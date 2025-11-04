@@ -1,0 +1,422 @@
+{
+  "info": {
+    "name": "SPK Depresi Mayor - Dashboard CRUD Collection",
+    "description": "Postman Collection untuk menguji CRUD Admin, Gejala, Penyakit, Aturan, dan Hasil Diagnosa pada sistem SPK Depresi Mayor berbasis Node.js + MySQL.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Admin - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/admin/login",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "admin",
+            "login"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"identifier\": \"admin1\", \"password\": \"admin123\"}"
+        }
+      }
+    },
+    {
+      "name": "Admin - Get All",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/admin",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/admin/register",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "admin",
+            "register"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\": \"adminbaru\", \"email\": \"baru@example.com\", \"password\": \"123456\", \"nama_lengkap\": \"Admin Baru\"}"
+        }
+      }
+    },
+    {
+      "name": "Admin - Update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/admin/update/2",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "admin",
+            "update",
+            "2"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nama_lengkap\": \"Admin Update\", \"email\": \"update@example.com\"}"
+        }
+      }
+    },
+    {
+      "name": "Admin - Update Password",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/admin/update-password/2",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "admin",
+            "update-password",
+            "2"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"newPassword\": \"admin456\"}"
+        }
+      }
+    },
+    {
+      "name": "Admin - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/admin/delete/2",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "admin",
+            "delete",
+            "2"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Penyakit - Get All",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/penyakit",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "penyakit"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Penyakit - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/penyakit",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "penyakit"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"kode_penyakit\": \"P01\", \"nama_penyakit\": \"Depresi Ringan\", \"deskripsi\": \"Gejala ringan dengan rasa sedih berkepanjangan\"}"
+        }
+      }
+    },
+    {
+      "name": "Penyakit - Update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/penyakit/1",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "penyakit",
+            "1"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"kode_penyakit\": \"P01\", \"nama_penyakit\": \"Depresi Sedang\", \"deskripsi\": \"Tingkat depresi sedang dengan gejala lebih intens\"}"
+        }
+      }
+    },
+    {
+      "name": "Penyakit - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/penyakit/1",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "penyakit",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Gejala - Get All",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/gejala",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "gejala"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Aturan - Get All",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/aturan",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "aturan"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Diagnosis - Get All Hasil",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/diagnosis/hasil",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "diagnosis",
+            "hasil"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Diagnosis - Delete Hasil",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/diagnosis/hasil/1",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "diagnosis",
+            "hasil",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Laporan - Filter by Date",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/laporan/filter?from=2025-11-01&to=2025-11-04",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "laporan",
+            "filter"
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "2025-11-01"
+            },
+            {
+              "key": "to",
+              "value": "2025-11-04"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

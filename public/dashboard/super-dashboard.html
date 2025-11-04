@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Super Admin - Sistem Pakar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-green-700 text-white px-6 py-3 flex justify-between items-center shadow-md">
+      <h1 class="text-xl font-bold">Super Admin Dashboard</h1>
+      <div class="flex items-center gap-4">
+        <span id="userName" class="font-medium"></span>
+        <button
+          id="logoutBtn"
+          class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm font-semibold"
+        >
+          Keluar
+        </button>
+      </div>
+    </nav>
+
+    <!-- Konten utama -->
+    <main class="flex-grow p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800">Daftar Admin Terdaftar</h2>
+        <div class="flex gap-2">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Cari nama / username..."
+      class="border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-green-500"
+    />
+
+    <select
+      id="filterRole"
+      class="border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-green-500"
+    >
+      <option value="">Semua Role</option>
+      <option value="admin">Admin</option>
+      <option value="super-admin">Super Admin</option>
+    </select>
+
+    <button
+      id="btnTambah"
+      class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded"
+    >
+      + Tambah Admin
+    </button>
+  </div>
+</div>
+
+      <div id="adminTableContainer" class="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table class="min-w-full text-sm text-left text-gray-600">
+          <thead class="bg-gray-100 border-b text-gray-700">
+            <tr>
+              <th class="py-3 px-4">ID</th>
+              <th class="py-3 px-4">Nama Lengkap</th>
+              <th class="py-3 px-4">Username</th>
+              <th class="py-3 px-4">Email</th>
+              <th class="py-3 px-4">Role</th>
+              <th class="py-3 px-4 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="adminList"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Modal Tambah Admin -->
+    <div
+      id="modalTambah"
+      class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+    >
+      <div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6 relative">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Tambah Admin Baru</h3>
+        <form id="formTambahAdmin" class="space-y-4">
+          <input
+            type="text"
+            id="nama_lengkap"
+            placeholder="Nama Lengkap"
+            class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500"
+            required
+          />
+          <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500"
+            required
+          />
+          <input
+            type="email"
+            id="email"
+            placeholder="Email"
+            class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500"
+            required
+          />
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500"
+            required
+          />
+          <select
+            id="role"
+            class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-500"
+          >
+            <option value="admin">Admin</option>
+            <option value="super-admin">Super Admin</option>
+          </select>
+
+          <p id="formMsg" class="text-center text-sm mt-2"></p>
+
+          <div class="flex justify-end gap-3 mt-4">
+            <button
+              type="button"
+              id="btnBatal"
+              class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              id="btnSimpan"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer class="bg-gray-200 text-center py-3 text-gray-600 text-sm">
+      © 2025 Sistem Pakar Depresi Mayor — Super Admin Panel
+    </footer>
+
+    <script src="../assets/js/dashboard/super-dashboard.js"></script>
+  </body>
+</html>

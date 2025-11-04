@@ -1,0 +1,38 @@
+[2025-10-19T13:49:46.783Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-10-19T13:49:47.948Z] ✅ Gejala C1 ditambahkan
+[2025-10-19T13:49:47.973Z] ✅ Gejala C2 ditambahkan
+[2025-10-19T13:49:48.025Z] ✅ Gejala C3 ditambahkan
+[2025-10-19T13:49:48.070Z] ✅ Gejala C4 ditambahkan
+[2025-10-19T13:49:48.112Z] ✅ Gejala C5 ditambahkan
+[2025-10-19T13:49:48.137Z] ✅ Gejala C6 ditambahkan
+[2025-10-19T13:49:48.181Z] ✅ Gejala C7 ditambahkan
+[2025-10-19T13:49:48.203Z] ✅ Gejala C8 ditambahkan
+[2025-10-19T13:49:48.234Z] ✅ Gejala C9 ditambahkan
+[2025-10-19T13:49:48.264Z] ✅ Aturan baru (Depresi Ringan) ditambahkan
+[2025-10-19T13:49:48.288Z] ✅ Aturan baru (Depresi Sedang) ditambahkan
+[2025-10-19T13:49:48.319Z] ✅ Aturan baru (Depresi Mayor Berat) ditambahkan
+[2025-10-19T13:49:48.322Z] 🎉 Seeding selesai tanpa duplikasi & sinkronisasi sukses!
+[2025-11-02T06:07:45.088Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-11-02T06:07:45.112Z] ❌ Terjadi kesalahan saat seeding: pool is not defined
+[2025-11-02T06:24:12.137Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-11-02T06:24:12.163Z] ❌ Terjadi kesalahan saat seeding: You have tried to call .then(), .catch(), or invoked await on the result of query that is not a promise, which is a programming error. Try calling con.promise().query(), or require('mysql2/promise') instead of 'mysql2' for a promise-compatible version of the query interface. To learn how to use async/await or Promises check out documentation at https://sidorares.github.io/node-mysql2/docs#using-promise-wrapper, or the mysql2 documentation at https://sidorares.github.io/node-mysql2/docs/documentation/promise-wrapper
+[2025-11-02T06:25:48.348Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-11-02T06:27:38.814Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-11-02T06:28:58.563Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-11-02T06:29:05.561Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-11-02T06:29:05.712Z] ⚙️  Gejala C1 sudah sesuai, dilewati
+[2025-11-02T06:29:05.716Z] ⚙️  Gejala C2 sudah sesuai, dilewati
+[2025-11-02T06:29:05.719Z] ⚙️  Gejala C3 sudah sesuai, dilewati
+[2025-11-02T06:29:05.725Z] ⚙️  Gejala C4 sudah sesuai, dilewati
+[2025-11-02T06:29:05.735Z] ⚙️  Gejala C5 sudah sesuai, dilewati
+[2025-11-02T06:29:05.742Z] ⚙️  Gejala C6 sudah sesuai, dilewati
+[2025-11-02T06:29:05.748Z] ⚙️  Gejala C7 sudah sesuai, dilewati
+[2025-11-02T06:29:05.754Z] ⚙️  Gejala C8 sudah sesuai, dilewati
+[2025-11-02T06:29:05.760Z] ⚙️  Gejala C9 sudah sesuai, dilewati
+[2025-11-02T06:29:05.774Z] ⚙️  Aturan (Depresi Ringan) sudah sesuai, dilewati
+[2025-11-02T06:29:05.782Z] ⚙️  Aturan (Depresi Sedang) sudah sesuai, dilewati
+[2025-11-02T06:29:05.788Z] ⚙️  Aturan (Depresi Mayor Berat) sudah sesuai, dilewati
+[2025-11-02T06:29:05.829Z] ✅ Data hasil_diagnosa untuk Dummy A (Depresi Ringan) ditambahkan
+[2025-11-02T06:29:05.836Z] ✅ Data hasil_diagnosa untuk Dummy B (Depresi Sedang) ditambahkan
+[2025-11-02T06:29:05.843Z] ✅ Data hasil_diagnosa untuk Dummy C (Depresi Berat) ditambahkan
+[2025-11-02T06:29:05.844Z] 🎉 Seeding selesai tanpa duplikasi & sinkronisasi sukses!

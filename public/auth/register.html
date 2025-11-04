@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Register Admin - Sistem Pakar</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="../assets/css/login.css" />
+    </head>
+    <body class="bg-gray-50">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Register Admin</h2>
+
+                <form id="register-form">
+                    <div class="mb-4">
+                        <label for="nama_lengkap" class="block text-gray-700 text-sm font-bold mb-2"
+                            >Nama Lengkap</label
+                        >
+                        <input
+                            type="text"
+                            id="nama_lengkap"
+                            name="nama_lengkap"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="username" class="block text-gray-700 text-sm font-bold mb-2"
+                            >Username</label
+                        >
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-4">
+  <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+  <input
+    type="email"
+    id="email"
+    name="email"
+    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
+    required
+  />
+</div>
+
+
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-700 text-sm font-bold mb-2"
+                            >Password</label
+                        >
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-4">
+  <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Role</label>
+  <select
+    id="role"
+    name="role"
+    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
+  >
+    <option value="admin">Admin</option>
+    <option value="super-admin">Super Admin</option>
+  </select>
+</div>
+
+                    <p id="error-message" class="text-red-500 text-xs italic text-center mb-4"></p>
+
+                    <div class="flex items-center justify-between">
+                        <button
+                            type="submit"
+                            id="submit-button"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            Daftar
+                        </button>
+                    </div>
+                </form>
+
+                <p class="text-center text-gray-600 text-sm mt-6">
+                    Sudah punya akun?
+                    <a href="login.html" class="font-bold text-green-600 hover:text-green-800">
+                        Login di sini
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <script src="../assets/js/auth/register.js"></script>
+    </body>
+</html>

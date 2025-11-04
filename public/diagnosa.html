@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pakar Diagnosa Awal Depresi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                        },
+                        bluegray: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            700: '#334155',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .checkbox-container:hover .checkmark {
+            @apply border-teal-500;
+        }
+        .checkbox-container input:checked ~ .checkmark {
+            @apply bg-teal-500 border-teal-500;
+        }
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+        .checkbox-container .checkmark:after {
+            content: "";
+            @apply absolute hidden left-1.5 top-0.5 w-2 h-3 border-white border-r-2 border-b-2 transform rotate-45;
+        }
+    </style>
+</head>
+<body class="bg-bluegray-50 font-sans text-bluegray-700 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-teal-500 to-teal-600 text-white py-12 px-4 md:px-8 lg:px-16">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-3">Sistem Pakar Diagnosa Awal Depresi</h1>
+            <p class="text-lg md:text-xl mb-8 opacity-90">Kenali kondisi emosimu dengan mengisi kuisioner sederhana</p>
+            <a href="#diagnosis-form" class="inline-block bg-white text-teal-600 hover:bg-bluegray-50 px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md hover:shadow-lg">
+                Mulai Diagnosa
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <!-- Formulir Diagnosa dengan Skala Likert -->
+<form id="diagnosis-form" class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-12">
+  <h2 class="text-2xl font-bold mb-6 text-teal-600 flex items-center">
+    <i data-feather="edit-3" class="mr-3"></i>
+    Formulir Diagnosa (Skala Likert)
+  </h2>
+
+  <!-- Informasi Pribadi -->
+  <div class="mb-8">
+    <h3 class="text-lg font-semibold mb-4 text-bluegray-700 border-b pb-2">Informasi Pribadi</h3>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <label for="nama" class="block mb-2 font-medium">Nama Lengkap <span class="text-red-500">*</span></label>
+        <input type="text" id="nama" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+      </div>
+      <div>
+        <label for="email" class="block mb-2 font-medium">Email</label>
+        <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+      </div>
+    </div>
+  </div>
+
+  <!-- Daftar Gejala -->
+  <div class="mb-8">
+    <h3 class="text-lg font-semibold mb-4 text-bluegray-700 border-b pb-2">Penilaian Gejala (0–3)</h3>
+    <p class="text-sm text-bluegray-500 mb-6">Pilih satu jawaban untuk setiap pernyataan:</p>
+
+    <div id="likert-container" class="grid md:grid-cols-2 gap-6">
+      <!-- Gejala akan dimuat oleh JS -->
+    </div>
+  </div>
+
+  <!-- Tombol Submit -->
+  <div class="text-center">
+    <button type="submit" id="submit-btn" class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-medium transition duration-300 shadow-md hover:shadow-lg flex items-center mx-auto">
+      <i data-feather="activity" class="mr-2"></i>
+      Proses Diagnosa
+    </button>
+  </div>
+</form>
+
+<!-- Hasil Diagnosa -->
+<div id="results-section" class="hidden bg-white rounded-xl shadow-md p-6 md:p-8 mb-12 fade-in">
+  <h2 class="text-2xl font-bold mb-6 text-teal-600 flex items-center">
+    <i data-feather="clipboard" class="mr-3"></i>
+    Hasil Diagnosa
+  </h2>
+  <div id="diagnosis-result" class="text-center py-8"></div>
+  <div class="text-center mt-4">
+    <button id="reset-btn" class="text-teal-600 hover:text-teal-700 font-medium flex items-center mx-auto">
+      <i data-feather="refresh-cw" class="mr-2"></i>
+      Lakukan Diagnosa Baru
+    </button>
+  </div>
+</div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-bluegray-100 to-bluegray-50 py-8 px-4 text-center text-bluegray-600">
+        <p>© 2025 Sistem Pakar Depresi — Dibuat oleh Kazzpars</p>
+    </footer>
+
+    <script>
+const gejalaList = [
+  { kode: "C1", nama: "Suasana hati sedih hampir setiap hari" },
+  { kode: "C2", nama: "Kehilangan minat atau kesenangan dalam aktivitas" },
+  { kode: "C3", nama: "Perubahan berat badan atau nafsu makan signifikan" },
+  { kode: "C4", nama: "Kesulitan tidur atau tidur berlebihan" },
+  { kode: "C5", nama: "Kelelahan atau kehilangan energi" },
+  { kode: "C6", nama: "Perasaan tidak berharga atau rasa bersalah berlebihan" },
+  { kode: "C7", nama: "Kesulitan berkonsentrasi atau membuat keputusan" },
+  { kode: "C8", nama: "Perubahan gerakan (lambat atau gelisah)" },
+  { kode: "C9", nama: "Pikiran tentang kematian atau bunuh diri" }
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+  feather.replace();
+
+  const container = document.getElementById('likert-container');
+  gejalaList.forEach(gejala => {
+    const div = document.createElement('div');
+    div.className = 'bg-bluegray-50 rounded-lg p-4 border';
+    div.innerHTML = `
+      <p class="font-medium mb-3">${gejala.nama}</p>
+      <div class="flex flex-col space-y-2">
+        <label><input type="radio" name="${gejala.kode}" value="0" required> Tidak Pernah (0)</label>
+        <label><input type="radio" name="${gejala.kode}" value="1"> Kadang-kadang (1)</label>
+        <label><input type="radio" name="${gejala.kode}" value="2"> Sering (2)</label>
+        <label><input type="radio" name="${gejala.kode}" value="3"> Hampir setiap hari (3)</label>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  const form = document.getElementById('diagnosis-form');
+  const resultSection = document.getElementById('results-section');
+  const diagnosisResult = document.getElementById('diagnosis-result');
+  const resetBtn = document.getElementById('reset-btn');
+  const submitBtn = document.getElementById('submit-btn');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Tampilkan loading di tombol
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i data-feather="loader" class="animate-spin mr-2"></i> Mengirim...';
+    feather.replace();
+
+    try {
+      // Ambil nilai form
+      const nama = document.getElementById('nama').value;
+      const email = document.getElementById('email').value;
+
+      const nilaiGejala = gejalaList.map(g => {
+        const radio = document.querySelector(`input[name="${g.kode}"]:checked`);
+        return radio ? parseInt(radio.value) : 0;
+      });
+      const totalSkor = nilaiGejala.reduce((a, b) => a + b, 0);
+
+      // Hitung kategori lokal (bisa dikirim juga ke backend)
+      let kategori = '';
+      if (totalSkor <= 4) kategori = 'Normal';
+      else if (totalSkor <= 9) kategori = 'Depresi Ringan';
+      else if (totalSkor <= 14) kategori = 'Depresi Sedang';
+      else if (totalSkor <= 19) kategori = 'Depresi Cukup Berat';
+      else kategori = 'Depresi Berat';
+
+      // Siapkan payload untuk backend
+      const payload = {
+        nama_pasien: nama,
+        email: email,
+        gejala_dipilih: nilaiGejala, // bisa juga kirim sebagai array kode + nilai
+        total_skor: totalSkor,
+        kategori: kategori
+      };
+
+      // Kirim ke backend
+      const res = await fetch('/api/public/diagnosis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Gagal mengirim hasil ke server.');
+
+      // Tampilkan hasil
+      diagnosisResult.innerHTML = `
+        <div class="mb-6">
+          <div class="inline-block text-teal-600 text-4xl font-bold py-3 px-6 border-2 border-teal-600 rounded-lg">
+            Skor ${totalSkor}
+          </div>
+          <h3 class="text-2xl font-semibold mt-4 text-teal-600">${kategori}</h3>
+        </div>
+        <p class="text-bluegray-600 max-w-md mx-auto">
+          Berdasarkan jawaban Anda, sistem mendeteksi indikasi <strong>${kategori.toLowerCase()}</strong>.
+          Hasil ini telah dikirim dan dicatat dalam sistem.
+        </p>
+      `;
+
+      resultSection.classList.remove('hidden');
+      form.classList.add('hidden');
+      resultSection.scrollIntoView({ behavior: 'smooth' });
+
+    } catch (err) {
+      alert('Terjadi kesalahan: ' + err.message);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i data-feather="activity" class="mr-2"></i> Proses Diagnosa';
+      feather.replace();
+    }
+  });
+
+  resetBtn.addEventListener('click', function() {
+    form.reset();
+    form.classList.remove('hidden');
+    resultSection.classList.add('hidden');
+    form.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+
+
+    </script>
+</body>
+</html>

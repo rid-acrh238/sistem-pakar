@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Laporan Diagnosa Depresi Mayor</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css" />
+  <style>
+    body {
+      font-family: 'Times New Roman', serif;
+      background: #fff;
+      color: #000;
+      margin: 30px;
+    }
+    h1, h2 { text-align: center; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: left;
+    }
+    thead { background: #eee; }
+    #printFooter {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 10pt;
+      color: #444;
+    }
+    #printFooter .text-right {
+      margin-top: 24px;
+      text-align: right;
+      padding-right: 80px;
+    }
+    #printFooter .text-right p { margin: 0; }
+  </style>
+</head>
+<body>
+  <div id="printHeader" class="text-center mb-6">
+    <img src="/assets/img/xylem.png" alt="Logo Xylem" class="w-20 h-auto mr-3" />
+    <h1>Sistem Pakar Diagnosa Awal Depresi Mayor</h1>
+    <h2>Laporan Hasil Diagnosa</h2>
+    <p id="printMeta"></p>
+    <hr class="my-4 border-gray-400" />
+  </div>
+
+  <div id="laporanContainer"></div>
+
+  <div id="printFooter" class="mt-8 text-center text-gray-600">
+    <hr class="my-3 border-gray-400" />
+    <p class="text-sm italic">
+      Dicetak dari Sistem Pakar Diagnosa Awal Depresi Mayor — Xylem Analytics Indonesia
+    </p>
+    <div class="mt-8 text-right pr-12">
+      <p>______________________________</p>
+      <p class="text-sm">Tanda Tangan Admin</p>
+    </div>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem('laporanData') || '[]');
+    const adminName = localStorage.getItem('nama_lengkap') || 'Administrator';
+    const container = document.getElementById('laporanContainer');
+
+    if (!data.length) {
+      container.innerHTML = '<p>Tidak ada data laporan.</p>';
+    } else {
+      const rows = data.map(item => `
+        <tr>
+          <td>${item.id}</td>
+          <td>${new Date(item.tanggal).toLocaleDateString('id-ID')}</td>
+          <td>${item.nama_pasien}</td>
+          <td>${item.hasil_penyakit}</td>
+          <td>${parseFloat(item.persentase || 0).toFixed(2)}%</td>
+        </tr>
+      `).join('');
+
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tanggal</th>
+              <th>Nama Pasien</th>
+              <th>Hasil Penyakit</th>
+              <th>Persentase</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    // meta info
+    const now = new Date();
+    document.getElementById('printMeta').textContent =
+      'Dicetak oleh: ' + adminName + ' — ' +
+      now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) +
+      ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+    // buka dialog print otomatis
+    window.onload = () => {
+      window.focus();
+      window.print();
+    };
+  </script>
+</body>
+</html>

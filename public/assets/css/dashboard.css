@@ -1,0 +1,153 @@
+/* ========================= */
+/* 🎚️ Custom Scrollbar */
+/* ========================= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* gray-300 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* gray-400 */
+}
+
+/* ========================= */
+/* 🖨️ Print Mode Styling */
+/* ========================= */
+@media print {
+  /* Hilangkan elemen yang tidak perlu di-print */
+  .no-print,
+  #sidebar,
+  #mobileMenuButton,
+  #logoutButton,
+  #filterButton,
+  #exportButton,
+  #printButton {
+    display: none !important;
+  }
+
+  /* Logo */
+  #printLogo {
+    display: inline-block !important;
+    width: 70px !important;
+    height: auto !important;
+    object-fit: contain !important;
+    margin-right: 10px !important;
+  }
+
+  /* Header cetak */
+  #printHeader {
+    display: block !important;
+    text-align: center !important;
+    margin-bottom: 10px;
+  }
+
+  #printHeader h1 {
+    font-size: 20pt !important;
+    margin-bottom: 2px;
+  }
+
+  #printHeader h2 {
+    font-size: 14pt !important;
+    margin-bottom: 4px;
+  }
+
+  #printHeader p {
+    font-size: 10pt !important;
+    margin-top: 0;
+  }
+
+  /* Reset tampilan halaman */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Tampilkan hanya halaman laporan */
+  #mainContent > *:not(#pageLaporan),
+  #pageLaporan > *:not(#laporanContainer):not(#printHeader):not(#printFooter) {
+    display: none !important;
+  }
+
+  #laporanContainer {
+    display: block !important;
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Tabel laporan */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1px solid #000 !important;
+    padding: 8px !important;
+  }
+
+  thead {
+    background: #eee !important;
+    print-color-adjust: exact;
+  }
+
+  /* Judul laporan */
+  #laporanContainer h1 {
+    text-align: center !important;
+    font-size: 22px !important;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  #laporanContainer h2 {
+    text-align: center !important;
+    font-size: 16px !important;
+    margin-bottom: 15px;
+  }
+
+  /* Footer cetak */
+  #printFooter {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 10pt;
+    color: #444;
+  }
+
+  #printFooter hr {
+    border: 0;
+    border-top: 1px solid #aaa;
+    margin-bottom: 8px;
+  }
+
+  #printFooter .text-right {
+    margin-top: 24px;
+    text-align: right;
+    padding-right: 80px;
+  }
+
+  #printFooter .text-right p {
+    margin: 0;
+  }
+
+  /* Nonaktifkan semua transisi animasi */
+  * {
+    transition: none !important;
+  }
+
+  html, body {
+    overflow: visible !important;
+  }
+}

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Identitas Pengunjung - Sistem Pakar Depresi Mayor</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+
+        <link rel="stylesheet" href="identitas.css" />
+    </head>
+    <body>
+        <main class="main-container">
+            <div class="form-card animate-on-load">
+                <form action="diagnosis.html" method="GET">
+                    <h1>Isi Identitas Anda</h1>
+
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap</label>
+                        <input
+                            type="text"
+                            id="nama"
+                            name="nama"
+                            required
+                            placeholder="Contoh: Budi Santoso"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="umur">Umur</label>
+                        <input
+                            type="number"
+                            id="umur"
+                            name="umur"
+                            min="1"
+                            max="120"
+                            required
+                            placeholder="Contoh: 25"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <fieldset>
+                            <legend>Jenis Kelamin</legend>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input
+                                        type="radio"
+                                        name="jenis_kelamin"
+                                        value="laki-laki"
+                                        required
+                                    />
+                                    <span>Laki-laki</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="jenis_kelamin" value="perempuan" />
+                                    <span>Perempuan</span>
+                                </label>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pekerjaan">Pekerjaan (Opsional)</label>
+                        <input
+                            type="text"
+                            id="pekerjaan"
+                            name="pekerjaan"
+                            placeholder="Contoh: Mahasiswa"
+                        />
+                    </div>
+
+                    <button type="submit" class="submit-btn">Lanjutkan ke Diagnosa</button>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>
