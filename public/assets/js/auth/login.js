@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const identifier = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
-    const role = document.getElementById('role').value;
+    //const role = document.getElementById('role').value;
 
     msg.textContent = '⏳ Sedang masuk...';
     msg.className = 'text-gray-500 text-sm text-center';
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('http://localhost:3000/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier, password, role }),
+        body: JSON.stringify({ identifier, password }),
       });
 
       const data = await res.json();

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = document.getElementById('username').value.trim();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
-    const role = document.getElementById('role').value;
+    //const role = document.getElementById('role').value;
 
     msg.textContent = '⏳ Mendaftarkan akun...';
     btn.disabled = true;
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/admin/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nama_lengkap, username, email, password, role }),
+        body: JSON.stringify({ nama_lengkap, username, email, password }),
       });
 
       const data = await res.json();

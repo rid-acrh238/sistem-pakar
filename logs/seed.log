@@ -36,3 +36,49 @@
 [2025-11-02T06:29:05.836Z] ✅ Data hasil_diagnosa untuk Dummy B (Depresi Sedang) ditambahkan
 [2025-11-02T06:29:05.843Z] ✅ Data hasil_diagnosa untuk Dummy C (Depresi Berat) ditambahkan
 [2025-11-02T06:29:05.844Z] 🎉 Seeding selesai tanpa duplikasi & sinkronisasi sukses!
+[2025-11-18T11:34:08.618Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-11-18T11:34:08.723Z] ✅ Gejala C1 ditambahkan
+[2025-11-18T11:34:08.730Z] ✅ Gejala C2 ditambahkan
+[2025-11-18T11:34:08.755Z] ✅ Gejala C3 ditambahkan
+[2025-11-18T11:34:08.793Z] ✅ Gejala C4 ditambahkan
+[2025-11-18T11:34:08.808Z] ✅ Gejala C5 ditambahkan
+[2025-11-18T11:34:08.862Z] ✅ Gejala C6 ditambahkan
+[2025-11-18T11:34:08.875Z] ✅ Gejala C7 ditambahkan
+[2025-11-18T11:34:08.882Z] ✅ Gejala C8 ditambahkan
+[2025-11-18T11:34:08.900Z] ✅ Gejala C9 ditambahkan
+[2025-11-18T11:34:08.910Z] ⚙️  Aturan (Depresi Ringan) sudah sesuai, dilewati
+[2025-11-18T11:34:08.918Z] ⚙️  Aturan (Depresi Sedang) sudah sesuai, dilewati
+[2025-11-18T11:34:08.925Z] ⚙️  Aturan (Depresi Mayor Berat) sudah sesuai, dilewati
+[2025-11-18T11:34:08.930Z] ⚙️  Data hasil_diagnosa untuk Dummy A sudah ada, dilewati
+[2025-11-18T11:34:08.937Z] ⚙️  Data hasil_diagnosa untuk Dummy B sudah ada, dilewati
+[2025-11-18T11:34:08.940Z] ⚙️  Data hasil_diagnosa untuk Dummy C sudah ada, dilewati
+[2025-11-18T11:34:08.949Z] 🎉 Seeding selesai tanpa duplikasi & sinkronisasi sukses!
+[2025-12-01T08:06:23.377Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-12-01T08:06:23.397Z] 📋 Memproses 20 data gejala...
+[2025-12-01T08:06:23.693Z]    ✅ Gejala BARU: [D01] Mood depresi / sedih hampir sepanjang hari
+[2025-12-01T08:06:23.774Z]    ✅ Gejala BARU: [D02] Kehilangan minat atau kesenangan (anhedonia)
+[2025-12-01T08:06:23.853Z]    ✅ Gejala BARU: [D03] Perubahan berat badan atau nafsu makan yang signifikan
+[2025-12-01T08:06:24.012Z]    ✅ Gejala BARU: [D04] Gangguan tidur (Insomnia atau Hipersomnia)
+[2025-12-01T08:06:24.406Z]    ✅ Gejala BARU: [D05] Agitasi atau retardasi psikomotor (gelisah/lamban)
+[2025-12-01T08:06:24.714Z]    ✅ Gejala BARU: [D06] Kelelahan atau kehilangan energi
+[2025-12-01T08:06:24.797Z]    ✅ Gejala BARU: [D07] Perasaan tidak berharga atau rasa bersalah berlebihan
+[2025-12-01T08:06:24.877Z]    ✅ Gejala BARU: [D08] Sulit berkonsentrasi atau keragu-raguan
+[2025-12-01T08:06:24.956Z]    ✅ Gejala BARU: [D09] Pikiran berulang tentang kematian atau bunuh diri
+[2025-12-01T08:06:25.108Z]    ✅ Gejala BARU: [A01] Kecemasan dan kekhawatiran berlebihan (6 bulan terakhir)
+[2025-12-01T08:06:25.259Z]    ✅ Gejala BARU: [A02] Sulit mengendalikan kekhawatiran
+[2025-12-01T08:06:25.417Z]    ✅ Gejala BARU: [A03] Gelisah atau merasa tegang (keyed up)
+[2025-12-01T08:06:25.493Z]    ✅ Gejala BARU: [A04] Mudah lelah (terkait cemas)
+[2025-12-01T08:06:25.731Z]    ✅ Gejala BARU: [A05] Sulit konsentrasi atau pikiran menjadi kosong
+[2025-12-01T08:06:26.096Z]    ✅ Gejala BARU: [A06] Iritabilitas (mudah tersinggung/marah)
+[2025-12-01T08:06:26.391Z]    ✅ Gejala BARU: [A07] Ketegangan otot
+[2025-12-01T08:06:26.496Z]    ✅ Gejala BARU: [A08] Gangguan tidur (sulit tidur/gelisah)
+[2025-12-01T08:06:26.599Z]    ✅ Gejala BARU: [B01] Kelelahan emosional atau merasa terkuras energinya
+[2025-12-01T08:06:26.676Z]    ✅ Gejala BARU: [B02] Depersonalisasi, sinisme, atau jarak mental dari pekerjaan
+[2025-12-01T08:06:26.755Z]    ✅ Gejala BARU: [B03] Penurunan pencapaian pribadi atau rasa tidak efektif bekerja
+[2025-12-01T08:06:26.757Z] 📋 Memproses 4 aturan diagnosa...
+[2025-12-01T08:06:26.837Z]    ✅ Aturan BARU: [D09] -> BAHAYA: Risiko Bunuh Diri. Segera hubungi profesional.
+[2025-12-01T08:06:27.065Z]    ✅ Aturan BARU: [D01,D02,D03,D04,D05,D06,D07,D08] -> Depresi Mayor: Sangat Berat (Segera cari bantuan medis)
+[2025-12-01T08:06:27.300Z]    ✅ Aturan BARU: [A01,A02] -> Indikasi Gangguan Kecemasan Umum (GAD)
+[2025-12-01T08:06:27.452Z]    ✅ Aturan BARU: [B01,B02,B03] -> Burnout (Sindrom Stres Akibat Pekerjaan)
+[2025-12-01T08:06:27.454Z] 
+🎉 Seeding selesai! Database telah diperbarui dengan kriteria DSM-5.

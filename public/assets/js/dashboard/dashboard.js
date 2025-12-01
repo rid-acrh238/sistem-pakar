@@ -126,24 +126,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 🔹 Fungsi untuk load profil admin dari token
-    async function loadAdminProfile() {
-        try {
-            const res = await fetchWithAuth('/api/admin/profile');
-            if (!res.ok) throw new Error('Gagal mengambil profil admin');
+    // Di dashboard.js, update fungsi ini:
 
-            const data = await res.json();
-            document.getElementById('adminName').textContent = data.user.nama_lengkap || 'Admin';
-             // tampilkan avatar dummy kalau belum ada
-    const avatar = document.getElementById('adminAvatar');
-    avatar.src = `https://i.pravatar.cc/40?u=${encodeURIComponent(user.username)}`;
+async function loadAdminProfile() {
+    try {
+        const res = await fetchWithAuth('/api/admin/profile');
+        if (!res.ok) throw new Error('Gagal mengambil profil admin');
 
-            console.log('✅ Profil admin berhasil dimuat:', data.user.nama_lengkap);
-        } catch (err) {
-            console.error('Gagal memuat profil admin:', err.message);
-            document.getElementById('adminName').textContent = 'admin';
+        const data = await res.json();
+        const user = data.user;
+
+        // Update Nama
+        const nameEl = document.getElementById('adminName');
+        if(nameEl) nameEl.textContent = user.nama_lengkap || 'Admin';
+
+        // Update Avatar Sidebar
+        const avatarEl = document.getElementById('adminAvatar');
+        if (avatarEl) {
+            // 👇 LOGIKA SAMA: Abaikan jika isinya 'default.jpg'
+            const hasPhoto = user.foto_profil && user.foto_profil !== 'default.jpg';
+
+            if (hasPhoto) {
+                avatarEl.src = `/uploads/${user.foto_profil}?v=${new Date().getTime()}`;
+            } else {
+                // Pakai UI Avatars
+                avatarEl.src = `https://ui-avatars.com/api/?name=${user.nama_lengkap}&background=0D9488&color=fff&size=128`;
+            }
         }
-        //loadAdminProfile();
+    } catch (err) {
+        console.error('Gagal memuat profil admin:', err.message);
     }
+}
+//     async function loadAdminProfile() {
+//     try {
+//         const res = await fetchWithAuth('/api/admin/profile');
+//         if (!res.ok) throw new Error('Gagal mengambil profil admin');
+
+//         const data = await res.json();
+//         const user = data.user;
+
+//         // 1. Update Nama
+//         const nameEl = document.getElementById('adminName');
+//         if(nameEl) nameEl.textContent = user.nama_lengkap || 'Admin';
+
+//         // 2. Update Avatar Sidebar
+//         const avatarEl = document.getElementById('adminAvatar');
+//         if (avatarEl) {
+//             // Cek jika ada foto_profil dari database
+//             if (user.foto_profil) {
+//                 avatarEl.src = `/uploads/${user.foto_profil}`;
+//             } else {
+//                 // Fallback ke inisial/dummy jika tidak ada foto
+//                 avatarEl.src = `https://i.pravatar.cc/150?u=${user.username}`;
+//             }
+//         }
+        
+//         console.log('✅ Profil dimuat. Foto:', user.foto_profil);
+//     } catch (err) {
+//         console.error('Gagal memuat profil admin:', err.message);
+//     }
+// }
 
     function autoLogout(message) {
         Swal.fire({
@@ -188,6 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
             switch (pageId) {
                 case 'pageDashboard':
                     loadDashboardData();
+                    break;
+                case 'pageProfil':
+                    loadUserProfileForEdit();
                     break;
                 case 'pageDataGejala':
                     loadGejalaData();
@@ -477,20 +522,19 @@ console.log('[Dashboard] Data hasil diagnosa:', hasil);
         const { value: formValues } = await Swal.fire({
             title: 'Tambah Gejala Baru',
             html: `
-            <input id="kodeGejala" class="swal2-input" placeholder="Kode Gejala (misal G01)">
             <input id="namaGejala" class="swal2-input" placeholder="Nama Gejala">
         `,
             confirmButtonText: 'Simpan',
             cancelButtonText: 'Batal',
             showCancelButton: true,
             preConfirm: () => {
-                const kode = document.getElementById('kodeGejala').value.trim();
+                // const kode = document.getElementById('kodeGejala').value.trim();
                 const nama = document.getElementById('namaGejala').value.trim();
-                if (!kode || !nama) {
+                if (!nama) {
                     Swal.showValidationMessage('Semua field wajib diisi!');
                     return false;
                 }
-                return { kode_gejala: kode, nama_gejala: nama };
+                return { nama_gejala: nama };
             },
         });
 
@@ -518,20 +562,20 @@ console.log('[Dashboard] Data hasil diagnosa:', hasil);
             const { value: formValues } = await Swal.fire({
                 title: 'Edit Gejala',
                 html: `
-                <input id="editKodeGejala" class="swal2-input" value="${data.kode_gejala}" placeholder="Kode Gejala">
+                <input id="editKodeGejala" class="swal2-input" value="${data.kode_gejala}" placeholder="Kode Gejala" disabled>
                 <input id="editNamaGejala" class="swal2-input" value="${data.nama_gejala}" placeholder="Nama Gejala">
             `,
                 confirmButtonText: 'Perbarui',
                 cancelButtonText: 'Batal',
                 showCancelButton: true,
                 preConfirm: () => {
-                    const kode = document.getElementById('editKodeGejala').value.trim();
+                    //const kode = document.getElementById('editKodeGejala').value.trim();
                     const nama = document.getElementById('editNamaGejala').value.trim();
-                    if (!kode || !nama) {
+                    if (!nama) {
                         Swal.showValidationMessage('Semua field wajib diisi!');
                         return false;
                     }
-                    return { kode_gejala: kode, nama_gejala: nama };
+                    return { nama_gejala: nama };
                 },
             });
 
@@ -1111,20 +1155,61 @@ function setupPrintHeader() {
 // 🔹 CRUD: KELOLA ADMIN
 // ===========================
 
+// function loadAdminData() {
+//   loadTableData(`${API_BASE_URL}/admin`, 'adminTableBody', (item) => `
+//     <tr class="bg-white border-b hover:bg-gray-50 transition">
+//       <td class="py-4 px-6 font-medium text-gray-900">${item.username}</td>
+//       <td class="py-4 px-6">${item.nama_lengkap}</td>
+//       <td class="py-4 px-6">${item.email || '-'}</td>
+//       <td class="py-4 px-6">${formatDate(item.created_at)}</td>
+//       <td class="py-4 px-6 text-center space-x-2">
+//         <button class="btn-edit-admin bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm" data-id="${item.id}" data-username="${item.username}">Edit</button>
+//          <button class="btn-password-admin bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Password</button>
+//         <button class="btn-hapus-admin bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Hapus</button>
+//       </td>
+//     </tr>
+//   `).then(() => attachAdminButtonListeners());
+// }
 function loadAdminData() {
-  loadTableData(`${API_BASE_URL}/admin`, 'adminTableBody', (item) => `
-    <tr class="bg-white border-b hover:bg-gray-50 transition">
-      <td class="py-4 px-6 font-medium text-gray-900">${item.username}</td>
-      <td class="py-4 px-6">${item.nama_lengkap}</td>
-      <td class="py-4 px-6">${item.email || '-'}</td>
-      <td class="py-4 px-6">${formatDate(item.created_at)}</td>
-      <td class="py-4 px-6 text-center space-x-2">
-        <button class="btn-edit-admin bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm" data-id="${item.id}" data-username="${item.username}">Edit</button>
-         <button class="btn-password-admin bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Password</button>
-        <button class="btn-hapus-admin bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Hapus</button>
-      </td>
-    </tr>
-  `).then(() => attachAdminButtonListeners());
+  loadTableData(`${API_BASE_URL}/admin`, 'adminTableBody', (item) => {
+    
+    // 👇 LOGIKA BARU: Cek jika foto ada DAN bukan 'default.jpg'
+    const hasPhoto = item.foto_profil && item.foto_profil !== 'default.jpg';
+
+    // Kalau punya foto asli, pakai itu. Kalau tidak (atau default.jpg), pakai UI Avatars.
+    const avatarUrl = hasPhoto 
+      ? `/uploads/${item.foto_profil}` 
+      : `https://ui-avatars.com/api/?name=${item.username}&background=random&color=fff&size=128`;
+
+    return `
+      <tr class="bg-white border-b hover:bg-gray-50 transition">
+        <td class="py-4 px-6">
+          <div class="flex items-center space-x-3">
+            <img class="w-10 h-10 rounded-full border border-gray-300 object-cover" 
+                 src="${avatarUrl}" 
+                 alt="Avatar"
+                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${item.username}&background=random&color=fff&size=128';">
+            <span class="font-medium text-gray-900">${item.username}</span>
+          </div>
+        </td>
+        <td class="py-4 px-6">${item.nama_lengkap}</td>
+        <td class="py-4 px-6">${item.email || '-'}</td>
+        <td class="py-4 px-6">${formatDate(item.created_at)}</td>
+        <td class="py-4 px-6 text-center space-x-2">
+           <div class="flex justify-center gap-2">
+              <button class="btn-edit-admin bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm" 
+                data-id="${item.id}" data-username="${item.username}">Edit</button>
+              
+              <button class="btn-password-admin bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm" 
+                data-id="${item.id}">Pass</button>
+              
+              <button class="btn-hapus-admin bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" 
+                data-id="${item.id}">Hapus</button>
+           </div>
+        </td>
+      </tr>
+    `;
+  }).then(() => attachAdminButtonListeners());
 }
 
 // Tambah admin baru
@@ -1294,69 +1379,256 @@ function attachAdminButtonListeners() {
 }
 
 
+// ===========================
+// 🔹 LOGIKA PROFIL SAYA
+// ===========================
+
+// 1. Load Data ke Form Edit
+async function loadUserProfileForEdit() {
+    try {
+        // Kita pakai endpoint profile yang sudah ada
+        const res = await fetchWithAuth('/api/admin/profile'); 
+        const data = await res.json();
+        
+        if (res.ok && data.user) {
+            const user = data.user;
+            
+            // Isi Form
+            document.getElementById('profilNama').value = user.nama_lengkap || '';
+            document.getElementById('profilEmail').value = user.email || '';
+            
+            // Tampilkan Foto
+            const preview = document.getElementById('previewFoto');
+            if (user.foto_profil) {
+                // Pastikan path uploads sesuai setting backend (misal /uploads/namafile.jpg)
+                preview.src = `/uploads/${user.foto_profil}`;
+            } else {
+                preview.src = `https://i.pravatar.cc/150?u=${user.username}`;
+            }
+        }
+    } catch (err) {
+        console.error("Gagal load profil edit:", err);
+    }
+}
+
+// 2. Handle Simpan Profil (Pakai FormData)
+async function handleUpdateProfil(e) {
+    e.preventDefault();
+    
+    const btnSimpan = e.target.querySelector('button[type="submit"]');
+    const originalText = btnSimpan.innerHTML;
+    btnSimpan.textContent = 'Menyimpan...';
+    btnSimpan.disabled = true;
+
+    try {
+        const formData = new FormData();
+        // Ambil ID dari token/profile (atau biarkan backend ambil dari req.user.id)
+        // Disini kita asumsi backend baca ID dari Token JWT, jadi gak perlu append ID manual
+        
+        formData.append('nama_lengkap', document.getElementById('profilNama').value);
+        formData.append('email', document.getElementById('profilEmail').value);
+
+        // Password Opsional
+        const passBaru = document.getElementById('profilPassBaru')?.value;
+        if(passBaru) {
+            formData.append('password', passBaru);
+        }
+
+        // File Foto
+        const fileInput = document.getElementById('uploadFotoInput');
+        if (fileInput.files[0]) {
+            formData.append('foto', fileInput.files[0]);
+        }
+
+        // ⚠️ PENTING: Kita pakai fetch biasa (bukan fetchWithAuth) 
+        // karena FormData tidak boleh ada header 'Content-Type: application/json'
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/admin/update-profil', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}` 
+                // Browser akan otomatis set Content-Type ke multipart/form-data
+            },
+            body: formData
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            Swal.fire('Berhasil', 'Profil berhasil diperbarui!', 'success');
+            // Update UI Sidebar langsung
+            document.getElementById('adminName').textContent = document.getElementById('profilNama').value;
+            // Jika ada foto baru, update avatar sidebar
+            if(fileInput.files[0]){
+                 const reader = new FileReader();
+                 reader.onload = (e) => document.getElementById('adminAvatar').src = e.target.result;
+                 reader.readAsDataURL(fileInput.files[0]);
+            }
+        } else {
+            throw new Error(result.message || 'Gagal update');
+        }
+
+    } catch (error) {
+        Swal.fire('Gagal', error.message, 'error');
+    } finally {
+        btnSimpan.innerHTML = originalText;
+        btnSimpan.disabled = false;
+    }
+}
+
+// 3. Helper Preview Image saat pilih file
+window.previewImage = function(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        const output = document.getElementById('previewFoto');
+        output.src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
 
 
     // --- EVENT LISTENERS ---
     //baru ditambahin
     // Logout
-    logoutButton.addEventListener('click', () => {
+    // ==========================================
+    // 🔹 EVENT LISTENERS (VERSI AMAN / ANTI ERROR)
+    // ==========================================
+    
+    // Helper: Pasang listener hanya jika elemen ada
+    function safeAddListener(id, event, handler) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener(event, handler);
+        }
+    }
+
+    // 1. Tombol Navigasi & Logout
+    safeAddListener('logoutButton', 'click', () => {
         Swal.fire({
-            title: 'Keluar dari dashboard?',
-            text: 'Sesi login kamu akan berakhir.',
+            title: 'Keluar?',
+            text: 'Sesi login akan berakhir.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, keluar',
-            cancelButtonText: 'Batal',
             confirmButtonColor: '#d33',
         }).then((result) => {
             if (result.isConfirmed) {
-                // Hapus token & redirect ke login
                 localStorage.removeItem('token');
-                localStorage.removeItem('nama_lengkap');
-                Swal.fire('Berhasil keluar!', 'Kamu telah logout dari sistem.', 'success');
-                setTimeout(() => (window.location.href = '/auth/login'), 1000);
+                window.location.href = '/auth/login';
             }
         });
     });
 
-    // Tombol ke landing page
-const homeButton = document.getElementById('homeButton');
-if (homeButton) {
-  homeButton.addEventListener('click', () => {
-    window.location.href = '/diagnosa.html';
-  });
-}
-
-
-    // Mobile menu toggle
-    mobileMenuButton.addEventListener('click', () => {
-        sidebar.classList.toggle('-translate-x-full');
+    safeAddListener('homeButton', 'click', () => {
+        window.location.href = '/diagnosa.html';
     });
 
-    // Sidebar navigation
-    navLinks.forEach((link) => {
+    if (mobileMenuButton && sidebar) {
+        mobileMenuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    }
+
+    // 2. Form Submissions (Hanya jalan jika form ada di layar)
+    safeAddListener('formTambahAdmin', 'submit', handleTambahAdmin);
+    safeAddListener('formUbahPassword', 'submit', handleUbahPassword);
+    
+    // Khusus Form Edit Profil (cegah duplikasi listener)
+    const formProfil = document.getElementById('formEditProfil');
+    if (formProfil) {
+        const newForm = formProfil.cloneNode(true);
+        formProfil.parentNode.replaceChild(newForm, formProfil);
+        newForm.addEventListener('submit', handleUpdateProfil);
+    }
+
+    // 3. Modal Controls
+    safeAddListener('openTambahAdminModal', 'click', () => openModal('tambahAdminModal'));
+    
+    document.querySelectorAll('.close-modal').forEach((button) => {
+        button.addEventListener('click', (e) => closeModal(e.currentTarget.dataset.modal));
+    });
+
+    // 4. Sidebar Links
+    document.querySelectorAll('.nav-link').forEach((link) => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             showPage(e.currentTarget.dataset.page);
         });
     });
 
-    // Modal triggers
-    openTambahAdminModalButton.addEventListener('click', () => openModal('tambahAdminModal'));
-    closeModalButtons.forEach((button) => {
-        button.addEventListener('click', (e) => closeModal(e.currentTarget.dataset.modal));
+    // 5. Print & Export
+    safeAddListener('printButton', 'click', () => {
+        const data = JSON.parse(localStorage.getItem('laporanData') || '[]');
+        if (data.length === 0) return Swal.fire('Info', 'Tidak ada data.', 'info');
+        window.open('/laporan/print.html', '_blank');
     });
-on
-    // Form submissions
-    formTambahAdmin.addEventListener('submit', handleTambahAdmin);
-    formUbahPassword.addEventListener('submit', handleUbahPassword);
-
-    // Print button
-    // printButton.addEventListener('click', () => {
-    //     window.print();
-    // });
 
     // --- INITIALIZATION ---
-    showPage('pageDashboard'); // Load dashboard on page load
-});
+    showPage('pageDashboard');
+}); // Penutup DOMContentLoaded
+//     logoutButton.addEventListener('click', () => {
+//         Swal.fire({
+//             title: 'Keluar dari dashboard?', 
+//             text: 'Sesi login kamu akan berakhir.',
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonText: 'Ya, keluar',
+//             cancelButtonText: 'Batal',
+//             confirmButtonColor: '#d33',
+//         }).then((result) => {
+//             if (result.isConfirmed) {
+//                 // Hapus token & redirect ke login
+//                 localStorage.removeItem('token');
+//                 localStorage.removeItem('nama_lengkap');
+//                 Swal.fire('Berhasil keluar!', 'Kamu telah logout dari sistem.', 'success');
+//                 setTimeout(() => (window.location.href = '/auth/login'), 1000);
+//             }
+//         });
+//     });
+
+//     const formEditProfil = document.getElementById('formEditProfil');
+//     if (formEditProfil) {
+//         formEditProfil.addEventListener('submit', handleUpdateProfil);
+//     }
+
+//     // Tombol ke landing page
+// const homeButton = document.getElementById('homeButton');
+// if (homeButton) {
+//   homeButton.addEventListener('click', () => {
+//     window.location.href = '/diagnosa.html';
+//   });
+// }
+
+
+//     // Mobile menu toggle
+//     mobileMenuButton.addEventListener('click', () => {
+//         sidebar.classList.toggle('-translate-x-full');
+//     });
+
+//     // Sidebar navigation
+//     navLinks.forEach((link) => {
+//         link.addEventListener('click', (e) => {
+//             e.preventDefault();
+//             showPage(e.currentTarget.dataset.page);
+//         });
+//     });
+
+//     // Modal triggers
+//     openTambahAdminModalButton.addEventListener('click', () => openModal('tambahAdminModal'));
+//     closeModalButtons.forEach((button) => {
+//         button.addEventListener('click', (e) => closeModal(e.currentTarget.dataset.modal));
+//     });
+// on
+//     // Form submissions
+//     formTambahAdmin.addEventListener('submit', handleTambahAdmin);
+//     formUbahPassword.addEventListener('submit', handleUbahPassword);
+
+//     // Print button
+//     // printButton.addEventListener('click', () => {
+//     //     window.print();
+//     // });
+
+//     // --- INITIALIZATION ---
+//     showPage('pageDashboard'); // Load dashboard on page load
+// });
 

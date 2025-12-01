@@ -1,7 +1,7 @@
 import express from 'express';
 import { getAllLaporan, getLaporanByTanggal } from '../controllers/laporanController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
-import { onlyAdmin } from '../middleware/roleMiddleware.js';
+import { onlyAdmin } from '../middleware/roleMiddlewareArsip.js';
 
 const router = express.Router();
 
