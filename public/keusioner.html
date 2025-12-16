@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Deteksi Dini Depresi Mayor</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'Poppins', 'sans-serif'],
+                        'heading': ['Poppins', 'Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'mindful': {
+                            'light': '#C5E4F3',
+                            'primary': '#5DADE2',
+                            'DEFAULT': '#3498DB',
+                            'dark': '#2874A6',
+                            'darker': '#1B4F72'
+                        },
+                        'calm': {
+                            'light': '#D5DBDB',
+                            'primary': '#A3E4D7',
+                            'DEFAULT': '#48C9B0',
+                            'dark': '#17A589'
+                        },
+                        'danger': {
+                             'light': '#FADBD8',
+                             'DEFAULT': '#E74C3C',
+                             'dark': '#C0392B'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .step-section { 
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .step-section.active { 
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #f0f4f8 0%, #dbeafe 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* --- GAYA KUESIONER BARU (Dari diagnosamincek.html) --- */
+        
+        /* Menyembunyikan radio button asli */
+        .custom-radio {
+            display: none;
+        }
+        
+        /* Tampilan opsi jawaban (kartu) */
+        .radio-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 10px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            height: 100%; /* Agar tinggi sama */
+        }
+        
+        .radio-option:hover {
+            border-color: #5DADE2;
+            background-color: #F7FBFE;
+            transform: translateY(-2px);
+        }
+        
+        /* State ketika dipilih */
+        .custom-radio:checked + .radio-option {
+            border-color: #3498DB;
+            background-color: #E8F4FC;
+            color: #1B4F72;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="gradient-bg text-slate-800 min-h-screen flex flex-col font-sans">
+
+    <nav class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 fixed top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
+                <div class="bg-mindful-light p-2 rounded-lg">
+                    <i class="fas fa-brain text-mindful-darker text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-heading font-bold text-mindful-darker">MindCare</h1>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Beranda</a>
+                <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Tentang Kami</a>
+                <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Layanan</a>
+                <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Kontak</a>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-semibold text-white px-3 py-1 bg-mindful rounded-full shadow-sm">
+                    <i class="fas fa-robot mr-1"></i> AI Expert System
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-28 pb-12 px-4">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="sticky top-24 z-30 bg-white/80 backdrop-blur rounded-xl p-4 mb-8 shadow-sm border border-slate-100" id="progress-container">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500" id="step-indicator">Langkah 1: Pendahuluan</span>
+                    <span class="text-xs font-bold text-mindful-dark" id="step-percentage">0%</span>
+                </div>
+                <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-mindful transition-all duration-700 ease-out" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <section id="step-1" class="step-section active" data-aos="fade-up">
+                <div class="text-center py-10">
+                    <div class="relative w-full max-w-lg mx-auto mb-12">
+                        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+                        <div class="absolute top-0 -right-4 w-72 h-72 bg-mindful-light rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+                        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+                        
+                        <div class="relative">
+                            <img src="https://img.freepik.com/free-vector/mental-health-awareness-concept-illustration_114360-2036.jpg" 
+                                 alt="Mental Health Check" class="w-full rounded-2xl shadow-2xl transform hover:scale-105 transition duration-500">
+                        </div>
+                    </div>
+
+                    <h1 class="text-4xl md:text-6xl font-heading font-bold text-slate-800 mb-6">
+                        Pahami Kondisi <span class="text-mindful">Kesehatan Mental</span> Anda
+                    </h1>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+                        Sistem pakar diagnosa awal depresi mayor menggunakan metode <b>Forward-Chaining</b> berdasarkan standar DSM-5. Deteksi dini adalah langkah awal menuju pemulihan.
+                    </p>
+
+                    <button onclick="nextStep(2)" class="btn-primary text-white text-xl font-semibold py-4 px-12 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition flex items-center mx-auto group">
+                        <span>Mulai Tes Screening</span>
+                        <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition"></i>
+                    </button>
+
+                    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                            <i class="fas fa-user-shield text-mindful text-2xl mb-3"></i>
+                            <h3 class="font-bold text-slate-700">Privasi Terjaga</h3>
+                            <p class="text-sm text-slate-500">Data anonim & rahasia.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                            <i class="fas fa-clipboard-check text-calm text-2xl mb-3"></i>
+                            <h3 class="font-bold text-slate-700">Standar Medis</h3>
+                            <p class="text-sm text-slate-500">Berbasis kriteria DSM-5.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                            <i class="fas fa-bolt text-yellow-400 text-2xl mb-3"></i>
+                            <h3 class="font-bold text-slate-700">Hasil Instan</h3>
+                            <p class="text-sm text-slate-500">Analisa langsung dengan AI.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step-2" class="step-section">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+                    <div class="bg-mindful/10 p-8 border-b border-mindful/20">
+                        <h2 class="text-2xl font-heading font-bold text-slate-800">Kuesioner Gejala</h2>
+                        <div class="flex items-start mt-3 bg-white p-4 rounded-lg border-l-4 border-mindful shadow-sm">
+                            <i class="fas fa-info-circle text-mindful text-xl mr-3 mt-1"></i>
+                            <p class="text-slate-600 text-sm">
+                                <strong>PENTING:</strong> Pertanyaan di bawah ini menanyakan seberapa sering Anda terganggu oleh masalah-masalah berikut dalam <span class="text-mindful-dark font-bold underline">2 minggu terakhir</span>.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 md:p-10">
+                        <form id="quiz-form" class="space-y-10">
+                            <div id="question-container"></div>
+                        </form>
+                        
+                        <div class="mt-10 pt-6 border-t border-slate-100 flex justify-between items-center">
+                            <button onclick="prevStep(1)" class="text-slate-500 hover:text-slate-800 font-medium px-4 py-2 rounded-lg hover:bg-slate-100 transition">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button onclick="validateAndNext(3)" class="btn-primary text-white font-medium py-3 px-8 rounded-xl shadow-md flex items-center">
+                                Lanjut ke Info Tambahan <i class="fas fa-chevron-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step-3" class="step-section">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+                    <div class="bg-gradient-to-r from-slate-50 to-white p-8 border-b border-slate-200">
+                        <h2 class="text-2xl font-heading font-bold text-slate-800">Tentang Anda & Konteks</h2>
+                        <p class="text-slate-500 mt-2">Informasi ini membantu memberikan konteks pada hasil diagnosa (Opsional namun disarankan).</p>
+                    </div>
+
+                    <div class="p-8">
+                        <form id="demographic-form" class="space-y-8">
+                            
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-3">
+                                    <label class="block text-sm font-bold text-slate-700">Apa alasan utama Anda menggunakan sistem ini? <span class="text-xs font-normal text-slate-500">(Pilih Maksimal 3)</span></label>
+                                    <div class="space-y-2" id="reason-group">
+                                        <div class="flex items-center"><input type="checkbox" name="reason" value="curiosity" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Hanya ingin tahu/penasaran</span></div>
+                                        <div class="flex items-center"><input type="checkbox" name="reason" value="symptoms" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Merasakan gejala depresi</span></div>
+                                        <div class="flex items-center"><input type="checkbox" name="reason" value="referral" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Disarankan orang lain/profesional</span></div>
+                                        <div class="flex items-center"><input type="checkbox" name="reason" value="monitoring" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Memantau kondisi berkala</span></div>
+                                        <div class="flex items-center"><input type="checkbox" name="reason" value="education" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Keperluan edukasi/penelitian</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <label class="block text-sm font-bold text-slate-700">Untuk siapa Anda mengambil tes ini?</label>
+                                    <div class="flex space-x-4">
+                                        <div class="flex-1">
+                                            <input type="radio" name="target" id="target-self" value="self" class="hidden" checked>
+                                            <label for="target-self" class="block w-full text-center p-3 border rounded-xl cursor-pointer hover:border-mindful transition">
+                                                <i class="fas fa-user mb-1 block"></i> Diri Sendiri
+                                            </label>
+                                        </div>
+                                        <div class="flex-1">
+                                            <input type="radio" name="target" id="target-other" value="other" class="hidden">
+                                            <label for="target-other" class="block w-full text-center p-3 border rounded-xl cursor-pointer hover:border-mindful transition">
+                                                <i class="fas fa-user-friends mb-1 block"></i> Orang Lain
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="border-slate-100">
+
+                            <h3 class="text-lg font-bold text-mindful-dark"><i class="fas fa-id-card mr-2"></i>Tentang Kamu</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Rentang Usia</label>
+                                    <select id="age-range" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-mindful">
+                                        <option value="">Pilih Rentang Usia</option>
+                                        <option value="<18">Di bawah 18 tahun</option>
+                                        <option value="18-24">18 - 24 tahun</option>
+                                        <option value="25-34">25 - 34 tahun</option>
+                                        <option value="35-44">35 - 44 tahun</option>
+                                        <option value="45-54">45 - 54 tahun</option>
+                                        <option value=">55">Di atas 55 tahun</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Gender</label>
+                                    <div class="flex gap-4 mb-2">
+                                        <label class="inline-flex items-center"><input type="radio" name="gender" value="L" class="text-mindful"> <span class="ml-2 text-sm">Laki-laki</span></label>
+                                        <label class="inline-flex items-center"><input type="radio" name="gender" value="P" class="text-mindful"> <span class="ml-2 text-sm">Perempuan</span></label>
+                                    </div>
+                                    <label class="inline-flex items-center text-sm text-slate-600 bg-purple-50 px-3 py-1 rounded-lg w-full">
+                                        <input type="checkbox" name="is_trans" class="mr-2 text-purple-600 rounded"> Saya mengidentifikasi sebagai Transgender
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Perkiraan Pendapatan (Bulanan)</label>
+                                    <select id="income" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-mindful">
+                                        <option value="">Pilih Rentang</option>
+                                        <option value="<2jt">< Rp 2.000.000</option>
+                                        <option value="2-5jt">Rp 2.000.000 - Rp 5.000.000</option>
+                                        <option value="5-10jt">Rp 5.000.000 - Rp 10.000.000</option>
+                                        <option value=">10jt">> Rp 10.000.000</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Populasi yang menggambarkan kamu</label>
+                                    <select id="population" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-mindful">
+                                        <option value="">Pilih Status</option>
+                                        <option value="student">Pelajar / Mahasiswa</option>
+                                        <option value="worker">Pekerja Kantoran</option>
+                                        <option value="freelance">Freelancer / Wirausaha</option>
+                                        <option value="unemployed">Sedang mencari kerja</option>
+                                        <option value="retired">Pensiunan</option>
+                                        <option value="irmt">Ibu Rumah Tangga</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <label class="block text-sm font-bold text-slate-700 mb-3">Domisili</label>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="flex gap-4 mb-3">
+                                            <label class="inline-flex items-center"><input type="radio" name="location_type" value="ID" checked onclick="toggleCountry(false)" class="text-mindful"> <span class="ml-2 text-sm">Indonesia</span></label>
+                                            <label class="inline-flex items-center"><input type="radio" name="location_type" value="Overseas" onclick="toggleCountry(true)" class="text-mindful"> <span class="ml-2 text-sm">Luar Negeri</span></label>
+                                        </div>
+                                        <input type="text" id="country_name" placeholder="Nama Negara" class="w-full p-2 border rounded-lg mb-2 hidden" disabled>
+                                    </div>
+                                    <div>
+                                        <input type="text" id="zipcode" placeholder="Kode Pos (Zip/Postal Code)" class="w-full p-2 border rounded-lg">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="border-slate-100">
+
+                            <h3 class="text-lg font-bold text-mindful-dark"><i class="fas fa-heartbeat mr-2"></i>Riwayat Kesehatan</h3>
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-blue-50/50 p-4 rounded-xl">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Pernah menerima penanganan/dukungan mental sebelumnya?</label>
+                                    <div class="flex gap-4">
+                                        <label><input type="radio" name="past_support" value="yes"> Ya</label>
+                                        <label><input type="radio" name="past_support" value="no"> Tidak</label>
+                                    </div>
+                                </div>
+                                <div class="bg-blue-50/50 p-4 rounded-xl">
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Apakah sedang mendapatkannya SEKARANG?</label>
+                                    <div class="flex gap-4">
+                                        <label><input type="radio" name="current_support" value="yes"> Ya</label>
+                                        <label><input type="radio" name="current_support" value="no"> Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Apa kontributor utama masalah kesehatan mental Anda saat ini? <span class="text-xs font-normal text-slate-500">(Maksimal 3)</span></label>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2" id="contributors-group">
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="work" class="mr-2 limit-3-con"> Pekerjaan/Karir</label>
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="study" class="mr-2 limit-3-con"> Akademik/Sekolah</label>
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="finance" class="mr-2 limit-3-con"> Keuangan</label>
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="relationship" class="mr-2 limit-3-con"> Hubungan Asmara</label>
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="family" class="mr-2 limit-3-con"> Keluarga</label>
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="health" class="mr-2 limit-3-con"> Kesehatan Fisik</label>
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="trauma" class="mr-2 limit-3-con"> Trauma Masa Lalu</label>
+                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="loneliness" class="mr-2 limit-3-con"> Kesepian</label>
+                                </div>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Riwayat Penyakit Fisik?</label>
+                                    <select id="physical_disease" class="w-full p-2 border rounded-lg mb-2" onchange="toggleOtherDisease()">
+                                        <option value="none">Tidak Ada</option>
+                                        <option value="diabetes">Diabetes</option>
+                                        <option value="heart">Jantung</option>
+                                        <option value="autoimmune">Autoimun</option>
+                                        <option value="other">Lainnya (Sebutkan)</option>
+                                    </select>
+                                    <input type="text" id="other_disease_text" placeholder="Sebutkan penyakit fisik..." class="w-full p-2 border rounded-lg hidden">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Memiliki hewan peliharaan (Pet Support)?</label>
+                                    <div class="flex gap-4 mt-2">
+                                        <label><input type="radio" name="pet" value="yes"> Ya</label>
+                                        <label><input type="radio" name="pet" value="no"> Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <div class="mt-8 flex justify-between">
+                            <button onclick="prevStep(2)" class="text-slate-500 hover:text-slate-800 font-medium px-4 py-2">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </button>
+                            <button onclick="calculateAndShowResult()" class="btn-primary text-white text-lg font-bold py-3 px-10 rounded-xl shadow-lg hover:shadow-xl transition flex items-center">
+                                Lihat Hasil Diagnosa <i class="fas fa-file-medical-alt ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="step-result" class="step-section">
+                <div class="max-w-4xl mx-auto space-y-8">
+                    
+                    <div id="crisis-banner" class="hidden bg-red-600 text-white p-6 rounded-2xl shadow-lg border-l-8 border-red-800 animate-pulse-slow">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-3xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="text-xl font-bold mb-1">PERINGATAN KRISIS TERDETEKSI</h3>
+                                <p class="mb-3">Anda mengindikasikan adanya pemikiran untuk menyakiti diri sendiri. Mohon jangan abaikan perasaan ini.</p>
+                                <div class="bg-white/20 p-3 rounded-lg inline-block">
+                                    <i class="fas fa-phone-alt mr-2"></i> <strong>Layanan Darurat (Indonesia): 119 / 112</strong>
+                                </div>
+                                <p class="text-sm mt-2 opacity-90">Atau hubungi "LISA" (Love Inside Suicide Awareness): +62 811 3855 472</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+                        <div id="result-header" class="bg-mindful p-10 text-center text-white relative overflow-hidden">
+                            <div class="relative z-10">
+                                <p class="text-sm uppercase tracking-widest opacity-80 mb-2">Hasil Screening Awal</p>
+                                <h2 id="result-category" class="text-4xl font-heading font-bold mb-4">Menganalisis...</h2>
+                                <div class="inline-flex items-center bg-white/20 backdrop-blur px-4 py-2 rounded-full">
+                                    <span id="result-score" class="font-mono font-bold text-xl">Score: 0</span>
+                                </div>
+                            </div>
+                            <div class="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-10 -translate-y-10"></div>
+                            <div class="absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full translate-x-10 translate-y-10"></div>
+                        </div>
+
+                        <div class="p-8">
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold text-slate-800 mb-3 flex items-center">
+                                    <i class="fas fa-notes-medical text-mindful mr-2"></i> Interpretasi
+                                </h3>
+                                <p id="result-description" class="text-slate-600 leading-relaxed bg-slate-50 p-5 rounded-xl border border-slate-100">
+                                    -
+                                </p>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800 mb-3">Rekomendasi Tindakan</h3>
+                                    <ul id="recommendation-list" class="space-y-3 text-sm text-slate-600">
+                                        </ul>
+                                </div>
+
+                                <div class="bg-calm-light/30 p-5 rounded-xl border border-calm-light">
+                                    <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center">
+                                        <i class="fas fa-hospital-alt text-calm-dark mr-2"></i> Rujukan Medis
+                                    </h3>
+                                    <div class="space-y-3 text-sm">
+                                        <div class="bg-white p-3 rounded shadow-sm">
+                                            <p class="font-bold text-slate-700">RSJ Dr. Soeharto Heerdjan</p>
+                                            <p class="text-xs text-slate-500">Jakarta Barat - BPJS Tersedia</p>
+                                            <p class="text-xs text-green-600 font-semibold mt-1">Est. Konsul: Rp 150rb - 300rb</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded shadow-sm">
+                                            <p class="font-bold text-slate-700">RSUP Nasional Dr. Cipto M.</p>
+                                            <p class="text-xs text-slate-500">Jakarta Pusat - Poli Jiwa Lengkap</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded shadow-sm">
+                                            <p class="font-bold text-slate-700">Halodoc / Alodokter (Online)</p>
+                                            <p class="text-xs text-slate-500">Konsultasi Psikolog/Psikiater</p>
+                                            <p class="text-xs text-green-600 font-semibold mt-1">Est: Rp 50rb - 150rb</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-xl flex items-start">
+                                <i class="fas fa-balance-scale text-yellow-600 text-xl mr-3 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold text-yellow-800 text-sm">DISCLAIMER (PENAFIAN)</h4>
+                                    <p class="text-xs text-yellow-800 mt-1">
+                                        Hasil tes ini <strong>BUKAN DIAGNOSIS MEDIS</strong>. Ini adalah alat screening awal. Diagnosis tegak hanya dapat dilakukan oleh Psikolog Klinis atau Psikiater melalui wawancara mendalam. Jangan gunakan hasil ini sebagai satu-satunya alasan untuk pengobatan mandiri.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 flex justify-center space-x-4">
+                                <button onclick="location.reload()" class="border-2 border-slate-200 text-slate-600 font-bold py-3 px-6 rounded-xl hover:bg-slate-50 transition">
+                                    <i class="fas fa-redo mr-2"></i> Ulangi Tes
+                                </button>
+                                <button onclick="window.print()" class="bg-slate-800 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-900 transition">
+                                    <i class="fas fa-print mr-2"></i> Simpan Hasil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-300 py-12">
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8 text-sm">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="fas fa-brain text-mindful-light text-2xl"></i>
+                    <span class="text-xl font-bold text-white">MindCare</span>
+                </div>
+                <p class="mb-4 max-w-sm">Platform sistem pakar berbasis web untuk deteksi dini depresi mayor menggunakan metode forward chaining dan standar DSM-5.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase tracking-wider">Tautan</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-mindful transition">Beranda</a></li>
+                    <li><a href="#" class="hover:text-mindful transition">Tentang Kami</a></li>
+                    <li><a href="#" class="hover:text-mindful transition">Kebijakan Privasi</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase tracking-wider">Kontak Darurat</h4>
+                <p class="mb-2"><i class="fas fa-phone mr-2"></i> 119 (Ambulans)</p>
+                <p><i class="fas fa-headset mr-2"></i> 1-500-454 (Kemenkes)</p>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+            &copy; 2025 MindCare Expert System. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // --- DATA GEJALA (PHQ-9 Standard) ---
+        const gejalaList = [
+            { kode: "C1", nama: "Kurang berminat atau bergairah dalam melakukan apapun" },
+            { kode: "C2", nama: "Merasa murung, sedih, atau putus asa" },
+            { kode: "C3", nama: "Sulit tidur atau mudah terbangun, atau terlalu banyak tidur" },
+            { kode: "C4", nama: "Merasa lelah atau kurang bertenaga" },
+            { kode: "C5", nama: "Kurang nafsu makan atau terlalu banyak makan" },
+            { kode: "C6", nama: "Kurang percaya diri — atau merasa bahwa Anda adalah orang yang gagal atau telah mengecewakan diri sendiri atau keluarga" },
+            { kode: "C7", nama: "Sulit berkonsentrasi pada sesuatu, misalnya membaca koran atau menonton televisi" },
+            { kode: "C8", nama: "Bergerak atau berbicara sangat lambat sehingga orang lain memperhatikannya. Atau sebaliknya - merasa resah atau gelisah sehingga Anda lebih sering bergerak dari biasanya" },
+            { kode: "C9", nama: "Merasa lebih baik mati atau ingin melukai diri sendiri dengan cara apapun" }
+        ];
+
+        let currentAnswers = {};
+        
+        // --- LOGIC: Navigation & UI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestions();
+            updateProgress(1);
+            setupLimitCheckboxes(); // Setup max 3 selection logic
+        });
+
+        function nextStep(step) {
+            document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+            updateProgress(step);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep(step) {
+            nextStep(step);
+        }
+
+        function updateProgress(step) {
+            let percentage = 0;
+            let text = "";
+            
+            if(step === 1) { percentage = 10; text = "Langkah 1: Pendahuluan"; }
+            else if(step === 2) { percentage = 40; text = "Langkah 2: Kuesioner Gejala"; }
+            else if(step === 3) { percentage = 70; text = "Langkah 3: Data Diri"; }
+            else if(step === 'result') { percentage = 100; text = "Selesai"; }
+            
+            document.getElementById('step-indicator').textContent = text;
+            document.getElementById('step-percentage').textContent = `${percentage}%`;
+            document.getElementById('progress-fill').style.width = `${percentage}%`;
+        }
+
+        // --- LOGIC: Questionnaire UI DIPERBARUI ---
+        function renderQuestions() {
+            const container = document.getElementById('question-container');
+            let html = '';
+            
+            gejalaList.forEach((g, index) => {
+                html += `
+                <div class="question-item bg-white" data-index="${index}">
+                    <div class="flex items-start mb-6">
+                        <div class="flex-shrink-0 bg-mindful-light text-mindful-dark font-bold rounded-xl w-10 h-10 flex items-center justify-center mr-4 mt-1">
+                            ${index + 1}
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="text-lg font-medium text-slate-800 mb-6">${g.nama}</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                ${renderOption(g.kode, 0, "Tidak Pernah", "fa-times", "text-slate-500")}
+                                ${renderOption(g.kode, 1, "Beberapa Hari", "fa-calendar-minus", "text-blue-500")}
+                                ${renderOption(g.kode, 2, "> Seminggu", "fa-calendar-week", "text-amber-500")}
+                                ${renderOption(g.kode, 3, "Hampir Tiap Hari", "fa-calendar-day", "text-red-500")}
+                            </div>
+                        </div>
+                    </div>
+                    ${index < gejalaList.length - 1 ? '<hr class="border-slate-100">' : ''}
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderOption(name, value, label, icon, iconColor) {
+            const isChecked = currentAnswers[name] === value ? 'checked' : '';
+            return `
+            <div class="relative h-full">
+                <input type="radio" name="${name}" value="${value}" id="${name}-${value}" 
+                       class="custom-radio" onchange="saveAnswer('${name}', ${value})" ${isChecked}>
+                <label for="${name}-${value}" class="radio-option cursor-pointer flex flex-col items-center justify-center h-full w-full">
+                    <i class="fas ${icon} ${iconColor} text-xl mb-2"></i>
+                    <span class="font-medium text-sm">${label}</span>
+                </label>
+            </div>`;
+        }
+
+        function saveAnswer(code, val) {
+            // 1. Simpan jawaban ke variabel global
+            currentAnswers[code] = val;
+            
+            // 2. Cari index pertanyaan saat ini berdasarkan kode (misal C1 -> index 0)
+            const currentIndex = gejalaList.findIndex(item => item.kode === code);
+            
+            // 3. Logika Auto-Scroll
+            if (currentIndex !== -1) {
+                // Beri jeda sedikit (300ms) biar user sempat lihat animasinya 'klik'
+                setTimeout(() => {
+                    // Cek apakah ini pertanyaan terakhir?
+                    if (currentIndex < gejalaList.length - 1) {
+                        // Jika BUKAN terakhir, cari elemen pertanyaan BERIKUTNYA
+                        const nextIndex = currentIndex + 1;
+                        const nextElement = document.querySelector(`.question-item[data-index="${nextIndex}"]`);
+                        
+                        if (nextElement) {
+                            // Scroll halus ke tengah layar
+                            nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    } else {
+                        // Jika pertanyaan TERAKHIR, scroll ke tombol "Lanjut"
+                        const nextButton = document.querySelector('button[onclick="validateAndNext(3)"]');
+                        if (nextButton) {
+                            nextButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                }, 300); // 300ms delay
+            }
+        }
+
+        function validateAndNext(step) {
+            // Check if all questions answered
+            if(Object.keys(currentAnswers).length < gejalaList.length) {
+                alert("Mohon lengkapi semua pertanyaan kuesioner sebelum melanjutkan.");
+                return;
+            }
+            nextStep(step);
+        }
+
+        // --- LOGIC: Optional Form Helpers ---
+        function setupLimitCheckboxes() {
+            // Helper for Reason (Max 3)
+            const reasonChecks = document.querySelectorAll('.limit-3');
+            reasonChecks.forEach(check => {
+                check.addEventListener('change', function() {
+                    const checkedCount = document.querySelectorAll('.limit-3:checked').length;
+                    if(checkedCount > 3) {
+                        this.checked = false;
+                        alert("Maksimal pilih 3 alasan.");
+                    }
+                });
+            });
+
+            // Helper for Contributors (Max 3)
+            const conChecks = document.querySelectorAll('.limit-3-con');
+            conChecks.forEach(check => {
+                check.addEventListener('change', function() {
+                    const checkedCount = document.querySelectorAll('.limit-3-con:checked').length;
+                    if(checkedCount > 3) {
+                        this.checked = false;
+                        alert("Maksimal pilih 3 faktor kontributor.");
+                    }
+                });
+            });
+        }
+
+        function toggleCountry(isOverseas) {
+            const el = document.getElementById('country_name');
+            if(isOverseas) {
+                el.classList.remove('hidden');
+                el.disabled = false;
+            } else {
+                el.classList.add('hidden');
+                el.disabled = true;
+                el.value = "";
+            }
+        }
+
+        function toggleOtherDisease() {
+            const val = document.getElementById('physical_disease').value;
+            const textInput = document.getElementById('other_disease_text');
+            if(val === 'other') {
+                textInput.classList.remove('hidden');
+            } else {
+                textInput.classList.add('hidden');
+            }
+        }
+
+        // --- LOGIC: CALCULATION (Forward Chaining) ---
+
+        // --- GANTI SELURUH FUNGSI calculateAndShowResult DENGAN INI ---
+
+async function calculateAndShowResult() {
+    
+    document.querySelectorAll('.step-section')
+  .forEach(el => el.classList.remove('active'));
+
+document.getElementById('step-result').classList.add('active');
+    const btnSubmit = document.querySelector(
+        'button[onclick="calculateAndShowResult()"]'
+    );
+
+     const demografiData = {
+        ageRange: document.getElementById("age-range")?.value || null,
+        gender: document.querySelector("input[name='gender']:checked")?.value || null,
+        income: document.getElementById("income")?.value || null,
+        population: document.getElementById("population")?.value || null,
+        zipcode: document.getElementById("zipcode")?.value || null
+    };
+
+    console.log("DEMOGRAFI:", demografiData);
+
+    const originalText = btnSubmit.innerHTML;
+    btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menganalisis...';
+    btnSubmit.disabled = true;
+
+    try {
+        const response = await fetch('/api/public/diagnosis/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                jawaban: currentAnswers,
+            })
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text || 'Response server gagal');
+        }
+
+        const resultJson = await response.json();
+        console.log('HASIL SUBMIT:', resultJson);
+
+        // VALIDASI OBJECT (BUKAN ARRAY)
+        if (!resultJson.success) {
+            throw new Error(resultJson.message || 'Diagnosis gagal');
+        }
+
+        const data = resultJson;
+
+        // ===== UPDATE UI HASIL =====
+        document.getElementById('result-category').textContent = data.kategori;
+        document.getElementById('result-score').textContent =
+            `Total Skor PHQ-9: ${data.score}`;
+        document.getElementById('result-description').textContent =
+            data.deskripsi;
+
+        // rekomendasi (array)
+        const recList = document.getElementById('recommendation-list');
+recList.innerHTML = "";
+
+data.rekomendasi.forEach(r => {
+  recList.innerHTML += `<li>• ${r}</li>`;
+});
+
+        // banner krisis
+        if (data.krisis) {
+            document.getElementById('crisis-banner').classList.remove('hidden');
+        } else {
+            document.getElementById('crisis-banner').classList.add('hidden');
+        }
+
+        // ⬅️ INI YANG MEMBUAT TOMBOL “HIDUP”
+        nextStep('result');
+
+    } catch (err) {
+        console.error('Error koneksi:', err);
+        alert(err.message);
+    } finally {
+        // PASTI JALAN, ERROR ATAU TIDAK
+        btnSubmit.innerHTML = originalText;
+        btnSubmit.disabled = false;
+    }
+}
+
+
+
+//         async function calculateAndShowResult() {
+//     // 1. UI FEEDBACK: Kasih tau user kalau sistem lagi mikir
+//     const btnSubmit = document.querySelector('button[onclick="calculateAndShowResult()"]');
+//     const originalText = btnSubmit.innerHTML;
+//     btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menganalisis...';
+//     btnSubmit.disabled = true;
+
+//     try {
+//         // 2. PERSIAPAN DATA: Ambil data jawaban
+//         // currentAnswers isinya { D01: 2, D02: 1, ... }
+        
+//         // 3. KIRIM KE BACKEND (API)
+//         const response = await fetch('/api/public/diagnosis/submit', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 jawaban: currentAnswers, 
+//                 // Jika butuh data demografi, bisa ditambah disini:
+//                 // demografi: { usia: ..., gender: ... }
+//             })
+//         });
+
+//         const resultJson = await response.json();
+
+//         // 4. CEK HASIL DARI BACKEND
+//         if (resultJson.success) {
+//             const data = resultJson.data; 
+//             // Backend mengirim: { skor: 15, hasil: "Depresi Sedang...", saran: "..." }
+
+//             // --- A. UPDATE WARNA (Visual) BERDASARKAN SKOR ---
+//             // Karena backend cuma kirim teks, kita tentukan warna di sini
+//             let colorClass = 'bg-mindful'; // Default (Hijau/Biru)
+//             if (data.skor > 19) colorClass = 'bg-red-700';       // Severe
+//             else if (data.skor > 14) colorClass = 'bg-orange-600'; // Mod. Severe
+//             else if (data.skor > 9) colorClass = 'bg-yellow-500';  // Moderate
+//             else if (data.skor > 4) colorClass = 'bg-calm-dark';   // Mild
+
+//             // --- B. MASUKKAN DATA KE HTML (DOM) ---
+//             const header = document.getElementById('result-header');
+//             header.className = `p-10 text-center text-white relative overflow-hidden ${colorClass}`;
+
+//             document.getElementById('result-category').textContent = data.hasil;
+//             document.getElementById('result-score').textContent = `Total Skor PHQ-9: ${data.skor}`;
+            
+//             // Backend sudah mengirim saran lengkap, jadi kita pakai itu
+//             document.getElementById('result-description').textContent = data.saran;
+            
+//             // Jika backend tidak mengirim list HTML rekomendasi spesifik, 
+//             // kamu bisa buat logika if-else singkat disini atau minta backend kirim array rekomendasi.
+//             // Untuk sekarang, kita kosongkan atau isi default:
+//             document.getElementById('recommendation-list').innerHTML = `<li>Ikuti saran klinis di atas.</li>`;
+
+//             // --- C. CEK RED FLAG (BUNUH DIRI) ---
+//             // Cek apakah string hasil mengandung kata kunci bahaya
+//             if (data.hasil.includes('PERLU PERHATIAN KHUSUS') || data.hasil.includes('RISIKO')) {
+//                 document.getElementById('crisis-banner').classList.remove('hidden');
+//             } else {
+//                 document.getElementById('crisis-banner').classList.add('hidden');
+//             }
+
+//             // 5. PINDAH KE HALAMAN HASIL
+//             nextStep('result');
+
+//         } else {
+//             alert('Gagal: ' + (resultJson.msg || 'Terjadi kesalahan sistem'));
+//         }
+
+//     } catch (error) {
+//         console.error('Error koneksi:', error);
+//         alert('Gagal menghubungi server. Periksa koneksi internet Anda.');
+//     } finally {
+//         // Kembalikan tombol seperti semula jika gagal/selesai
+//         btnSubmit.innerHTML = originalText;
+//         btnSubmit.disabled = false;
+//     }
+// }
+
+
+
+        // function calculateAndShowResult() {
+        //     // 1. Calculate Score
+        //     let totalScore = 0;
+        //     let suicideRisk = false;
+            
+        //     Object.keys(currentAnswers).forEach(key => {
+        //         totalScore += currentAnswers[key];
+        //         if(key === 'C9' && currentAnswers[key] > 0) suicideRisk = true;
+        //     });
+
+        //     // 2. Determine Category (Standard PHQ-9 cutoffs)
+        //     let category = "";
+        //     let desc = "";
+        //     let color = "";
+        //     let recommendations = "";
+
+        //     if (totalScore <= 4) {
+        //         category = "Minimal / Tidak Depresi";
+        //         color = "bg-mindful";
+        //         desc = "Gejala yang Anda alami minimal. Kemungkinan besar ini adalah fluktuasi suasana hati yang normal.";
+        //         recommendations = "<li>Pertahankan pola hidup sehat (tidur cukup, olahraga).</li><li>Lakukan manajemen stres ringan.</li>";
+        //     } else if (totalScore <= 9) {
+        //         category = "Depresi Ringan";
+        //         color = "bg-calm-dark";
+        //         desc = "Terindikasi gejala depresi ringan. Mungkin mengganggu namun Anda masih bisa berfungsi dengan cukup baik.";
+        //         recommendations = "<li>Curhat dengan teman dekat atau keluarga.</li><li>Pantau gejala selama 2 minggu ke depan.</li><li>Lakukan aktivitas yang biasanya Anda nikmati (behavioral activation).</li>";
+        //     } else if (totalScore <= 14) {
+        //         category = "Depresi Sedang";
+        //         color = "bg-yellow-500";
+        //         desc = "Terindikasi gejala depresi sedang. Hal ini mungkin mulai signifikan mengganggu pekerjaan atau hubungan sosial Anda.";
+        //         recommendations = "<li><strong>Sangat disarankan</strong> berkonsultasi dengan Psikolog.</li><li>Terapi Kognitif Perilaku (CBT) biasanya efektif.</li><li>Coba kurangi beban kerja jika memungkinkan.</li>";
+        //     } else if (totalScore <= 19) {
+        //         category = "Depresi Cukup Berat";
+        //         color = "bg-orange-600";
+        //         desc = "Terindikasi gejala depresi cukup berat (Moderately Severe). Memerlukan perhatian profesional segera.";
+        //         recommendations = "<li><strong>Segera hubungi Psikolog Klinis atau Psikiater.</strong></li><li>Mungkin memerlukan kombinasi terapi dan pengobatan medis.</li><li>Jangan memendam masalah sendirian.</li>";
+        //     } else {
+        //         category = "Depresi Berat";
+        //         color = "bg-red-700";
+        //         desc = "Terindikasi gejala depresi berat. Ini adalah kondisi serius yang mempengaruhi fungsi hidup secara total.";
+        //         recommendations = "<li><strong>Wajib segera mencari pertolongan medis/psikiater.</strong></li><li>Libatkan keluarga untuk dukungan penuh.</li><li>Prioritaskan kesehatan mental di atas segalanya saat ini.</li>";
+        //     }
+
+        //     // 3. Update DOM
+        //     const header = document.getElementById('result-header');
+        //     header.className = `p-10 text-center text-white relative overflow-hidden ${color}`;
+            
+        //     document.getElementById('result-category').textContent = category;
+        //     document.getElementById('result-score').textContent = `Total Skor PHQ-9: ${totalScore}`;
+        //     document.getElementById('result-description').textContent = desc;
+        //     document.getElementById('recommendation-list').innerHTML = recommendations;
+
+        //     // 4. Handle Suicide Risk
+        //     if(suicideRisk) {
+        //         document.getElementById('crisis-banner').classList.remove('hidden');
+        //         document.getElementById('result-description').innerHTML += "<br><br><strong>CATATAN:</strong> Adanya keinginan menyakiti diri sendiri adalah tanda bahwa Anda membutuhkan pertolongan darurat sekarang juga.";
+        //     } else {
+        //         document.getElementById('crisis-banner').classList.add('hidden');
+        //     }
+
+        //     // Go to result page
+        //     nextStep('result');
+        // }
+    </script>
+</body>
+</html>

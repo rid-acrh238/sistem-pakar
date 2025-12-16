@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Sistem Pakar Diagnosa Depresi Mayor</title>
+    
+    <!-- Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'Poppins', 'sans-serif'],
+                        'heading': ['Poppins', 'Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'mindful': {
+                            'light': '#C5E4F3',
+                            'primary': '#5DADE2',
+                            'DEFAULT': '#3498DB',
+                            'dark': '#2874A6',
+                            'darker': '#1B4F72'
+                        },
+                        'calm': {
+                            'light': '#D5DBDB',
+                            'primary': '#A3E4D7',
+                            'DEFAULT': '#48C9B0',
+                            'dark': '#17A589'
+                        },
+                        'serene': {
+                            'light': '#FADBD8',
+                            'primary': '#F1948A',
+                            'DEFAULT': '#E74C3C',
+                            'dark': '#B03A2E'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.8s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                        'bounce-slow': 'bounce 2s infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .step-section { 
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .step-section.active { 
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c5e4f3 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #3498DB 0%, #2874A6 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5DADE2, #3498DB);
+            transition: width 0.5s ease;
+        }
+        
+        input[type="radio"]:checked + .option-label {
+            background-color: #E8F4FC;
+            border-color: #3498DB;
+            color: #1B4F72;
+            font-weight: 500;
+        }
+        
+        .wave-divider {
+            height: 50px;
+            overflow: hidden;
+        }
+        
+        .wave-divider svg {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #48C9B0;
+            animation: pulse-slow 2s infinite;
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Custom radio button styling */
+        .custom-radio {
+            display: none;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .radio-option:hover {
+            border-color: #5DADE2;
+            background-color: #F7FBFE;
+        }
+        
+        .custom-radio:checked + .radio-option {
+            border-color: #3498DB;
+            background-color: #E8F4FC;
+            color: #1B4F72;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+        }
+        
+        /* Reason option styling */
+        .reason-option {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .reason-option:hover {
+            border-color: #5DADE2;
+            background-color: #F7FBFE;
+        }
+        
+        .custom-radio:checked + .reason-option {
+            border-color: #3498DB;
+            background-color: #E8F4FC;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+        }
+        
+        .reason-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #C5E4F3;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5DADE2;
+        }
+        
+        /* Other reason input styling */
+        #other-reason-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        #other-reason-container.show {
+            max-height: 120px;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 fixed top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-mindful-light p-2 rounded-lg">
+                    <i class="fas fa-brain text-mindful-darker text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-heading font-bold text-mindful-darker">MindCare</h1>
+                    <p class="text-xs text-slate-500">Sistem Pakar Diagnosa Depresi</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="pulse-dot"></div>
+                <span class="text-xs font-medium text-mindful-dark px-3 py-1 bg-mindful-light rounded-full">Forward-Chaining</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-24 pb-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Progress Indicator -->
+            <div class="mb-10 px-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-slate-600" id="step-indicator">Langkah 1 dari 4</span>
+                    <span class="text-sm font-medium text-mindful-dark" id="step-percentage">25%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 25%"></div>
+                </div>
+            </div>
+
+            <!-- Step 1: Landing -->
+            <section id="step-1" class="step-section active">
+                <div class="text-center px-4">
+                    <div class="relative mb-10">
+                        <div class="absolute -top-10 -left-10 w-32 h-32 bg-calm-primary rounded-full opacity-20 floating-element"></div>
+                        <div class="absolute -bottom-8 -right-8 w-40 h-40 bg-mindful-light rounded-full opacity-30 floating-element" style="animation-delay: 2s;"></div>
+                        
+                        <div class="relative z-10">
+                            <img src="https://img.freepik.com/free-vector/mental-health-concept-illustration_114360-3734.jpg?w=740" 
+                                 alt="Mental Health" class="w-72 md:w-96 mx-auto rounded-2xl shadow-xl mb-8 transform transition duration-500 hover:scale-105">
+                        </div>
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-5xl font-heading font-bold text-slate-800 mb-6 leading-tight">
+                        Cek Kondisi <span class="text-mindful-dark">Kesehatan Mental</span> Anda
+                    </h1>
+                    
+                    <p class="text-slate-600 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+                        Sistem pakar ini menggunakan metode <span class="font-medium text-mindful-dark">forward-chaining</span> untuk membantu mendeteksi gejala awal depresi mayor berdasarkan standar diagnostik. Jawablah dengan jujur untuk mendapatkan hasil yang akurat.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12">
+                        <div class="flex items-center text-slate-600">
+                            <i class="fas fa-shield-alt text-mindful-primary text-lg mr-2"></i>
+                            <span class="text-sm">Data Anda Aman & Privasi Terjaga</span>
+                        </div>
+                        <div class="flex items-center text-slate-600">
+                            <i class="fas fa-clock text-calm-dark text-lg mr-2"></i>
+                            <span class="text-sm">Hanya 5 Menit Waktu Anda</span>
+                        </div>
+                        <div class="flex items-center text-slate-600">
+                            <i class="fas fa-heart text-serene-primary text-lg mr-2"></i>
+                            <span class="text-sm">Hasil Personal & Anonim</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="nextStep(2)" class="btn-primary text-white text-lg font-semibold py-4 px-12 rounded-full relative overflow-hidden group">
+                        <span class="relative z-10">Mulai Tes Sekarang <i class="fas fa-arrow-right ml-2"></i></span>
+                        <div class="absolute inset-0 bg-mindful-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </button>
+                    
+                    <p class="text-slate-500 text-sm mt-8">
+                        <i class="fas fa-info-circle text-mindful-primary mr-1"></i> 
+                        Tes ini tidak menggantikan diagnosis profesional. Jika hasil menunjukkan gejala signifikan, konsultasikan dengan tenaga kesehatan mental.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Step 2: Questionnaire -->
+            <section id="step-2" class="step-section">
+                <div class="bg-white rounded-3xl card-shadow border border-slate-100 overflow-hidden">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-mindful-light to-calm-light px-8 py-6 border-b border-slate-200">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xl font-heading font-bold text-slate-700">Kuesioner Gejala Depresi</h2>
+                                <p class="text-slate-600 text-sm mt-1">Pilih seberapa sering Anda mengalami gejala berikut dalam <span class="font-medium text-mindful-dark">2 minggu terakhir</span></p>
+                            </div>
+                            <div class="bg-white/80 px-3 py-1 rounded-lg">
+                                <span class="text-sm font-medium text-mindful-dark" id="question-counter">0/9</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Questions Container -->
+                    <div class="p-6 md:p-8">
+                        <form id="quiz-form">
+                            <div id="question-container" class="space-y-10"></div>
+                            
+                            <!-- Navigation -->
+                            <div class="pt-8 mt-8 border-t border-slate-100 flex justify-between">
+                                <button type="button" onclick="prevStep(1)" class="text-slate-600 hover:text-mindful-dark font-medium py-3 px-6 rounded-xl border border-slate-300 hover:border-mindful-primary transition flex items-center">
+                                    <i class="fas fa-chevron-left mr-2"></i> Kembali
+                                </button>
+                                <button type="button" onclick="validateAndNext(3)" class="btn-primary text-white font-medium py-3 px-8 rounded-xl shadow-md transition flex items-center">
+                                    Lanjut ke Data Diri <i class="fas fa-chevron-right ml-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Identity Form -->
+            <section id="step-3" class="step-section">
+                <div class="bg-white rounded-3xl card-shadow border border-slate-100 overflow-hidden">
+                    <div class="relative">
+                        <!-- Decorative wave -->
+                        <div class="wave-divider">
+                            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#E8F4FC"></path>
+                            </svg>
+                        </div>
+                        
+                        <div class="px-8 pt-6 pb-12">
+                            <div class="text-center mb-10">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-mindful-light rounded-2xl mb-4">
+                                    <i class="fas fa-user-circle text-mindful-dark text-2xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-heading font-bold text-slate-800">Data Diri</h2>
+                                <p class="text-slate-500 max-w-md mx-auto">Informasi ini membantu personalisasi hasil Anda dan tetap dijaga kerahasiaannya.</p>
+                            </div>
+                            
+                            <form id="identity-form" class="space-y-8 max-w-2xl mx-auto">
+                                <div class="grid md:grid-cols-2 gap-8">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-3">
+                                            <i class="fas fa-user text-mindful-primary mr-2"></i> Nama Lengkap
+                                        </label>
+                                        <input type="text" id="nama" class="w-full px-5 py-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-mindful-primary focus:border-transparent outline-none transition" placeholder="Nama Anda" required>
+                                        <p class="text-xs text-slate-500 mt-2">Digunakan untuk personalisasi hasil</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-3">
+                                            <i class="fas fa-birthday-cake text-calm-dark mr-2"></i> Usia
+                                        </label>
+                                        <input type="number" id="umur" min="10" max="100" class="w-full px-5 py-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-mindful-primary focus:border-transparent outline-none transition" placeholder="Contoh: 25" required>
+                                        <p class="text-xs text-slate-500 mt-2">Usia 10-100 tahun</p>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-3">
+                                        <i class="fas fa-envelope text-serene-primary mr-2"></i> Email (Opsional)
+                                    </label>
+                                    <input type="email" id="email" class="w-full px-5 py-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-mindful-primary focus:border-transparent outline-none transition" placeholder="email@example.com">
+                                    <p class="text-xs text-slate-500 mt-2">Hanya jika ingin menerima informasi kesehatan mental</p>
+                                </div>
+                                
+                                <!-- Alasan Mengikuti Tes (Radio Button) -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-4">
+                                        <i class="fas fa-question-circle text-mindful-dark mr-2"></i> Mengapa Anda Mengikuti Tes Ini?
+                                    </label>
+                                    <p class="text-slate-600 text-sm mb-6">Pilih salah satu alasan yang paling sesuai dengan kondisi Anda:</p>
+                                    
+                                    <div class="space-y-4">
+                                        <!-- Alasan 1: Ingin memahami diri sendiri -->
+                                        <div class="relative">
+                                            <input type="radio" name="alasan" value="ingin_memahami_diri" id="alasan-1" class="custom-radio">
+                                            <label for="alasan-1" class="reason-option cursor-pointer">
+                                                <div class="reason-icon bg-blue-100 text-blue-600">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-medium text-slate-800 mb-1">Ingin Memahami Diri Sendiri</h4>
+                                                    <p class="text-slate-600 text-sm">Saya merasa ada perubahan pada diri saya dan ingin memahami kondisi kesehatan mental saya saat ini.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Alasan 2: Rekomendasi profesional -->
+                                        <div class="relative">
+                                            <input type="radio" name="alasan" value="rekomendasi_profesional" id="alasan-2" class="custom-radio">
+                                            <label for="alasan-2" class="reason-option cursor-pointer">
+                                                <div class="reason-icon bg-green-100 text-green-600">
+                                                    <i class="fas fa-user-md"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-medium text-slate-800 mb-1">Rekomendasi Profesional</h4>
+                                                    <p class="text-slate-600 text-sm">Dokter, psikolog, atau konselor menyarankan saya untuk melakukan skrining kesehatan mental.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Alasan 3: Khawatir dengan gejala -->
+                                        <div class="relative">
+                                            <input type="radio" name="alasan" value="khawatir_gejala" id="alasan-3" class="custom-radio">
+                                            <label for="alasan-3" class="reason-option cursor-pointer">
+                                                <div class="reason-icon bg-amber-100 text-amber-600">
+                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-medium text-slate-800 mb-1">Khawatir dengan Gejala yang Dialami</h4>
+                                                    <p class="text-slate-600 text-sm">Saya mengalami beberapa gejala yang membuat saya khawatir dan ingin memeriksakannya.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Alasan 4: Dukungan teman/keluarga -->
+                                        <div class="relative">
+                                            <input type="radio" name="alasan" value="dukungan_teman" id="alasan-4" class="custom-radio">
+                                            <label for="alasan-4" class="reason-option cursor-pointer">
+                                                <div class="reason-icon bg-purple-100 text-purple-600">
+                                                    <i class="fas fa-users"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-medium text-slate-800 mb-1">Dukungan dari Teman atau Keluarga</h4>
+                                                    <p class="text-slate-600 text-sm">Orang terdekat menyarankan saya untuk memeriksa kondisi kesehatan mental saya.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Alasan 5: Pencegahan dan kesadaran -->
+                                        <div class="relative">
+                                            <input type="radio" name="alasan" value="pencegahan" id="alasan-5" class="custom-radio">
+                                            <label for="alasan-5" class="reason-option cursor-pointer">
+                                                <div class="reason-icon bg-teal-100 text-teal-600">
+                                                    <i class="fas fa-heartbeat"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-medium text-slate-800 mb-1">Pencegahan dan Kesadaran Diri</h4>
+                                                    <p class="text-slate-600 text-sm">Saya rutin melakukan skrining kesehatan mental sebagai bagian dari perawatan diri preventif.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Alasan 6: Penasaran atau edukasi -->
+                                        <div class="relative">
+                                            <input type="radio" name="alasan" value="penasaran" id="alasan-6" class="custom-radio">
+                                            <label for="alasan-6" class="reason-option cursor-pointer">
+                                                <div class="reason-icon bg-indigo-100 text-indigo-600">
+                                                    <i class="fas fa-graduation-cap"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-medium text-slate-800 mb-1">Penasaran atau Tujuan Edukasi</h4>
+                                                    <p class="text-slate-600 text-sm">Saya ingin belajar tentang kesehatan mental atau memahami bagaimana sistem skrining bekerja.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Alasan 7: Lainnya -->
+                                        <div class="relative">
+                                            <input type="radio" name="alasan" value="lainnya" id="alasan-7" class="custom-radio" onchange="toggleOtherReason()">
+                                            <label for="alasan-7" class="reason-option cursor-pointer">
+                                                <div class="reason-icon bg-gray-100 text-gray-600">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-medium text-slate-800 mb-1">Lainnya</h4>
+                                                    <p class="text-slate-600 text-sm">Alasan lain yang tidak tercantum di atas.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Input untuk alasan lainnya -->
+                                        <div id="other-reason-container" class="transition-all duration-300 ease-out">
+                                            <div class="mt-4 ml-12">
+                                                <label class="block text-sm font-medium text-slate-700 mb-2">
+                                                    Jelaskan alasan Anda:
+                                                </label>
+                                                <textarea id="other-reason-text" rows="2" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-mindful-primary outline-none transition resize-none" placeholder="Tuliskan alasan Anda mengikuti tes ini..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                    <div class="flex items-start">
+                                        <i class="fas fa-lock text-mindful-primary text-lg mr-3 mt-1"></i>
+                                        <div>
+                                            <p class="font-medium text-slate-700 mb-1">Privasi Terjamin</p>
+                                            <p class="text-sm text-slate-600">Data Anda disimpan secara anonim dan aman. Hasil tes ini tidak akan dibagikan kepada pihak manapun tanpa izin Anda.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="pt-6 flex flex-col sm:flex-row justify-between items-center">
+                                    <button type="button" onclick="prevStep(2)" class="text-slate-600 hover:text-mindful-dark font-medium py-3 px-6 rounded-xl border border-slate-300 hover:border-mindful-primary transition flex items-center mb-4 sm:mb-0">
+                                        <i class="fas fa-chevron-left mr-2"></i> Kembali ke Kuesioner
+                                    </button>
+                                    <button type="submit" class="btn-primary text-white text-lg font-bold py-4 px-10 rounded-xl shadow-lg transition flex items-center">
+                                        Lihat Hasil Diagnosa <i class="fas fa-chart-line ml-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Results -->
+            <section id="step-result" class="step-section">
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white rounded-3xl card-shadow overflow-hidden">
+                        <!-- Result Header -->
+                        <div id="result-header" class="bg-gradient-to-r from-mindful to-mindful-dark text-white p-8 md:p-12 text-center relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-full opacity-10">
+                                <div class="absolute top-10 left-10 w-20 h-20 rounded-full bg-white"></div>
+                                <div class="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-white"></div>
+                            </div>
+                            
+                            <div class="relative z-10">
+                                <div class="inline-flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-6">
+                                    <i class="fas fa-clipboard-check mr-2"></i> Hasil Analisis Sistem Pakar
+                                </div>
+                                <h2 id="result-kategori" class="text-3xl md:text-4xl font-heading font-bold mb-4">Normal</h2>
+                                <div class="inline-flex items-center bg-white/30 backdrop-blur-sm px-6 py-3 rounded-full text-lg font-medium">
+                                    <i class="fas fa-chart-bar mr-2"></i> <span id="result-score">Skor Total: 0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Result Body -->
+                        <div class="p-8 md:p-12">
+                            <div class="mb-10">
+                                <h3 class="text-xl font-heading font-bold text-slate-800 mb-4 flex items-center">
+                                    <i class="fas fa-user-circle text-mindful-primary mr-3"></i> Ringkasan Hasil
+                                </h3>
+                                <p id="result-desc" class="text-slate-600 text-lg leading-relaxed bg-slate-50 p-6 rounded-xl">
+                                    Hasil analisis akan muncul di sini setelah Anda menyelesaikan tes.
+                                </p>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                                <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100">
+                                    <h3 class="font-bold text-blue-800 mb-4 flex items-center">
+                                        <i class="fas fa-hands-helping mr-3"></i> Rekomendasi
+                                    </h3>
+                                    <p id="result-advice" class="text-blue-700 text-sm leading-relaxed">
+                                        Saran akan muncul berdasarkan hasil skor Anda.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-calm-light rounded-2xl p-6 border border-calm">
+                                    <h3 class="font-bold text-calm-darker mb-4 flex items-center">
+                                        <i class="fas fa-heartbeat mr-3"></i> Langkah Selanjutnya
+                                    </h3>
+                                    <ul class="text-calm-darker text-sm space-y-3">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-calm-dark mr-2 mt-1"></i>
+                                            <span>Tinjau hasil dengan tenang dan jangan panik</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-calm-dark mr-2 mt-1"></i>
+                                            <span>Bagikan hasil dengan orang terpercaya jika perlu</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-calm-dark mr-2 mt-1"></i>
+                                            <span>Pertimbangkan konsultasi profesional untuk hasil akurat</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Disclaimer -->
+                            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 mb-10">
+                                <h4 class="font-bold text-slate-700 mb-3 flex items-center">
+                                    <i class="fas fa-exclamation-triangle text-amber-500 mr-2"></i> Penting untuk Diketahui
+                                </h4>
+                                <p class="text-slate-600 text-sm">
+                                    Tes ini merupakan alat skrining awal dan <span class="font-medium">tidak menggantikan diagnosis profesional</span>. Jika hasil menunjukkan gejala signifikan, disarankan untuk berkonsultasi dengan psikolog, psikiater, atau tenaga kesehatan mental terpercaya untuk evaluasi lebih lanjut.
+                                </p>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                                <button onclick="location.reload()" class="bg-white text-mindful-dark border-2 border-mindful-primary hover:bg-mindful-light font-medium py-3 px-8 rounded-xl transition flex items-center">
+                                    <i class="fas fa-redo mr-2"></i> Ulangi Tes
+                                </button>
+                                <button onclick="downloadResult()" class="bg-slate-800 hover:bg-slate-900 text-white font-medium py-3 px-8 rounded-xl transition flex items-center">
+                                    <i class="fas fa-download mr-2"></i> Simpan Hasil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Support Resources -->
+                    <div class="mt-8 bg-white/80 backdrop-blur-sm rounded-2xl card-shadow p-8 border border-slate-100">
+                        <h3 class="text-xl font-heading font-bold text-slate-800 mb-6 text-center">
+                            <i class="fas fa-life-ring text-mindful-primary mr-2"></i> Dukungan & Sumber Bantuan
+                        </h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <a href="#" class="bg-white border border-slate-200 hover:border-mindful-primary p-5 rounded-xl transition text-center group">
+                                <div class="inline-flex items-center justify-center w-12 h-12 bg-mindful-light rounded-xl mb-4 group-hover:bg-mindful transition">
+                                    <i class="fas fa-phone-alt text-mindful-dark"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-700 mb-2">Layanan Darurat</h4>
+                                <p class="text-slate-600 text-sm">Kontak darurat kesehatan mental 24/7</p>
+                            </a>
+                            <a href="#" class="bg-white border border-slate-200 hover:border-calm p-5 rounded-xl transition text-center group">
+                                <div class="inline-flex items-center justify-center w-12 h-12 bg-calm-light rounded-xl mb-4 group-hover:bg-calm transition">
+                                    <i class="fas fa-book-medical text-calm-darker"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-700 mb-2">Artikel & Edukasi</h4>
+                                <p class="text-slate-600 text-sm">Materi tentang kesehatan mental</p>
+                            </a>
+                            <a href="#" class="bg-white border border-slate-200 hover:border-serene p-5 rounded-xl transition text-center group">
+                                <div class="inline-flex items-center justify-center w-12 h-12 bg-serene-light rounded-xl mb-4 group-hover:bg-serene transition">
+                                    <i class="fas fa-users text-serene-darker"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-700 mb-2">Komunitas</h4>
+                                <p class="text-slate-600 text-sm">Temukan dukungan dari sesama</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <i class="fas fa-brain text-2xl text-mindful-light"></i>
+                        <h3 class="text-xl font-heading font-bold">MindCare</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm max-w-md">Sistem pakar untuk skrining awal depresi mayor menggunakan metode forward-chaining. Inisiatif untuk mendukung kesehatan mental masyarakat.</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-slate-400 text-sm mb-2">
+                        <i class="fas fa-shield-alt text-mindful-light mr-1"></i> 
+                        Keamanan & Privasi Terjamin
+                    </p>
+                    <p class="text-slate-400 text-sm">
+                        &copy; 2023 MindCare. Untuk tujuan edukasi dan informasi kesehatan.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        
+        // --- DATA GEJALA (Format Lama: C1-C9) ---
+        const gejalaList = [
+            { kode: "C1", nama: "Suasana hati sedih, kosong, atau putus asa hampir setiap hari" },
+            { kode: "C2", nama: "Kehilangan minat atau kesenangan yang jelas dalam semua atau hampir semua aktivitas" },
+            { kode: "C3", nama: "Perubahan berat badan atau nafsu makan yang signifikan (naik/turun >5% berat badan dalam sebulan)" },
+            { kode: "C4", nama: "Kesulitan tidur (insomnia) atau tidur berlebihan (hipersomnia) hampir setiap hari" },
+            { kode: "C5", nama: "Kelelahan atau kehilangan energi hampir setiap hari" },
+            { kode: "C6", nama: "Perasaan tidak berharga atau rasa bersalah yang berlebihan hampir setiap hari" },
+            { kode: "C7", nama: "Kesulitan berkonsentrasi, berpikir, atau membuat keputusan hampir setiap hari" },
+            { kode: "C8", nama: "Perubahan gerakan (agitasi atau retardasi psikomotor) yang dapat diamati orang lain" },
+            { kode: "C9", nama: "Pikiran berulang tentang kematian, ide bunuh diri, atau percobaan bunuh diri" }
+        ];
+
+        let currentAnswers = {};
+        let currentQuestion = 1;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestions();
+            updateProgress(1);
+        });
+
+        function nextStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
+            
+            // Show the target step
+            document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Update progress indicator
+            updateProgress(step);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep(step) {
+            nextStep(step);
+        }
+
+        function updateProgress(step) {
+            let percentage = 25;
+            let stepText = "Langkah 1 dari 4";
+            
+            if (step === 2) {
+                percentage = 50;
+                stepText = "Langkah 2 dari 4";
+            } else if (step === 3) {
+                percentage = 75;
+                stepText = "Langkah 3 dari 4";
+            } else if (step === 'result') {
+                percentage = 100;
+                stepText = "Selesai";
+            }
+            
+            document.getElementById('step-indicator').textContent = stepText;
+            document.getElementById('step-percentage').textContent = `${percentage}%`;
+            document.getElementById('progress-fill').style.width = `${percentage}%`;
+            
+            // Update question counter for step 2
+            if (step === 2) {
+                updateQuestionCounter();
+            }
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('question-container');
+            let html = '';
+            
+            gejalaList.forEach((g, index) => {
+                html += `
+                <div class="question-item" data-question="${index + 1}">
+                    <div class="flex items-start mb-6">
+                        <div class="flex-shrink-0 bg-mindful-light text-mindful-dark font-bold rounded-xl w-10 h-10 flex items-center justify-center mr-4 mt-1">
+                            ${index + 1}
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="text-lg font-medium text-slate-800 mb-6">${g.nama}</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                ${renderOption(g.kode, 0, "Tidak Pernah", "fa-times", "text-slate-500")}
+                                ${renderOption(g.kode, 1, "Beberapa Hari", "fa-calendar-minus", "text-blue-500")}
+                                ${renderOption(g.kode, 2, "Lebih dari Seminggu", "fa-calendar-week", "text-amber-500")}
+                                ${renderOption(g.kode, 3, "Hampir Setiap Hari", "fa-calendar-day", "text-red-500")}
+                            </div>
+                        </div>
+                    </div>
+                    ${index < gejalaList.length - 1 ? '<hr class="border-slate-100">' : ''}
+                </div>`;
+            });
+            
+            container.innerHTML = html;
+            
+            // Add event listeners to radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const questionNum = this.name.substring(1); // Extract number from "C1", "C2", etc.
+                    currentQuestion = parseInt(questionNum);
+                    updateQuestionCounter();
+                    
+                    // Scroll to next question if not last
+                    if (currentQuestion < gejalaList.length) {
+                        const nextQuestion = document.querySelector(`[data-question="${currentQuestion + 1}"]`);
+                        if (nextQuestion) {
+                            nextQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
+        }
+
+        function renderOption(name, value, label, icon, iconColor) {
+            const isChecked = currentAnswers[name] === value ? 'checked' : '';
+            return `
+            <div class="relative">
+                <input type="radio" name="${name}" value="${value}" id="${name}-${value}" 
+                       class="custom-radio" onchange="saveAnswer('${name}', ${value})" ${isChecked}>
+                <label for="${name}-${value}" class="radio-option cursor-pointer flex flex-col items-center justify-center h-full">
+                    <i class="fas ${icon} ${iconColor} text-xl mb-2"></i>
+                    <span class="font-medium">${label}</span>
+                    <span class="text-xs text-slate-500 mt-1">(${value} poin)</span>
+                </label>
+            </div>`;
+        }
+
+        function saveAnswer(code, val) {
+            currentAnswers[code] = parseInt(val);
+            
+            // Update UI to show selected state
+            document.querySelectorAll(`input[name="${code}"]`).forEach(input => {
+                const label = input.nextElementSibling;
+                if (parseInt(input.value) === val) {
+                    label.classList.add('selected');
+                } else {
+                    label.classList.remove('selected');
+                }
+            });
+            
+            // Update question counter
+            updateQuestionCounter();
+        }
+
+        function updateQuestionCounter() {
+            const answeredCount = Object.keys(currentAnswers).length;
+            document.getElementById('question-counter').textContent = `${answeredCount}/${gejalaList.length}`;
+        }
+
+        function validateAndNext(step) {
+            if (Object.keys(currentAnswers).length < gejalaList.length) {
+                // Show notification
+                const unanswered = gejalaList.length - Object.keys(currentAnswers).length;
+                alert(`Masih ada ${unanswered} pertanyaan yang belum dijawab. Mohon lengkapi semua pertanyaan sebelum melanjutkan.`);
+                
+                // Scroll to first unanswered question
+                for (let i = 0; i < gejalaList.length; i++) {
+                    const g = gejalaList[i];
+                    if (!currentAnswers[g.kode]) {
+                        const questionElement = document.querySelector(`[data-question="${i+1}"]`);
+                        if (questionElement) {
+                            questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            break;
+                        }
+                    }
+                }
+                return;
+            }
+            nextStep(step);
+        }
+
+        // Toggle other reason text input
+        function toggleOtherReason() {
+            const otherReasonContainer = document.getElementById('other-reason-container');
+            const otherReasonRadio = document.getElementById('alasan-7');
+            
+            if (otherReasonRadio.checked) {
+                otherReasonContainer.classList.add('show');
+            } else {
+                otherReasonContainer.classList.remove('show');
+            }
+        }
+
+        // --- LOGIKA SUBMIT UTAMA ---
+        document.getElementById('identity-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const nama = document.getElementById('nama').value;
+            if(!nama) { 
+                alert("Nama wajib diisi."); 
+                document.getElementById('nama').focus();
+                return; 
+            }
+            
+            const umur = document.getElementById('umur').value;
+            if(!umur || umur < 10 || umur > 100) { 
+                alert("Mohon masukkan usia yang valid (10-100 tahun)."); 
+                document.getElementById('umur').focus();
+                return; 
+            }
+
+            // Get selected reason
+            const selectedReason = document.querySelector('input[name="alasan"]:checked');
+            if (!selectedReason) {
+                alert("Mohon pilih alasan mengikuti tes ini.");
+                return;
+            }
+            
+            let alasanText = '';
+            if (selectedReason.value === 'lainnya') {
+                alasanText = document.getElementById('other-reason-text').value.trim();
+                if (!alasanText) {
+                    alert("Mohon jelaskan alasan Anda di kolom 'Lainnya'.");
+                    document.getElementById('other-reason-text').focus();
+                    return;
+                }
+            } else {
+                // Get the label text of selected reason
+                const reasonLabel = selectedReason.nextElementSibling;
+                const reasonTitle = reasonLabel.querySelector('h4').textContent;
+                alasanText = reasonTitle;
+            }
+
+            // 1. Hitung Skor & Kategori secara LOKAL
+            let totalSkor = 0;
+            const nilaiGejala = []; // Array untuk dikirim ke backend jika perlu
+
+            gejalaList.forEach(g => {
+                const skor = currentAnswers[g.kode] || 0;
+                totalSkor += skor;
+                nilaiGejala.push(skor);
+            });
+
+            let kategori = '';
+            let saran = '';
+            let headerColor = 'bg-gradient-to-r from-mindful to-mindful-dark';
+
+            if (totalSkor <= 4) {
+                kategori = 'Minimal / Tidak Depresi';
+                saran = 'Hasil menunjukkan gejala depresi minimal. Kondisi mental Anda relatif stabil. Pertahankan gaya hidup sehat dengan pola makan bergizi, olahraga teratur, dan istirahat yang cukup.';
+            } else if (totalSkor <= 9) {
+                kategori = 'Depresi Ringan';
+                saran = 'Terdapat gejala depresi ringan. Cobalah teknik relaksasi seperti meditasi atau pernapasan dalam. Berbicara dengan teman atau keluarga terpercaya dapat membantu. Pantau kondisi Anda dan pertimbangkan konseling jika gejala menetap.';
+                headerColor = 'bg-gradient-to-r from-amber-400 to-amber-600';
+            } else if (totalSkor <= 14) {
+                kategori = 'Depresi Sedang';
+                saran = 'Gejala depresi sedang terdeteksi dan mungkin mulai mengganggu fungsi sehari-hari. Sangat disarankan untuk berkonsultasi dengan profesional kesehatan mental seperti psikolog atau konselor. Terapi perilaku kognitif (CBT) dapat membantu.';
+                headerColor = 'bg-gradient-to-r from-orange-500 to-orange-700';
+            } else if (totalSkor <= 19) {
+                kategori = 'Depresi Cukup Berat';
+                saran = 'Gejala depresi cukup berat terdeteksi. Sangat penting untuk segera mencari bantuan profesional. Pertimbangkan untuk berkonsultasi dengan psikiater yang dapat memberikan penanganan komprehensif termasuk psikoterapi dan jika perlu, pengobatan.';
+                headerColor = 'bg-gradient-to-r from-rose-600 to-rose-800';
+            } else {
+                kategori = 'Depresi Berat';
+                saran = 'Gejala depresi berat terdeteksi. Kondisi ini memerlukan perhatian medis segera. Segera hubungi profesional kesehatan mental, psikiater, atau layanan darurat kesehatan mental. Jangan ragu untuk meminta bantuan dari orang terdekat.';
+                headerColor = 'bg-gradient-to-r from-red-700 to-red-900';
+            }
+
+            // Cek Red Flag C9 (Bunuh Diri)
+            if (currentAnswers['C9'] > 0) {
+                saran += " <br><br><strong class='text-red-600'><i class='fas fa-exclamation-triangle mr-2'></i>PERINGATAN PENTING:</strong> Adanya pikiran tentang kematian atau menyakiti diri sendiri memerlukan perhatian segera. Segera hubungi layanan darurat kesehatan mental atau orang terpercaya.";
+                headerColor = 'bg-gradient-to-r from-red-800 to-red-900';
+            }
+
+            // 2. Kirim ke Backend (Sesuai format payload script lama)
+            const payload = {
+                nama_pasien: nama,
+                email: document.getElementById('email').value,
+                umur: document.getElementById('umur').value,
+                alasan: alasanText, // Menggunakan alasan yang dipilih/diinput
+                gejala_dipilih: nilaiGejala, // Array angka [0, 1, 2...]
+                total_skor: totalSkor,
+                kategori: kategori
+            };
+
+            try {
+                // Simulasi pengiriman data ke backend
+                const res = await fetch('/api/public/diagnosis', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                // Tampilkan hasil
+                showResult(nama, totalSkor, kategori, saran, headerColor);
+
+            } catch (err) {
+                // Jika gagal koneksi, tetap tampilkan hasil lokal
+                console.log('Gagal koneksi ke server, menampilkan hasil perhitungan lokal.');
+                showResult(nama, totalSkor, kategori, saran, headerColor);
+            }
+        });
+
+        function showResult(nama, skor, kategori, saran, colorClass) {
+            // Update result elements
+            document.getElementById('result-kategori').textContent = kategori;
+            document.getElementById('result-score').textContent = `Skor Total: ${skor}`;
+            document.getElementById('result-desc').innerHTML = `Halo <strong>${nama}</strong>, berdasarkan analisis sistem pakar dengan metode forward-chaining, hasil skrining menunjukkan: <strong>${kategori}</strong>.`;
+            document.getElementById('result-advice').innerHTML = saran;
+            
+            // Update header color
+            const header = document.getElementById('result-header');
+            header.className = `text-white p-8 md:p-12 text-center relative overflow-hidden ${colorClass}`;
+            
+            // Go to result step
+            nextStep('result');
+            
+            // Add animation to result
+            AOS.refresh();
+        }
+
+        function downloadResult() {
+            alert("Fitur download hasil akan tersedia dalam versi selanjutnya. Untuk saat ini, Anda dapat screenshot halaman ini.");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare | Sistem Pakar Diagnosa Depresi Mayor</title>
+    
+    <!-- Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'Poppins', 'sans-serif'],
+                        'heading': ['Poppins', 'Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'mindful': {
+                            'light': '#E3F2FD',
+                            'primary': '#64B5F6',
+                            'DEFAULT': '#2196F3',
+                            'dark': '#1565C0',
+                            'darker': '#0D47A1'
+                        },
+                        'calm': {
+                            'light': '#E0F7FA',
+                            'primary': '#80DEEA',
+                            'DEFAULT': '#00BCD4',
+                            'dark': '#00838F'
+                        },
+                        'serene': {
+                            'light': '#FFEBEE',
+                            'primary': '#EF9A9A',
+                            'DEFAULT': '#F44336',
+                            'dark': '#C62828'
+                        },
+                        'hope': {
+                            'light': '#E8F5E9',
+                            'primary': '#A5D6A7',
+                            'DEFAULT': '#4CAF50',
+                            'dark': '#2E7D32'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.8s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'gradient': 'gradient 8s ease infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom Styles */
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #64B5F6 0%, #2196F3 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #80DEEA 0%, #00BCD4 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 188, 212, 0.4);
+        }
+        
+        .step-section {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .step-section.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #64B5F6, #2196F3);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+        
+        .custom-checkbox {
+            display: none;
+        }
+        
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-option:hover {
+            border-color: #64B5F6;
+            background: #F5FBFF;
+        }
+        
+        .custom-checkbox:checked + .checkbox-option {
+            border-color: #2196F3;
+            background: #E3F2FD;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.1);
+        }
+        
+        .custom-radio {
+            display: none;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .radio-option:hover {
+            border-color: #64B5F6;
+            background: #F5FBFF;
+        }
+        
+        .custom-radio:checked + .radio-option {
+            border-color: #2196F3;
+            background: #E3F2FD;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.1);
+        }
+        
+        /* Floating animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Navbar transition */
+        .navbar {
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Result category colors */
+        .result-minimal {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+        }
+        
+        .result-mild {
+            background: linear-gradient(135deg, #FFB74D 0%, #F57C00 100%);
+        }
+        
+        .result-moderate {
+            background: linear-gradient(135deg, #FF9800 0%, #EF6C00 100%);
+        }
+        
+        .result-severe {
+            background: linear-gradient(135deg, #F44336 0%, #C62828 100%);
+        }
+        
+        .result-critical {
+            background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #64B5F6;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2196F3;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-gray-800 font-sans">
+
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="navbar fixed top-0 w-full z-50 py-4 transition-all duration-300">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-mindful-light p-3 rounded-xl">
+                        <i class="fas fa-brain text-mindful-dark text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-heading font-bold text-mindful-darker">MindCare</h1>
+                        <p class="text-xs text-gray-600">Sistem Pakar Diagnosa Depresi</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-mindful-dark font-medium transition">Beranda</a>
+                    <a href="#about" class="text-gray-700 hover:text-mindful-dark font-medium transition">Tentang Kami</a>
+                    <a href="#how-it-works" class="text-gray-700 hover:text-mindful-dark font-medium transition">Cara Kerja</a>
+                    <a href="#testimonial" class="text-gray-700 hover:text-mindful-dark font-medium transition">Testimoni</a>
+                    <a href="#faq" class="text-gray-700 hover:text-mindful-dark font-medium transition">FAQ</a>
+                    <button onclick="startTest()" class="btn-primary text-white font-medium py-3 px-6 rounded-xl">
+                        Mulai Tes
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden mt-4 hidden">
+                <div class="flex flex-col space-y-4 bg-white p-6 rounded-xl shadow-lg">
+                    <a href="#home" class="text-gray-700 hover:text-mindful-dark font-medium">Beranda</a>
+                    <a href="#about" class="text-gray-700 hover:text-mindful-dark font-medium">Tentang Kami</a>
+                    <a href="#how-it-works" class="text-gray-700 hover:text-mindful-dark font-medium">Cara Kerja</a>
+                    <a href="#testimonial" class="text-gray-700 hover:text-mindful-dark font-medium">Testimoni</a>
+                    <a href="#faq" class="text-gray-700 hover:text-mindful-dark font-medium">FAQ</a>
+                    <button onclick="startTest()" class="btn-primary text-white font-medium py-3 rounded-xl mt-4">
+                        Mulai Tes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-32 pb-20 px-4">
+        <div class="container mx-auto">
+            <div class="flex flex-col lg:flex-row items-center">
+                <!-- Hero Content -->
+                <div class="lg:w-1/2 mb-12 lg:mb-0" data-aos="fade-right">
+                    <div class="inline-flex items-center bg-mindful-light text-mindful-dark px-4 py-2 rounded-full mb-6">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        <span class="text-sm font-medium">Sistem Pakar Forward-Chaining</span>
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 leading-tight">
+                        Deteksi Dini 
+                        <span class="gradient-text">Depresi Mayor</span>
+                        Dengan Sistem Pakar
+                    </h1>
+                    
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        MindCare menggunakan metode <span class="font-semibold text-mindful-dark">forward-chaining</span> untuk membantu mendeteksi gejala depresi mayor berdasarkan standar DSM-V. Dapatkan hasil analisis personal dalam 10 menit.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                        <button onclick="startTest()" class="btn-primary text-white text-lg font-semibold py-4 px-8 rounded-xl">
+                            <i class="fas fa-play-circle mr-2"></i> Mulai Tes Sekarang
+                        </button>
+                        <a href="#how-it-works" class="bg-white text-mindful-dark border-2 border-mindful-primary font-semibold py-4 px-8 rounded-xl hover:bg-mindful-light transition text-center">
+                            <i class="fas fa-info-circle mr-2"></i> Pelajari Lebih Lanjut
+                        </a>
+                    </div>
+                    
+                    <div class="mt-10 flex flex-wrap gap-6">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-hope-light rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-user-check text-hope-dark"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">5,000+</p>
+                                <p class="text-sm text-gray-600">Pengguna Terbantu</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-calm-light rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-chart-line text-calm-dark"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">95%</p>
+                                <p class="text-sm text-gray-600">Akurasi Sistem</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-mindful-light rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-clock text-mindful-dark"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">10 Menit</p>
+                                <p class="text-sm text-gray-600">Waktu Tes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hero Image -->
+                <div class="lg:w-1/2" data-aos="fade-left">
+                    <div class="relative">
+                        <div class="absolute -top-6 -left-6 w-64 h-64 bg-mindful-light rounded-full opacity-30 floating"></div>
+                        <div class="absolute -bottom-6 -right-6 w-80 h-80 bg-calm-light rounded-full opacity-30 floating" style="animation-delay: 2s;"></div>
+                        
+                        <div class="relative z-10">
+                            <img src="https://img.freepik.com/free-vector/mental-health-concept-illustration_114360-3734.jpg?w=740" 
+                                 alt="Mental Health Illustration" 
+                                 class="rounded-2xl shadow-2xl transform hover:scale-105 transition duration-500">
+                        </div>
+                        
+                        <!-- Floating Card -->
+                        <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl card-hover" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="flex items-center mb-3">
+                                <div class="w-12 h-12 bg-mindful-light rounded-xl flex items-center justify-center mr-4">
+                                    <i class="fas fa-lock text-mindful-dark text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Privasi Terjaga</h3>
+                                    <p class="text-sm text-gray-600">Data Anda 100% aman</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600">Hasil tes bersifat anonim dan tidak dibagikan ke pihak manapun.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Tentang <span class="gradient-text">MindCare</span></h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Sistem pakar berbasis web yang dirancang untuk membantu deteksi dini gejala depresi mayor menggunakan metode forward-chaining.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-gray-50 p-8 rounded-2xl card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-mindful-light rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-mindful-dark text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Sistem Pakar Forward-Chaining</h3>
+                    <p class="text-gray-600 mb-4">
+                        Menggunakan metode inferensi forward-chaining untuk menganalisis gejala dan memberikan diagnosa awal berdasarkan aturan DSM-V.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Analisis berbasis aturan
+                        </li>
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Logika deduktif
+                        </li>
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Real-time diagnosis
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="bg-gray-50 p-8 rounded-2xl card-hover" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-calm-light rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-user-md text-calm-dark text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Berdasarkan Standar DSM-V</h3>
+                    <p class="text-gray-600 mb-4">
+                        Kuesioner disusun berdasarkan kriteria diagnostik DSM-V untuk depresi mayor, menjamin validitas dan reliabilitas hasil.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            9 kriteria utama
+                        </li>
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Durasi 2 minggu
+                        </li>
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Skala penilaian standar
+                        </li>
+                    </ul>
+                </div> 
+                
+                <!-- Card 3 -->
+                <div class="bg-gray-50 p-8 rounded-2xl card-hover" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-hope-light rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-heart text-hope-dark text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Dukungan & Tindak Lanjut</h3>
+                    <p class="text-gray-600 mb-4">
+                        Tidak hanya diagnosa, kami juga menyediakan rekomendasi tindak lanjut dan sumber daya dukungan kesehatan mental.
+                    </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Rekomendasi profesional
+                        </li>
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Kontak darurat
+                        </li>
+                        <li class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-hope-dark mr-2"></i>
+                            Sumber daya edukasi
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 gradient-bg">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Cara <span class="gradient-text">Kerja Sistem</span></h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Proses diagnosa melalui 4 langkah sederhana dengan sistem pakar forward-chaining.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative mb-6">
+                        <div class="w-20 h-20 bg-mindful-light rounded-full flex items-center justify-center mx-auto">
+                            <span class="text-2xl font-bold text-mindful-dark">1</span>
+                        </div>
+                        <div class="absolute top-1/2 left-full w-full h-1 bg-mindful-light hidden md:block"></div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Mulai Tes</h3>
+                    <p class="text-gray-600">Klik tombol "Mulai Tes" dan isi data dasar untuk memulai proses diagnosa.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative mb-6">
+                        <div class="w-20 h-20 bg-mindful-light rounded-full flex items-center justify-center mx-auto">
+                            <span class="text-2xl font-bold text-mindful-dark">2</span>
+                        </div>
+                        <div class="absolute top-1/2 left-full w-full h-1 bg-mindful-light hidden md:block"></div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Kuesioner Gejala</h3>
+                    <p class="text-gray-600">Jawab 9 pertanyaan tentang gejala yang dialami dalam 2 minggu terakhir.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="relative mb-6">
+                        <div class="w-20 h-20 bg-mindful-light rounded-full flex items-center justify-center mx-auto">
+                            <span class="text-2xl font-bold text-mindful-dark">3</span>
+                        </div>
+                        <div class="absolute top-1/2 left-full w-full h-1 bg-mindful-light hidden md:block"></div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Informasi Tambahan</h3>
+                    <p class="text-gray-600">Berikan informasi tambahan untuk personalisasi hasil diagnosa.</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="text-center" data-aos="fade-up" data-aos-delay="400">
+                    <div class="relative mb-6">
+                        <div class="w-20 h-20 bg-mindful-light rounded-full flex items-center justify-center mx-auto">
+                            <span class="text-2xl font-bold text-mindful-dark">4</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Hasil & Rekomendasi</h3>
+                    <p class="text-gray-600">Dapatkan hasil analisis dan rekomendasi tindak lanjut yang personal.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="500">
+                <button onclick="startTest()" class="btn-primary text-white text-lg font-semibold py-4 px-10 rounded-xl">
+                    <i class="fas fa-play mr-2"></i> Coba Sekarang
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Section (Initially Hidden) -->
+    <div id="test-container" class="hidden">
+        <!-- Test will be loaded here dynamically -->
+    </div>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Pertanyaan <span class="gradient-text">Umum</span></h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Temukan jawaban untuk pertanyaan yang sering diajukan tentang sistem kami.
+                </p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto space-y-6">
+                <!-- FAQ 1 -->
+                <div class="bg-gray-50 rounded-2xl p-6" data-aos="fade-up">
+                    <button class="faq-question w-full text-left flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-gray-800">Apakah tes ini menggantikan diagnosis dokter?</h3>
+                        <i class="fas fa-chevron-down text-mindful-dark"></i>
+                    </button>
+                    <div class="faq-answer mt-4 hidden">
+                        <p class="text-gray-600">
+                            Tidak. Tes ini hanya untuk skrining awal dan tidak menggantikan diagnosis profesional dari psikolog atau psikiater. Hasil tes dapat menjadi bahan pertimbangan saat berkonsultasi dengan profesional.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ 2 -->
+                <div class="bg-gray-50 rounded-2xl p-6" data-aos="fade-up" data-aos-delay="100">
+                    <button class="faq-question w-full text-left flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-gray-800">Berapa lama waktu yang dibutuhkan untuk tes?</h3>
+                        <i class="fas fa-chevron-down text-mindful-dark"></i>
+                    </button>
+                    <div class="faq-answer mt-4 hidden">
+                        <p class="text-gray-600">
+                            Tes biasanya membutuhkan waktu 5-10 menit, tergantung kecepatan Anda dalam menjawab pertanyaan. Tidak ada batasan waktu, jadi Anda dapat mengerjakannya dengan santai.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ 3 -->
+                <div class="bg-gray-50 rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
+                    <button class="faq-question w-full text-left flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-gray-800">Apakah data saya aman dan terjaga kerahasiaannya?</h3>
+                        <i class="fas fa-chevron-down text-mindful-dark"></i>
+                    </button>
+                    <div class="faq-answer mt-4 hidden">
+                        <p class="text-gray-600">
+                            Ya. Semua data yang Anda masukkan dienkripsi dan disimpan secara anonim. Kami tidak membagikan data pribadi Anda kepada pihak manapun tanpa izin.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ 4 -->
+                <div class="bg-gray-50 rounded-2xl p-6" data-aos="fade-up" data-aos-delay="300">
+                    <button class="faq-question w-full text-left flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-gray-800">Bagaimana cara kerja sistem pakar forward-chaining?</h3>
+                        <i class="fas fa-chevron-down text-mindful-dark"></i>
+                    </button>
+                    <div class="faq-answer mt-4 hidden">
+                        <p class="text-gray-600">
+                            Sistem menggunakan metode forward-chaining yang memulai analisis dari fakta-fakta (gejala yang Anda alami) kemudian menerapkan aturan-aturan DSM-V untuk menarik kesimpulan (diagnosa awal). Sistem secara progresif memproses data hingga mencapai kesimpulan final.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-mindful-dark to-mindful-darker text-white">
+        <div class="container mx-auto px-4 text-center">
+            <div data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6">
+                    Siap Memulai Perjalanan Kesehatan Mental Anda?
+                </h2>
+                <p class="text-xl mb-10 max-w-3xl mx-auto opacity-90">
+                    Dapatkan insight tentang kondisi mental Anda dalam 10 menit dengan sistem pakar kami.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <button onclick="startTest()" class="bg-white text-mindful-dark hover:bg-gray-100 text-lg font-semibold py-4 px-10 rounded-xl transition">
+                        <i class="fas fa-play-circle mr-2"></i> Mulai Tes Gratis
+                    </button>
+                    <a href="#about" class="bg-transparent border-2 border-white hover:bg-white/10 text-lg font-semibold py-4 px-10 rounded-xl transition">
+                        <i class="fas fa-book mr-2"></i> Pelajari Lebih Lanjut
+                    </a>
+                </div>
+                <p class="mt-8 text-sm opacity-80">
+                    <i class="fas fa-info-circle mr-1"></i> 
+                    Gratis • Tanpa pendaftaran • Hasil instan
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Logo & Description -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-mindful-light p-2 rounded-lg">
+                            <i class="fas fa-brain text-mindful-dark text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-heading font-bold">MindCare</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Sistem pakar untuk skrining awal depresi mayor menggunakan metode forward-chaining.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-mindful-dark transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-mindful-dark transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-mindful-dark transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-mindful-dark transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Tautan Cepat</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition">Beranda</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition">Tentang Kami</a></li>
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-white transition">Cara Kerja</a></li>
+                        <li><a href="#faq" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Kebijakan Privasi</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Sumber Daya</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Artikel Kesehatan Mental</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Daftar Psikolog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Hotline Darurat</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Komunitas Dukungan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">E-book Gratis</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Kontak</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope mr-3"></i>
+                            <span>hello@mindcare.id</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone mr-3"></i>
+                            <span>+62 21 1234 5678</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-3"></i>
+                            <span>Jakarta, Indonesia</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 MindCare. Hak Cipta Dilindungi. Sistem ini untuk tujuan edukasi dan informasi kesehatan.</p>
+                <p class="mt-2 text-sm">Jika Anda mengalami krisis, segera hubungi 119 atau layanan darurat kesehatan mental terdekat.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+   
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+        
+        AOS.init({ duration: 800, once: true });
+
+  
+
+  function startTest() {
+    const btn = document.getElementById("start-btn");
+    
+    // Ambil emoji acak
+    const emojiChar = emojis[Math.floor(Math.random() * emojis.length)];
+    const emojis = ["😸", "😺", "😻", "😹", "😼"]; // daftar emoji playful
+    const emoji = document.createElement("span");
+    emoji.textContent = emojiChar;
+    emoji.style.position = "absolute";
+    emoji.style.left = btn.offsetLeft + "px";
+    emoji.style.top = btn.offsetTop - 30 + "px";
+    emoji.style.fontSize = "24px";
+    emoji.style.transition = "all 0.6s ease";
+    document.body.appendChild(emoji);
+
+    // Animasi emoji naik & hilang
+    setTimeout(() => {
+      emoji.style.top = btn.offsetTop - 80 + "px";
+      emoji.style.opacity = "0";
+    }, 50);
+
+    setTimeout(() => emoji.remove(), 700);
+
+    // Tombol efek klik: scale dan warna
+    btn.style.transition = "all 0.2s";
+    btn.style.transform = "scale(1.1)";
+    btn.style.backgroundColor = "#ffcc00";
+    setTimeout(() => {
+      btn.style.transform = "scale(1)";
+      btn.style.backgroundColor = "";
+    }, 200);
+
+    // Scroll ke section test
+    const testSection = document.getElementById("section-test");
+    if (testSection) testSection.scrollIntoView({ behavior: "smooth" });
+  }
+
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                navbar.classList.add('py-3');
+            } else {
+                navbar.classList.remove('scrolled');
+                navbar.classList.remove('py-3');
+            }
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // FAQ toggle
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                answer.classList.toggle('hidden');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+        
+        // Start Test Function
+        function startTest() {
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Hide landing page content
+            document.querySelectorAll('section, footer').forEach(el => {
+                el.style.display = 'none';
+
+                window.location.href = '../keusioner.html';
+            });
+            
+            // Load test content
+            const testContainer = document.getElementById('test-container');
+            testContainer.classList.remove('hidden');
+            testContainer.innerHTML = `
+                <div class="pt-24 pb-12 px-4">
+                    ${document.querySelector('[file content begin]').textContent.match(/<main[\s\S]*<\/main>/)[0]}
+                </div>
+                ${document.querySelector('[file content begin]').textContent.match(/<footer[\s\S]*<\/footer>/)[0]}
+            `;
+            
+            // Reinitialize test functionality
+            setTimeout(() => {
+                // Reinitialize test scripts
+                if (typeof AOS !== 'undefined') AOS.refresh();
+                
+                // Reattach event listeners
+                const backButton = document.createElement('button');
+                backButton.innerHTML = '<i class="fas fa-arrow-left mr-2"></i> Kembali ke Beranda';
+                backButton.className = 'fixed top-6 left-6 z-50 bg-white text-mindful-dark border-2 border-mindful-primary hover:bg-mindful-light font-medium py-3 px-6 rounded-xl transition flex items-center shadow-lg';
+                backButton.onclick = function() {
+                    location.reload();
+                };
+                document.body.appendChild(backButton);
+            }, 100);
+        }
+        
+        // Add test script from the provided file
+        document.addEventListener('DOMContentLoaded', function() {
+    const scriptContent =
+        document.querySelector('[file content begin]')
+        .textContent.match(/<script[\s\S]*<\/script>/)[0];
+
+    const script = document.createElement('script');
+
+    script.textContent = scriptContent
+        .replace(/<script>/g, "")
+        .replace(/<\/script>/g, "");
+
+    document.body.appendChild(script);
+});
+
+    
+    </script>
+</body>
+</html>

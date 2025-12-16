@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - SPK Depresi</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
+    <script src="../assets/js/dashboard/dashboard.js" defer></script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* Print Style */
+        @media print {
+            .no-print, #sidebar, header { display: none !important; }
+            #mainContent { margin: 0 !important; width: 100% !important; padding: 0 !important; }
+            #laporanTable { display: block !important; }
+            .print-hidden { display: none !important; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-slate-800 antialiased h-screen flex overflow-hidden">
+
+    <aside id="sidebar" class="bg-teal-900 text-white w-64 flex-shrink-0 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-50 flex flex-col h-full shadow-xl no-print">
+        <div class="p-6 border-b border-teal-800">
+            <h1 class="text-xl font-bold">MindCheck</h1>
+            <p class="text-xs text-teal-300">Admin Panel</p>
+        </div>
+        <div class="p-4">
+            <div class="flex items-center space-x-3 bg-teal-800/50 p-3 rounded-lg">
+                <img id="adminAvatar" src="https://ui-avatars.com/api/?name=Admin" class="w-10 h-10 rounded-full border border-teal-200 object-cover">
+                <div class="overflow-hidden">
+                    <p id="adminNameDisplay" class="text-sm font-semibold truncate">Admin</p>
+                    <p class="text-xs text-teal-300">Online</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 overflow-y-auto px-3 space-y-1 py-2">
+            <a href="#" data-page="pageDashboard" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="home" class="w-5 h-5 mr-3"></i> Dashboard</a>
+            <a href="#" data-page="pageProfil" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="user" class="w-5 h-5 mr-3"></i> Profil Saya</a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-teal-400 uppercase">Master Data</div>
+            <a href="#" data-page="pageDataGejala" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="thermometer" class="w-5 h-5 mr-3"></i> Data Gejala</a>
+            <a href="#" data-page="pageDataPenyakit" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="activity" class="w-5 h-5 mr-3"></i> Data Penyakit</a>
+            <a href="#" data-page="pageDataAturan" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="git-merge" class="w-5 h-5 mr-3"></i> Data Aturan</a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-teal-400 uppercase">Laporan</div>
+            <a href="#" data-page="pageHasilDiagnosa" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="file-text" class="w-5 h-5 mr-3"></i> Hasil Diagnosa</a>
+            <a href="#" data-page="pageLaporan" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="printer" class="w-5 h-5 mr-3"></i> Laporan</a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-teal-400 uppercase">System</div>
+            <a href="#" data-page="pageKelolaAdmin" class="nav-link flex items-center px-4 py-3 rounded-lg text-teal-100 hover:bg-teal-800 transition"><i data-feather="users" class="w-5 h-5 mr-3"></i> Kelola Admin</a>
+        </nav>
+    </aside>
+
+    <div id="mainWrapper" class="flex-1 flex flex-col md:ml-64 h-screen transition-all duration-300">
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 sticky top-0 z-40 no-print">
+            <div class="flex items-center">
+                <button id="mobileMenuButton" class="md:hidden text-gray-600 mr-4"><i data-feather="menu"></i></button>
+                <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Dashboard</h2>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="homeButton" class="text-sm font-medium text-teal-600 hover:bg-teal-50 px-3 py-2 rounded-lg transition flex items-center"><i data-feather="external-link" class="w-4 h-4 mr-2"></i> Web Utama</button>
+                <button id="logoutButton" class="text-sm font-medium text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition flex items-center"><i data-feather="log-out" class="w-4 h-4 mr-2"></i> Logout</button>
+            </div>
+        </header>
+
+        <main id="mainContent" class="flex-1 overflow-y-auto p-6 md:p-8">
+            
+            <div id="pageDashboard" class="page-content space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+                        <div><p class="text-sm text-gray-500">Total Gejala</p><h3 id="totalGejala" class="text-3xl font-bold text-slate-800">0</h3></div>
+                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg"><i data-feather="thermometer"></i></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+                        <div><p class="text-sm text-gray-500">Total Aturan</p><h3 id="totalAturan" class="text-3xl font-bold text-slate-800">0</h3></div>
+                        <div class="p-3 bg-green-100 text-green-600 rounded-lg"><i data-feather="git-merge"></i></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+                        <div><p class="text-sm text-gray-500">Total Diagnosa</p><h3 id="totalHasilDiagnosa" class="text-3xl font-bold text-slate-800">0</h3></div>
+                        <div class="p-3 bg-yellow-100 text-yellow-600 rounded-lg"><i data-feather="activity"></i></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+                        <div><p class="text-sm text-gray-500">Total Admin</p><h3 id="totalAdmin" class="text-3xl font-bold text-slate-800">0</h3></div>
+                        <div class="p-3 bg-purple-100 text-purple-600 rounded-lg"><i data-feather="users"></i></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-slate-700">Statistik</h3>
+                            <button id="btnToggle3D" onclick="toggleChart3D()" class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded text-sm font-medium hover:bg-indigo-100 transition">Mode 3D</button>
+                        </div>
+                        <div id="diagnosisChart" style="height: 350px;"></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                        <h3 class="font-bold text-slate-700 mb-4">Terbaru</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-50 text-gray-600 font-bold">
+                                    <tr><th class="px-4 py-2">No</th><th class="px-4 py-2">Pasien</th><th class="px-4 py-2">Hasil</th></tr>
+                                </thead>
+                                <tbody id="recentDiagnosisTableBody" class="divide-y"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageProfil" class="page-content hidden">
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 max-w-4xl mx-auto">
+                    <h2 class="text-xl font-bold mb-6 pb-4 border-b">Edit Profil</h2>
+                    <form id="formEditProfil" class="space-y-6">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="flex flex-col items-center space-y-4 md:w-1/3">
+                                <div class="relative group cursor-pointer" onclick="document.getElementById('uploadFotoInput').click()">
+                                    <img id="previewFoto" src="https://ui-avatars.com/api/?name=Admin" class="w-40 h-40 rounded-full object-cover border-4 border-slate-100 shadow-md transition group-hover:opacity-75">
+                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                        <i data-feather="camera" class="text-gray-800 w-8 h-8"></i>
+                                    </div>
+                                </div>
+                                <input type="file" id="uploadFotoInput" class="hidden" accept="image/*">
+                                <p class="text-xs text-gray-500">Klik foto untuk mengganti (Max 2MB)</p>
+                            </div>
+                            <div class="flex-1 space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                    <input type="text" value="admin" disabled class="w-full rounded-lg border-gray-300 bg-gray-100 text-gray-500 px-4 py-2 cursor-not-allowed">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                                    <input type="text" id="profilNama" class="w-full rounded-lg border-gray-300 px-4 py-2 focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="profilEmail" class="w-full rounded-lg border-gray-300 px-4 py-2 focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div class="pt-4 border-t">
+                                    <h3 class="text-sm font-bold text-gray-900 mb-2">Ganti Password (Opsional)</h3>
+                                    <div class="space-y-3">
+                                        <input type="password" placeholder="Password Baru" class="w-full rounded-lg border-gray-300 px-4 py-2">
+                                        <input type="password" placeholder="Konfirmasi Password" class="w-full rounded-lg border-gray-300 px-4 py-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium shadow-md transition">Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="pageDataGejala" class="page-content hidden">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg text-slate-700">Data Gejala</h3>
+                        <button class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 flex items-center shadow-sm text-sm"><i data-feather="plus" class="w-4 h-4 mr-2"></i> Tambah</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left border-collapse"><thead class="bg-slate-50 text-slate-600 font-bold uppercase text-xs"><tr><th class="px-6 py-3 border-b">No</th><th class="px-6 py-3 border-b">Kode</th><th class="px-6 py-3 border-b">Nama Gejala</th><th class="px-6 py-3 border-b text-center">Aksi</th></tr></thead><tbody id="gejalaTableBody" class="divide-y"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageDataPenyakit" class="page-content hidden">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg text-slate-700">Data Penyakit</h3>
+                        <button class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 flex items-center shadow-sm text-sm"><i data-feather="plus" class="w-4 h-4 mr-2"></i> Tambah</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left border-collapse"><thead class="bg-slate-50 text-slate-600 font-bold uppercase text-xs"><tr><th class="px-6 py-3 border-b">Kode</th><th class="px-6 py-3 border-b">Nama Penyakit</th><th class="px-6 py-3 border-b">Deskripsi</th><th class="px-6 py-3 border-b text-center">Aksi</th></tr></thead><tbody id="penyakitTableBody" class="divide-y"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageDataAturan" class="page-content hidden">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg text-slate-700">Data Aturan</h3>
+                        <button id="btnTambahAturan" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 flex items-center shadow-sm text-sm"><i data-feather="plus" class="w-4 h-4 mr-2"></i> Tambah</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left border-collapse"><thead class="bg-slate-50 text-slate-600 font-bold uppercase text-xs"><tr><th class="px-6 py-3 border-b text-center">No</th><th class="px-6 py-3 border-b text-center">Diagnosa</th><th class="px-6 py-3 border-b">Kondisi</th><th class="px-6 py-3 border-b text-center">Aksi</th></tr></thead><tbody id="aturanTableBody" class="divide-y"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageKelolaAdmin" class="page-content hidden">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg text-slate-700">Daftar Admin</h3>
+                        <button id="btnTambahAdmin" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 flex items-center shadow-sm text-sm"><i data-feather="user-plus" class="w-4 h-4 mr-2"></i> Tambah</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left border-collapse"><thead class="bg-slate-50 text-slate-600 font-bold uppercase text-xs"><tr><th class="px-6 py-3 border-b">Username</th><th class="px-6 py-3 border-b">Nama</th><th class="px-6 py-3 border-b">Email</th><th class="px-6 py-3 border-b text-center">Tanggal</th><th class="px-6 py-3 border-b text-center">Aksi</th></tr></thead><tbody id="adminTableBody" class="divide-y"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageHasilDiagnosa" class="page-content hidden">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-lg text-slate-700 mb-6">Riwayat Diagnosa</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left border-collapse"><thead class="bg-slate-50 text-slate-600 font-bold uppercase text-xs"><tr><th class="px-6 py-3 border-b text-center">No</th><th class="px-6 py-3 border-b">Tanggal</th><th class="px-6 py-3 border-b">Nama</th><th class="px-6 py-3 border-b">Hasil</th><th class="px-6 py-3 border-b text-center">Skor</th><th class="px-6 py-3 border-b text-center">Aksi</th></tr></thead><tbody id="hasilTableBody" class="divide-y"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageLaporan" class="page-content hidden">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6 no-print">
+                        <h3 class="font-bold text-lg text-slate-700">Laporan & Cetak</h3>
+                        <button onclick="window.print()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center shadow-sm text-sm"><i data-feather="printer" class="w-4 h-4 mr-2"></i> Cetak PDF</button>
+                    </div>
+                    <div id="laporanContainer">
+                        <div class="hidden print:block text-center mb-8">
+                            <h2 class="text-2xl font-bold uppercase">Laporan Hasil Diagnosa</h2>
+                            <p class="text-sm text-gray-500">Sistem Pakar Diagnosa Depresi</p>
+                            <hr class="my-4 border-gray-800">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left border border-gray-200"><thead class="bg-gray-100 font-bold"><tr><th class="px-4 py-2 border">No</th><th class="px-4 py-2 border">Tanggal</th><th class="px-4 py-2 border">Nama</th><th class="px-4 py-2 border">Hasil</th><th class="px-4 py-2 border text-center">Skor</th></tr></thead><tbody id="laporanTableBody" class="divide-y"></tbody></table>
+                        </div>
+                        <div class="hidden print:block mt-16 text-right pr-10">
+                            <p>Mengetahui,</p>
+                            <br><br><br>
+                            <p class="font-bold underline">Administrator</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="tambahAdminModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 transform scale-95 transition-transform duration-200">
+            <h3 class="text-lg font-bold mb-4">Tambah Admin Baru</h3>
+            <form id="formTambahAdmin" class="space-y-4">
+                <input type="text" name="username" placeholder="Username" required class="w-full border px-4 py-2 rounded-lg">
+                <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" required class="w-full border px-4 py-2 rounded-lg">
+                <input type="email" name="email" placeholder="Email" required class="w-full border px-4 py-2 rounded-lg">
+                <input type="password" name="password" placeholder="Password" required class="w-full border px-4 py-2 rounded-lg">
+                <div class="flex justify-end space-x-2 pt-4">
+                    <button type="button" onclick="document.getElementById('tambahAdminModal').classList.add('hidden')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

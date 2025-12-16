@@ -74,6 +74,7 @@ app.use('/api/penyakit', penyakitRoutes);
 app.use('/api/diagnosis', diagnosisRoutes);
 app.use('/api/aturan', aturanRoutes);
 app.use('/api/laporan', laporanRoutes);
+app.use("/api/public/diagnosis", publicRoutes);
 
 // Log status route
 console.log(chalk.magentaBright('🧩 Semua Route API Berhasil Dimuat'));

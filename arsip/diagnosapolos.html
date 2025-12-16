@@ -125,126 +125,85 @@
     </footer>
 
     <script>
-const gejalaList = [
-  { kode: "C1", nama: "Suasana hati sedih hampir setiap hari" },
-  { kode: "C2", nama: "Kehilangan minat atau kesenangan dalam aktivitas" },
-  { kode: "C3", nama: "Perubahan berat badan atau nafsu makan signifikan" },
-  { kode: "C4", nama: "Kesulitan tidur atau tidur berlebihan" },
-  { kode: "C5", nama: "Kelelahan atau kehilangan energi" },
-  { kode: "C6", nama: "Perasaan tidak berharga atau rasa bersalah berlebihan" },
-  { kode: "C7", nama: "Kesulitan berkonsentrasi atau membuat keputusan" },
-  { kode: "C8", nama: "Perubahan gerakan (lambat atau gelisah)" },
-  { kode: "C9", nama: "Pikiran tentang kematian atau bunuh diri" }
-];
+  // Daftar Gejala PHQ-9
+  const gejalaPHQ9 = [
+    { kode: "D01", nama: "Kurang berminat atau bergairah dalam melakukan apapun" },
+    { kode: "D02", nama: "Merasa murung, sedih, atau putus asa" },
+    { kode: "D03", nama: "Sulit tidur / mudah terbangun, atau terlalu banyak tidur" },
+    { kode: "D04", nama: "Merasa lelah atau kurang bertenaga" },
+    { kode: "D05", nama: "Kurang nafsu makan atau terlalu banyak makan" },
+    { kode: "D06", nama: "Kurang percaya diri (merasa gagal/mengecewakan)" },
+    { kode: "D07", nama: "Sulit berkonsentrasi (baca koran/nonton TV)" },
+    { kode: "D08", nama: "Bergerak lambat ATAU terlalu gelisah (tidak bisa diam)" },
+    { kode: "D09", nama: "Pemikiran untuk menyakiti diri sendiri atau ingin mati" }
+  ];
 
-document.addEventListener('DOMContentLoaded', function() {
-  feather.replace();
-
-  const container = document.getElementById('likert-container');
-  gejalaList.forEach(gejala => {
-    const div = document.createElement('div');
-    div.className = 'bg-bluegray-50 rounded-lg p-4 border';
-    div.innerHTML = `
-      <p class="font-medium mb-3">${gejala.nama}</p>
-      <div class="flex flex-col space-y-2">
-        <label><input type="radio" name="${gejala.kode}" value="0" required> Tidak Pernah (0)</label>
-        <label><input type="radio" name="${gejala.kode}" value="1"> Kadang-kadang (1)</label>
-        <label><input type="radio" name="${gejala.kode}" value="2"> Sering (2)</label>
-        <label><input type="radio" name="${gejala.kode}" value="3"> Hampir setiap hari (3)</label>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-
-  const form = document.getElementById('diagnosis-form');
-  const resultSection = document.getElementById('results-section');
-  const diagnosisResult = document.getElementById('diagnosis-result');
-  const resetBtn = document.getElementById('reset-btn');
-  const submitBtn = document.getElementById('submit-btn');
-
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    // Tampilkan loading di tombol
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i data-feather="loader" class="animate-spin mr-2"></i> Mengirim...';
+  document.addEventListener('DOMContentLoaded', function() {
     feather.replace();
+    const container = document.getElementById('likert-container');
+    
+    // Render Form
+    gejalaPHQ9.forEach(g => {
+      const div = document.createElement('div');
+      div.className = 'bg-white rounded-lg p-5 border shadow-sm mb-4';
+      div.innerHTML = `
+        <p class="font-semibold text-gray-800 mb-3"><span class="text-teal-600 mr-2">${g.kode}</span> ${g.nama}</p>
+        <div class="grid grid-cols-1 gap-2 text-sm">
+          <label class="flex items-center p-2 rounded hover:bg-teal-50 cursor-pointer">
+            <input type="radio" name="${g.kode}" value="0" class="accent-teal-600 mr-2" required> Tidak pernah
+          </label>
+          <label class="flex items-center p-2 rounded hover:bg-teal-50 cursor-pointer">
+            <input type="radio" name="${g.kode}" value="1" class="accent-teal-600 mr-2"> Beberapa hari
+          </label>
+          <label class="flex items-center p-2 rounded hover:bg-teal-50 cursor-pointer">
+            <input type="radio" name="${g.kode}" value="2" class="accent-teal-600 mr-2"> Lebih dari separuh waktu
+          </label>
+          <label class="flex items-center p-2 rounded hover:bg-teal-50 cursor-pointer">
+            <input type="radio" name="${g.kode}" value="3" class="accent-teal-600 mr-2"> Hampir setiap hari
+          </label>
+        </div>
+      `;
+      container.appendChild(div);
+    });
 
-    try {
-      // Ambil nilai form
-      const nama = document.getElementById('nama').value;
-      const email = document.getElementById('email').value;
-
-      const nilaiGejala = gejalaList.map(g => {
-        const radio = document.querySelector(`input[name="${g.kode}"]:checked`);
-        return radio ? parseInt(radio.value) : 0;
+    // Handle Submit
+    const form = document.getElementById('diagnosis-form');
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Ambil semua jawaban (Format: { D01: 2, D02: 0, ... })
+      const jawabanUser = {};
+      gejalaPHQ9.forEach(g => {
+        const val = document.querySelector(`input[name="${g.kode}"]:checked`).value;
+        jawabanUser[g.kode] = parseInt(val);
       });
-      const totalSkor = nilaiGejala.reduce((a, b) => a + b, 0);
 
-      // Hitung kategori lokal (bisa dikirim juga ke backend)
-      let kategori = '';
-      if (totalSkor <= 4) kategori = 'Normal';
-      else if (totalSkor <= 9) kategori = 'Depresi Ringan';
-      else if (totalSkor <= 14) kategori = 'Depresi Sedang';
-      else if (totalSkor <= 19) kategori = 'Depresi Cukup Berat';
-      else kategori = 'Depresi Berat';
-
-      // Siapkan payload untuk backend
       const payload = {
-        nama_pasien: nama,
-        email: email,
-        gejala_dipilih: nilaiGejala, // bisa juga kirim sebagai array kode + nilai
-        total_skor: totalSkor,
-        kategori: kategori
+        nama_pasien: document.getElementById('nama').value,
+        email: document.getElementById('email').value,
+        jawaban: jawabanUser // Kirim object skor
       };
 
-      // Kirim ke backend
+      // Kirim ke Backend (Sesuaikan URL API kamu)
       const res = await fetch('/api/public/diagnosis', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
       });
-
+      
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Gagal mengirim hasil ke server.');
-
-      // Tampilkan hasil
-      diagnosisResult.innerHTML = `
-        <div class="mb-6">
-          <div class="inline-block text-teal-600 text-4xl font-bold py-3 px-6 border-2 border-teal-600 rounded-lg">
-            Skor ${totalSkor}
-          </div>
-          <h3 class="text-2xl font-semibold mt-4 text-teal-600">${kategori}</h3>
-        </div>
-        <p class="text-bluegray-600 max-w-md mx-auto">
-          Berdasarkan jawaban Anda, sistem mendeteksi indikasi <strong>${kategori.toLowerCase()}</strong>.
-          Hasil ini telah dikirim dan dicatat dalam sistem.
-        </p>
+      
+      // Tampilkan Hasil
+      document.getElementById('diagnosis-result').innerHTML = `
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">${data.hasil}</h3>
+        <p class="text-gray-600 mb-4">${data.saran}</p>
+        <span class="inline-block bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-bold">Skor PHQ-9: ${data.skor}</span>
       `;
-
-      resultSection.classList.remove('hidden');
+      
+      document.getElementById('results-section').classList.remove('hidden');
       form.classList.add('hidden');
-      resultSection.scrollIntoView({ behavior: 'smooth' });
-
-    } catch (err) {
-      alert('Terjadi kesalahan: ' + err.message);
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i data-feather="activity" class="mr-2"></i> Proses Diagnosa';
-      feather.replace();
-    }
+    });
   });
-
-  resetBtn.addEventListener('click', function() {
-    form.reset();
-    form.classList.remove('hidden');
-    resultSection.classList.add('hidden');
-    form.scrollIntoView({ behavior: 'smooth' });
-  });
-});
-
-
-
-    </script>
+</script>
 </body>
 </html>

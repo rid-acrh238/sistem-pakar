@@ -315,142 +315,260 @@ async function loadAdminProfile() {
         }
     }
 
-    // --- DATA LOADERS ---
+    // ===========================
+// 🔹 GLOBAL VARIABLES (Taruh paling atas file)
+// ===========================
+let is3DMode = false;      // Status awal: 2D
+let savedChartData = {};   // Wadah kosong untuk menyimpan data chart
 
-    /**
-     * Loads all data for the main dashboard
-     */
-    async function loadDashboardData() {
+// ===========================
+// 🔹 LOAD DATA UTAMA
+// ===========================
+async function loadDashboardData() {
     console.log('[Dashboard] Mulai ambil data...');
-        try {
-            // Fetch all data in parallel
-            const [gejalaRes, penyakitRes, aturanRes, hasilRes, adminRes] = await Promise.all([
-  fetchWithAuth(`${API_BASE_URL}/gejala`),
-  fetchWithAuth(`${API_BASE_URL}/penyakit`),
-  fetchWithAuth(`${API_BASE_URL}/aturan`),
-  fetchWithAuth(`${API_BASE_URL}/diagnosis/hasil`),
-  fetchWithAuth(`${API_BASE_URL}/admin`),
-]);
-console.log('[Dashboard] Semua request selesai.');
+    try {
+        // 1. Fetch Data Paralel
+        const [gejalaRes, penyakitRes, aturanRes, hasilRes, adminRes] = await Promise.all([
+            fetchWithAuth(`${API_BASE_URL}/gejala`),
+            fetchWithAuth(`${API_BASE_URL}/penyakit`),
+            fetchWithAuth(`${API_BASE_URL}/aturan`),
+            fetchWithAuth(`${API_BASE_URL}/diagnosis/hasil`), 
+            fetchWithAuth(`${API_BASE_URL}/admin`),
+        ]);
 
-    console.log('[Dashboard] Status:', 
-      gejalaRes.status, penyakitRes.status, aturanRes.status, hasilRes.status, adminRes.status
-    );
+        // 2. Parse JSON
+        const gejalaData = await gejalaRes.json();
+        const aturanData = await aturanRes.json();
+        const hasilResponse = await hasilRes.json();
+        const adminData = await adminRes.json();
 
-const [gejala, penyakit, aturan, hasil, admin] = await Promise.all([
-  gejalaRes.json(),
-  penyakitRes.json(),
-  aturanRes.json(),
-  hasilRes.json(),
-  adminRes.json(),
-]);
-console.log('[Dashboard] Data hasil diagnosa:', hasil);
-    console.log('[Dashboard] Data admin:', admin);
+        // 3. Ekstraksi Data
+        // Ambil array dari properti .data (sesuai format backend)
+        const listDiagnosa = hasilResponse.data || (Array.isArray(hasilResponse) ? hasilResponse : []);
+        const listGejala = gejalaData.data || gejalaData || [];
+        const listAturan = aturanData.data || aturanData || [];
+        const listAdmin = adminData.data || adminData || [];
 
-            // Update stat cards
-            document.getElementById('totalGejala').textContent = gejala.length || 0;
-            document.getElementById('totalAturan').textContent = aturan.length || 0;
-            //document.getElementById('totalPenyakit').textContent = penyakit.length || 0;
-            document.getElementById('totalHasilDiagnosa').textContent = hasil.length || 0;
-            document.getElementById('totalAdmin').textContent = admin.length || 0;
+        // 4. Update Kartu Total
+        if(document.getElementById('totalGejala')) document.getElementById('totalGejala').textContent = listGejala.length;
+        if(document.getElementById('totalAturan')) document.getElementById('totalAturan').textContent = listAturan.length;
+        if(document.getElementById('totalHasilDiagnosa')) document.getElementById('totalHasilDiagnosa').textContent = listDiagnosa.length;
+        if(document.getElementById('totalAdmin')) document.getElementById('totalAdmin').textContent = listAdmin.length;
 
-            // Update recent diagnosis table
-            const recentTableBody = document.getElementById('recentDiagnosisTableBody');
-            const recentHasil = hasil.slice(-5).reverse(); // Get last 5, newest first
-            recentTableBody.innerHTML = ''; // Clear loading
+        // 5. Update Tabel 5 Terakhir
+        const recentTableBody = document.getElementById('recentDiagnosisTableBody');
+        if (recentTableBody) {
+            recentTableBody.innerHTML = '';
+            const recentHasil = listDiagnosa.slice(-5).reverse();
 
             if (recentHasil.length === 0) {
-                recentTableBody.innerHTML =
-                    '<tr><td colspan="3" class="text-center p-4 text-gray-500">Belum ada data diagnosa.</td></tr>';
+                recentTableBody.innerHTML = '<tr><td colspan="4" class="text-center p-4 text-gray-500">Belum ada data.</td></tr>';
             } else {
+                let nomorUrut = 1;
                 recentHasil.forEach((item) => {
+                    const tgl = item.tanggal || item.tanggal_diagnosa;
+                    const tglDisplay = tgl ? new Date(tgl).toLocaleDateString('id-ID') : '-';
+                    const persentase = item.persentase ? item.persentase + '%' : '-';
+                    const penyakit = item.hasil_penyakit || '<span class="text-red-400">Belum Ada Hasil</span>';
+
                     recentTableBody.innerHTML += `
-                                <tr class="bg-white border-b">
-                                    <td class="py-3 px-4">${formatDate(item.tanggal)}</td>
-                                    <td class="py-3 px-4 font-medium text-gray-900">${item.hasil_penyakit || 'Tidak Terdiagnosa'}</td>
-                                    <td class="py-3 px-4">${parseFloat(item.persentase || 0).toFixed(0)}%</td>
-                                </tr>
-                            `;
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 text-center text-gray-500 font-semibold">${nomorUrut++}</td>
+                            <td class="py-3 px-4 text-sm text-gray-600">${tglDisplay}</td>
+                            <td class="py-3 px-4 font-medium text-gray-900">
+                                ${item.nama_pasien} <br>
+                                <span class="text-xs text-gray-500">${item.hasil_penyakit || '-'}</span>
+                            </td>
+                            <td class="py-3 px-4 text-center">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                                    ${item.total_skor} (${persentase})
+                                </span>
+                            </td>
+                        </tr>`;
                 });
             }
+        }
 
-            // Render chart
-            renderDiagnosisChart(hasil);
+        // 6. PERSIAPAN DATA CHART (Group by Kategori)
+        const statsKategori = {};
+
+            listDiagnosa.forEach(item => {
+                // Ambil text kategori, misal "Depresi Ringan"
+                // Kalau kosong atau null, kita masukkan ke kelompok "Lainnya"
+                let namaKategori = item.hasil_penyakit;
+                
+                if (!namaKategori || namaKategori === '') {
+                    namaKategori = 'Tidak Teridentifikasi';
+                }
+
+                // Hitung jumlahnya
+                if (statsKategori[namaKategori]) {
+                    statsKategori[namaKategori]++; // Kalau sudah ada, tambah 1
+                } else {
+                    statsKategori[namaKategori] = 1; // Kalau baru ketemu, set jadi 1
+                }
+            });
+
+            console.log("Data Chart Siap:", statsKategori); // Cek console buat debugging
+
+            // Simpan ke Global & Render
+            savedChartData = statsKategori; 
+            if (typeof renderDiagnosisChart === 'function') {
+                renderDiagnosisChart(statsKategori);
+            }
+
         } catch (error) {
-        console.error('[Dashboard] Error:', error);
-            showAlert('Gagal memuat data dashboard', true);
+            console.error('[Dashboard] Error:', error);
+        }
+    }
+// ===========================
+// 🔹 LOGIKA TOGGLE 2D / 3D
+// ===========================
+window.toggleChart3D = function() {
+    is3DMode = !is3DMode; // Switch status
+    
+    // Update Teks & Style Tombol
+    const btnText = document.getElementById('textToggle3D');
+    const btn = document.getElementById('btnToggle3D');
+    
+    if(btn && btnText) {
+        if (is3DMode) {
+            btnText.innerText = "Kembali ke 2D";
+            btn.className = "bg-teal-100 text-teal-700 hover:bg-teal-200 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center";
+        } else {
+            btnText.innerText = "Ubah ke 3D";
+            btn.className = "bg-indigo-100 text-indigo-600 hover:bg-indigo-200 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center";
         }
     }
 
-    /**
-     * Renders the diagnosis distribution chart
-     * @param {Array} hasilData - Array of diagnosis results
-     */
-    function renderDiagnosisChart(hasilData) {
-        const ctx = document.getElementById('diagnosisChart').getContext('2d');
+    // Render ulang chart menggunakan data yang disimpan di Global
+    renderDiagnosisChart(savedChartData);
+}
 
-        // Process data: count occurrences of each disease
-        const counts = hasilData.reduce((acc, curr) => {
-            const disease = curr.hasil_penyakit || 'Tidak Terdiagnosa';
-            acc[disease] = (acc[disease] || 0) + 1;
-            return acc;
-        }, {});
-
-        const labels = Object.keys(counts);
-        const data = Object.values(counts);
-
-        if (diagnosisChartInstance) {
-            diagnosisChartInstance.destroy(); // Destroy old chart before creating new one
-        }
-
-        diagnosisChartInstance = new Chart(ctx, {
-            type: 'bar', // 'pie' or 'bar'
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Jumlah Diagnosa',
-                        data: data,
-                        backgroundColor: [
-                            'rgba(13, 148, 136, 0.6)', // teal-600
-                            'rgba(6, 182, 212, 0.6)', // cyan-500
-                            'rgba(16, 185, 129, 0.6)', // emerald-500
-                            'rgba(139, 92, 246, 0.6)', // violet-500
-                            'rgba(239, 68, 68, 0.6)', // red-500
-                            'rgba(236, 72, 153, 0.6)', // pink-500
-                        ],
-                        borderColor: [
-                            'rgba(13, 148, 136, 1)',
-                            'rgba(6, 182, 212, 1)',
-                            'rgba(16, 185, 129, 1)',
-                            'rgba(139, 92, 246, 1)',
-                            'rgba(239, 68, 68, 1)',
-                            'rgba(236, 72, 153, 1)',
-                        ],
-                        borderWidth: 1,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1, // Only show whole numbers
-                        },
-                    },
-                },
-                plugins: {
-                    legend: {
-                        display: labels.length <= 6, // Only show legend if few items
-                    },
-                },
-            },
-        });
+// ===========================
+// 🔹 RENDER CHART (HIGHCHARTS)
+// ===========================
+function renderDiagnosisChart(statsKategori) {
+    // Cek apakah Highcharts sudah diload di HTML
+    if (typeof Highcharts === 'undefined') {
+        console.error("Highcharts belum dimuat! Pastikan script tag ada di dashboard.html");
+        return;
     }
-    loadDashboardData();
+
+    const categories = Object.keys(statsKategori);
+    const dataValues = Object.values(statsKategori);
+
+    Highcharts.chart('diagnosisChart', {
+        chart: {
+            type: 'column',
+            options3d: {
+                enabled: is3DMode, // Aktif jika is3DMode = true
+                alpha: 15,
+                beta: 15,
+                depth: 50,
+                viewDistance: 25
+            },
+            backgroundColor: 'transparent'
+        },
+        title: {
+            text: is3DMode ? 'Statistik Diagnosa (Mode 3D)' : 'Statistik Diagnosa (Mode 2D)',
+            align: 'left',
+            style: { fontSize: '16px', fontWeight: 'bold', color: '#334155' }
+        },
+        subtitle: {
+            text: 'Jumlah pasien per kategori',
+            align: 'left'
+        },
+        xAxis: {
+            categories: categories,
+            labels: { skew3d: is3DMode }
+        },
+        yAxis: {
+            title: { text: 'Jumlah Pasien' },
+            allowDecimals: false
+        },
+        plotOptions: {
+            column: {
+                depth: is3DMode ? 40 : 0,
+                colorByPoint: true,
+                borderRadius: is3DMode ? 0 : 5
+            }
+        },
+        colors: ['#2dd4bf', '#fbbf24', '#f87171', '#60a5fa', '#a78bfa'],
+        series: [{
+            name: 'Jumlah',
+            data: dataValues,
+            showInLegend: false
+        }],
+        credits: { enabled: false }
+    });
+}
+
+    // function renderDiagnosisChart(statsKategori) {
+    //     const ctx = document.getElementById('diagnosisChart').getContext('2d');
+
+    //     // Process data: count occurrences of each disease
+    //     const counts = hasilData.reduce((acc, curr) => {
+    //         const disease = curr.hasil_penyakit || 'Tidak Terdiagnosa';
+    //         acc[disease] = (acc[disease] || 0) + 1;
+    //         return acc;
+    //     }, {});
+
+    //     const labels = Object.keys(counts);
+    //     const data = Object.values(counts);
+
+    //     if (diagnosisChartInstance) {
+    //         diagnosisChartInstance.destroy(); // Destroy old chart before creating new one
+    //     }
+
+    //     diagnosisChartInstance = new Chart(ctx, {
+    //         type: 'bar', // 'pie' or 'bar'
+    //         data: {
+    //             labels: labels,
+    //             datasets: [
+    //                 {
+    //                     label: 'Jumlah Diagnosa',
+    //                     data: data,
+    //                     backgroundColor: [
+    //                         'rgba(13, 148, 136, 0.6)', // teal-600
+    //                         'rgba(6, 182, 212, 0.6)', // cyan-500
+    //                         'rgba(16, 185, 129, 0.6)', // emerald-500
+    //                         'rgba(139, 92, 246, 0.6)', // violet-500
+    //                         'rgba(239, 68, 68, 0.6)', // red-500
+    //                         'rgba(236, 72, 153, 0.6)', // pink-500
+    //                     ],
+    //                     borderColor: [
+    //                         'rgba(13, 148, 136, 1)',
+    //                         'rgba(6, 182, 212, 1)',
+    //                         'rgba(16, 185, 129, 1)',
+    //                         'rgba(139, 92, 246, 1)',
+    //                         'rgba(239, 68, 68, 1)',
+    //                         'rgba(236, 72, 153, 1)',
+    //                     ],
+    //                     borderWidth: 1,
+    //                 },
+    //             ],
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             maintainAspectRatio: false,
+    //             scales: {
+    //                 y: {
+    //                     beginAtZero: true,
+    //                     ticks: {
+    //                         stepSize: 1, // Only show whole numbers
+    //                     },
+    //                 },
+    //             },
+    //             plugins: {
+    //                 legend: {
+    //                     display: labels.length <= 6, // Only show legend if few items
+    //                 },
+    //             },
+    //         },
+    //     });
+    // }
+    // loadDashboardData();
 
     /**
      * Generic table loader function
@@ -498,25 +616,25 @@ console.log('[Dashboard] Data hasil diagnosa:', hasil);
             page.querySelector('h2').insertAdjacentElement('afterend', btnTambah);
         }
 
-        let nomorUrut = 1;
+        let nomorUrut = 1
+
         // Ambil data gejala
         loadTableData(
-            `${API_BASE_URL}/gejala`,
-            'gejalaTableBody',
-            (item) => `
-        <tr class="bg-white border-b hover:bg-gray-50 transition">
-        <td class="py-4 px-6 font-medium text-gray-900">${nomorUrut++}</td>
-            <td class="py-4 px-6 font-medium text-gray-900">${item.kode_gejala}</td>
-            <td class="py-4 px-6">${item.nama_gejala}</td>
-            <td class="py-4 px-6 space-x-2">
-                <button class="btn-edit-gejala bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm" data-id="${item.id_gejala}">Edit</button>
-                <button class="btn-hapus-gejala bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id_gejala}">Hapus</button>
-            </td>
-        </tr>
-    `
-        ).then(() => attachGejalaListeners());
+    `${API_BASE_URL}/gejala`,
+    'gejalaTableBody',
+    (item, index) => `
+    <tr class="bg-white border-b hover:bg-gray-50 transition">
+        <td class="py-4 px-6 text-center font-medium text-gray-900">${index + 1}</td>
+        <td class="py-4 px-6 font-mono text-teal-600 font-bold">${item.kode_gejala}</td>
+        <td class="py-4 px-6 text-gray-700">${item.nama_gejala}</td>
+        <td class="py-4 px-6 text-center space-x-2">
+            <button class="btn-edit bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm shadow-sm" data-id="${item.id_gejala}">Edit</button>
+            <button class="btn-hapus bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm shadow-sm" data-id="${item.id_gejala}">Hapus</button>
+        </td>
+    </tr>
+`
+).then(() => attachGejalaListeners());
     }
-
     /**
      * Tambah data gejala baru
      */
@@ -647,6 +765,8 @@ function loadPenyakitData() {
     btnTambah.addEventListener('click', handleTambahPenyakit);
     btnTambah.hasListener = true; // supaya gak dobel
   }
+
+  let nomorUrut = 1
 //   const page = document.getElementById('pageDataPenyakit');
 //   const tableBody = document.getElementById('penyakitTableBody');
 
@@ -654,25 +774,25 @@ function loadPenyakitData() {
 //     const btnTambah = document.getElementById('btnTambahPenyakit');
 //     btnTambah.addEventListener('click', handleTambahPenyakit);
 //   }
-let nomorUrut = 1;
+
   loadTableData(
     `${API_BASE_URL}/penyakit`,
     'penyakitTableBody',
     (item) => `
-      <tr class="bg-white border-b hover:bg-gray-50 transition">
-      <td class="py-4 px-6 font-medium text-gray-900">${nomorUrut++}</td>
-        <td class="py-4 px-6 font-medium text-gray-900">${item.kode_penyakit}</td>
-        <td class="py-4 px-6">${item.nama_penyakit}</td>
-        <td class="py-4 px-6 max-w-sm truncate">${item.deskripsi || '-'}</td>
-        <td class="py-4 px-6 text-center space-x-2">
-          <button class="btn-edit-penyakit bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Edit</button>
-          <button class="btn-hapus-penyakit bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Hapus</button>
+    <tr class="bg-white border-b hover:bg-gray-50 transition">
+        <td class="py-4 px-6 font-mono text-teal-600 font-bold">${item.kode_penyakit}</td>
+        <td class="py-4 px-6 font-semibold text-gray-800">${item.nama_penyakit}</td>
+        <td class="py-4 px-6 text-gray-600 text-sm max-w-xs truncate" title="${item.deskripsi}">
+            ${item.deskripsi || '-'}
         </td>
-      </tr>
-    `
-  ).then(() => attachPenyakitListeners());
+        <td class="py-4 px-6 text-center space-x-2">
+            <button class="btn-edit bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm shadow-sm" data-id="${item.id}">Edit</button>
+            <button class="btn-hapus bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm shadow-sm" data-id="${item.id}">Hapus</button>
+        </td>
+    </tr>
+`
+).then(() => attachPenyakitListeners());
 }
-
 async function handleTambahPenyakit() {
   const { value: formValues } = await Swal.fire({
     title: 'Tambah Penyakit Baru',
@@ -805,28 +925,31 @@ function attachPenyakitListeners() {
             page.querySelector('h2').insertAdjacentElement('afterend', btnTambah);
         }
 
-        let nomorUrut = 1;
-
+        let nomorUrut = 1
 
         // ambil data dari API
         loadTableData(
-            `${API_BASE_URL}/aturan`,
-            'aturanTableBody',
-            (item) => `
-        <tr class="bg-white border-b hover:bg-gray-50 transition">
-        <td class="py-4 px-6 font-medium text-gray-900">${nomorUrut++}</td>        
-            <td class="py-4 px-6 font-medium text-gray-900">${item.id_aturan}</td>
-            <td class="py-4 px-6">${item.kondisi}</td>
-            <td class="py-4 px-6">${item.hasil}</td>
-            <td class="py-4 px-6 space-x-2">
-                <button class="btn-edit-aturan bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm" data-id="${item.id_aturan}">Edit</button>
-                <button class="btn-hapus-aturan bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id_aturan}">Hapus</button>
-            </td>
-        </tr>
-    `
-        ).then(() => attachAturanListeners());
+    `${API_BASE_URL}/aturan`,
+    'aturanTableBody',
+    (item) => `
+    <tr class="bg-white border-b hover:bg-gray-50 transition">
+        <td class="py-4 px-6 text-center font-medium text-gray-900">${nomorUrut++}</td>
+        <td class="py-4 px-6 text-center">
+            <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs font-bold border border-indigo-200">
+                ${item.kode_penyakit || item.hasil}
+            </span>
+        </td>
+        <td class="py-4 px-6 font-mono text-sm text-gray-600 break-words max-w-sm">
+            ${item.kondisi || item.gejala}
+        </td>
+        <td class="py-4 px-6 text-center space-x-2">
+            <button class="btn-edit-aturan bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm shadow-sm" data-id="${item.id_aturan}">Edit</button>
+            <button class="btn-hapus-aturan bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm shadow-sm" data-id="${item.id_aturan}">Hapus</button>
+        </td>
+    </tr>
+`
+).then(() => attachAturanListeners());
     }
-
     /**
      * Tambah aturan baru
      */
@@ -946,25 +1069,38 @@ function attachPenyakitListeners() {
     }
 
     function loadHasilDiagnosaData() {
-  let nomorUrut = 1;
+        let nomorUrut = 1
+  
         loadTableData(
-    `${API_BASE_URL}/diagnosis/hasil`,
-    'hasilDiagnosaTableBody',
+    `${API_BASE_URL}/diagnosis/hasil`, // Atau endpoint laporan
+    'hasilTableBody', // ID tabel di HTML (atau laporanTableBody)
     (item) => `
-      <tr class="bg-white border-b hover:bg-gray-50">
-      <td class="py-4 px-6 font-medium text-gray-900">${nomorUrut++}</td>
-        <td class="py-4 px-6 font-medium text-gray-900">${item.id}</td>
-        <td class="py-4 px-6">${formatDate(item.tanggal)}</td>
-        <td class="py-4 px-6">${item.nama_pasien || '-'}</td>
-        <td class="py-4 px-6 font-semibold">${item.hasil_penyakit || 'Tidak Terdiagnosa'}</td>
-        <td class="py-4 px-6">${parseFloat(item.persentase || 0).toFixed(0)}%</td>
-        <td class="py-4 px-6 text-center">
-          <button class="btn-hapus-hasil bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">
-            Hapus
-          </button>
+    <tr class="bg-white border-b hover:bg-gray-50 transition">
+        <td class="py-4 px-6 text-center font-bold text-gray-500">${nomorUrut++}</td>
+        <td class="py-4 px-6 text-sm text-gray-600">
+            ${new Date(item.tanggal).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit'})}
         </td>
-      </tr>
-    `
+        <td class="py-4 px-6 font-medium text-gray-900 capitalize">
+            ${item.nama_pasien}
+        </td>
+        <td class="py-4 px-6">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold 
+                ${(item.hasil_penyakit || '').includes('Berat') ? 'bg-red-100 text-red-700' : 
+                  (item.hasil_penyakit || '').includes('Sedang') ? 'bg-orange-100 text-orange-700' : 
+                  'bg-teal-100 text-teal-700'}">
+                ${item.hasil_penyakit || 'Tidak Diketahui'}
+            </span>
+        </td>
+        <td class="py-4 px-6 text-center font-mono text-sm text-gray-700">
+            ${item.total_skor} (${item.persentase}%)
+        </td>
+        <td class="py-4 px-6 text-center">
+            <button class="text-red-500 hover:text-red-700 transition" onclick="hapusDiagnosa(${item.id_hasil})" title="Hapus Riwayat">
+                <i data-feather="trash-2" class="w-5 h-5"></i>
+            </button>
+        </td>
+    </tr>
+`
   ).then(() => attachHasilListeners());
 }
 
@@ -1063,11 +1199,9 @@ async function handleHapusHasil(id) {
                 return;
             }
 
-            let nomorUrut = 1;
             data.forEach((item) => {
                 tableBody.innerHTML += `
         <tr class="bg-white border-b hover:bg-gray-50">
-        <td class="py-4 px-6 font-medium text-gray-900">${nomorUrut++}</td>
           <td class="py-4 px-6 font-medium text-gray-900">${item.id}</td>
           <td class="py-4 px-6">${formatDate(item.tanggal)}</td>
           <td class="py-4 px-6">${item.nama_pasien}</td>
@@ -1574,15 +1708,6 @@ window.previewImage = function(event) {
         window.open('/laporan/print.html', '_blank');
     });
 
-        // Tombol ke landing page
-const homeButton = document.getElementById('homeButton');
-if (homeButton) {
-  homeButton.addEventListener('click', () => {
-    window.location.href = '../../../dashboard/diagnosa.html';
-  });
-}
-
-
     // --- INITIALIZATION ---
     showPage('pageDashboard');
 }); // Penutup DOMContentLoaded
@@ -1611,6 +1736,13 @@ if (homeButton) {
 //         formEditProfil.addEventListener('submit', handleUpdateProfil);
 //     }
 
+//     // Tombol ke landing page
+// const homeButton = document.getElementById('homeButton');
+// if (homeButton) {
+//   homeButton.addEventListener('click', () => {
+//     window.location.href = '/diagnosa.html';
+//   });
+// }
 
 
 //     // Mobile menu toggle

@@ -82,3 +82,37 @@
 [2025-12-01T08:06:27.452Z]    ✅ Aturan BARU: [B01,B02,B03] -> Burnout (Sindrom Stres Akibat Pekerjaan)
 [2025-12-01T08:06:27.454Z] 
 🎉 Seeding selesai! Database telah diperbarui dengan kriteria DSM-5.
+[2025-12-01T13:43:36.876Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-12-01T13:43:37.019Z] ✅ Gejala C1 ditambahkan
+[2025-12-01T13:43:37.028Z] ✅ Gejala C2 ditambahkan
+[2025-12-01T13:43:37.038Z] ✅ Gejala C3 ditambahkan
+[2025-12-01T13:43:37.050Z] ✅ Gejala C4 ditambahkan
+[2025-12-01T13:43:37.058Z] ✅ Gejala C5 ditambahkan
+[2025-12-01T13:43:37.069Z] ✅ Gejala C6 ditambahkan
+[2025-12-01T13:43:37.121Z] ✅ Gejala C7 ditambahkan
+[2025-12-01T13:43:37.173Z] ✅ Gejala C8 ditambahkan
+[2025-12-01T13:43:37.213Z] ✅ Gejala C9 ditambahkan
+[2025-12-01T13:43:37.236Z] ✅ Aturan baru (Depresi Ringan) ditambahkan
+[2025-12-01T13:43:37.258Z] ✅ Aturan baru (Depresi Sedang) ditambahkan
+[2025-12-01T13:43:37.277Z] ✅ Aturan baru (Depresi Mayor Berat) ditambahkan
+[2025-12-01T13:43:37.295Z] ⚙️  Data hasil_diagnosa untuk Dummy A sudah ada, dilewati
+[2025-12-01T13:43:37.303Z] ⚙️  Data hasil_diagnosa untuk Dummy B sudah ada, dilewati
+[2025-12-01T13:43:37.309Z] ⚙️  Data hasil_diagnosa untuk Dummy C sudah ada, dilewati
+[2025-12-01T13:43:37.312Z] 🎉 Seeding selesai tanpa duplikasi & sinkronisasi sukses!
+[2025-12-01T14:06:04.539Z] 🚀 Memulai seeding database (non-destruktif, auto-update, dengan logging)...
+[2025-12-01T14:06:04.667Z] ✅ Gejala C1 ditambahkan
+[2025-12-01T14:06:04.695Z] ✅ Gejala C2 ditambahkan
+[2025-12-01T14:06:04.743Z] ✅ Gejala C3 ditambahkan
+[2025-12-01T14:06:04.788Z] ✅ Gejala C4 ditambahkan
+[2025-12-01T14:06:04.829Z] ✅ Gejala C5 ditambahkan
+[2025-12-01T14:06:04.901Z] ✅ Gejala C6 ditambahkan
+[2025-12-01T14:06:05.088Z] ✅ Gejala C7 ditambahkan
+[2025-12-01T14:06:05.535Z] ✅ Gejala C8 ditambahkan
+[2025-12-01T14:06:05.660Z] ✅ Gejala C9 ditambahkan
+[2025-12-01T14:06:05.677Z] ⚙️  Aturan (Depresi Ringan) sudah sesuai, dilewati
+[2025-12-01T14:06:05.767Z] ⚙️  Aturan (Depresi Sedang) sudah sesuai, dilewati
+[2025-12-01T14:06:05.798Z] ⚙️  Aturan (Depresi Mayor Berat) sudah sesuai, dilewati
+[2025-12-01T14:06:05.823Z] ⚙️  Data hasil_diagnosa untuk Dummy A sudah ada, dilewati
+[2025-12-01T14:06:05.893Z] ⚙️  Data hasil_diagnosa untuk Dummy B sudah ada, dilewati
+[2025-12-01T14:06:05.919Z] ⚙️  Data hasil_diagnosa untuk Dummy C sudah ada, dilewati
+[2025-12-01T14:06:05.929Z] 🎉 Seeding selesai tanpa duplikasi & sinkronisasi sukses!

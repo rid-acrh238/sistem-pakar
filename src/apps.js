@@ -10,6 +10,7 @@ import aturanRoutes from './routes/aturanRoutes.js';
 import diagnosisRoutes from './routes/diagnosisRoutes.js';
 import gejalaRoutes from './routes/gejalaRoutes.js';
 import laporanRoutes from './routes/laporanRoutes.js';
+import publicRoutes from './routes/publicRoutes.js'
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/aturan', aturanRoutes);
 app.use('/api/diagnosis', diagnosisRoutes);
 app.use('/api/gejala', gejalaRoutes);
 app.use('/api/laporan', laporanRoutes);
+app.use('/api/public', publicRoutes);
 
 // --- Fallback Route (Untuk SPA) ---
 app.get(/^(?!\/api).*/, (_, res) => {

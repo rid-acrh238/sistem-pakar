@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Skrining Depresi PHQ-9</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: { light: '#5eead4', DEFAULT: '#0d9488', dark: '#115e59' }
+                    },
+                    animation: { 'fade-in-up': 'fadeInUp 0.5s ease-out' },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .step-section { display: none; }
+        .step-section.active { display: block; animation: fadeInUp 0.6s ease-out; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-brand-light selection:text-brand-dark">
+
+    <nav class="w-full bg-white/80 backdrop-blur-md border-b border-slate-200 fixed top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2 text-brand font-bold text-xl">
+                <i data-feather="smile"></i><span>MindCheck</span>
+            </div>
+            <span class="text-xs font-medium text-slate-400 px-3 py-1 bg-slate-100 rounded-full">PHQ-9 Mode</span>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-24 pb-12 px-4">
+        <div class="max-w-3xl mx-auto">
+
+            <section id="step-1" class="step-section active text-center pt-8">
+                <div class="mb-8">
+                    <img src="https://img.freepik.com/free-vector/mental-health-awareness-concept_23-2148514643.jpg?w=740" 
+                         alt="Mental Health" class="w-64 md:w-80 mx-auto rounded-2xl shadow-lg mb-8 hover:scale-105 transition duration-500">
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold text-slate-800 mb-4">Cek Kesehatan Mentalmu</h1>
+                <p class="text-slate-500 text-lg mb-10 max-w-xl mx-auto">Luangkan waktu sejenak untuk mengetahui kondisi perasaanmu saat ini dengan metode standar PHQ-9.</p>
+                <button onclick="nextStep(2)" class="bg-brand hover:bg-brand-dark text-white text-lg font-semibold py-4 px-10 rounded-full shadow-lg transition-all hover:-translate-y-1">
+                    Mulai Skrining <i data-feather="arrow-right" class="inline ml-2"></i>
+                </button>
+            </section>
+
+            <section id="step-2" class="step-section">
+                <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+                    <div class="bg-slate-50 px-8 py-6 border-b border-slate-200">
+                        <h2 class="text-xl font-bold text-slate-700">Kuesioner (2 Minggu Terakhir)</h2>
+                    </div>
+                    <form id="quiz-form" class="p-8 space-y-8">
+                        <div id="question-container" class="space-y-8"></div>
+                        <div class="pt-6 flex justify-end">
+                            <button type="button" onclick="validateAndNext(3)" class="bg-brand hover:bg-brand-dark text-white font-medium py-3 px-8 rounded-xl shadow-md transition">
+                                Lanjut Data Diri <i data-feather="chevron-right" class="inline ml-1"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="step-3" class="step-section">
+                <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 md:p-12">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-slate-800">Data Diri</h2>
+                        <p class="text-slate-500">Informasi ini untuk personalisasi hasil Anda.</p>
+                    </div>
+                    <form id="identity-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Nama</label>
+                            <input type="text" id="nama" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand outline-none" placeholder="Nama Anda">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Umur</label>
+                            <input type="number" id="umur" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand outline-none" placeholder="Contoh: 20">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Email (Opsional)</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand outline-none" placeholder="email@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Tujuan Mengisi</label>
+                            <textarea id="alasan" rows="2" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand outline-none" placeholder="Alasan Anda..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand hover:bg-brand-dark text-white text-lg font-bold py-4 rounded-xl shadow-lg transition mt-4">
+                            Lihat Hasil Analisis
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="step-result" class="step-section">
+                <div class="bg-white rounded-3xl shadow-2xl overflow-hidden text-center">
+                    <div id="result-header" class="bg-slate-800 text-white p-10">
+                        <p class="text-white/80 font-medium mb-2 text-sm uppercase">Hasil Diagnosa</p>
+                        <h2 id="result-kategori" class="text-3xl md:text-4xl font-bold mb-4">Normal</h2>
+                        <div class="inline-flex items-center bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full text-sm">
+                            <span id="result-score">Skor Total: 0</span>
+                        </div>
+                    </div>
+                    <div class="p-10">
+                        <p id="result-desc" class="text-slate-600 text-lg mb-8 leading-relaxed"></p>
+                        
+                        <div class="bg-blue-50 rounded-xl p-6 border border-blue-100 text-left mb-8">
+                            <h3 class="font-bold text-blue-800 mb-2 flex items-center"><i data-feather="heart" class="mr-2 w-4"></i> Saran:</h3>
+                            <p id="result-advice" class="text-blue-700 text-sm"></p>
+                        </div>
+
+                        <button onclick="location.reload()" class="text-slate-500 hover:text-brand font-medium flex items-center justify-center mx-auto transition">
+                            <i data-feather="refresh-ccw" class="mr-2 w-4"></i> Ulangi Tes
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // --- DATA GEJALA (Format Lama: C1-C9) ---
+        const gejalaList = [
+            { kode: "C1", nama: "Suasana hati sedih hampir setiap hari" },
+            { kode: "C2", nama: "Kehilangan minat atau kesenangan dalam aktivitas" },
+            { kode: "C3", nama: "Perubahan berat badan atau nafsu makan signifikan" },
+            { kode: "C4", nama: "Kesulitan tidur atau tidur berlebihan" },
+            { kode: "C5", nama: "Kelelahan atau kehilangan energi" },
+            { kode: "C6", nama: "Perasaan tidak berharga atau rasa bersalah berlebihan" },
+            { kode: "C7", nama: "Kesulitan berkonsentrasi atau membuat keputusan" },
+            { kode: "C8", nama: "Perubahan gerakan (lambat atau gelisah)" },
+            { kode: "C9", nama: "Pikiran tentang kematian atau bunuh diri" }
+        ];
+
+        let currentAnswers = {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+            renderQuestions();
+        });
+
+        function nextStep(step) {
+            document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('question-container');
+            let html = '';
+            gejalaList.forEach((g, index) => {
+                html += `
+                <div class="border-b border-slate-100 pb-6 last:border-0">
+                    <p class="text-slate-400 text-xs font-bold mb-2">#${index + 1}</p>
+                    <p class="text-lg font-medium text-slate-800 mb-4">${g.nama}</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        ${renderOption(g.kode, 0, "Tidak Pernah (0)")}
+                        ${renderOption(g.kode, 1, "Kadang-kadang (1)")}
+                        ${renderOption(g.kode, 2, "Sering (2)")}
+                        ${renderOption(g.kode, 3, "Hampir Tiap Hari (3)")}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderOption(name, value, label) {
+            return `
+            <label class="cursor-pointer relative group">
+                <input type="radio" name="${name}" value="${value}" class="peer sr-only" onchange="saveAnswer('${name}', ${value})">
+                <div class="p-3 rounded-lg border border-slate-200 text-slate-600 text-center text-sm transition hover:bg-slate-50 peer-checked:bg-brand peer-checked:text-white peer-checked:border-brand">
+                    ${label}
+                </div>
+            </label>`;
+        }
+
+        function saveAnswer(code, val) {
+            currentAnswers[code] = parseInt(val);
+        }
+
+        function validateAndNext(step) {
+            if (Object.keys(currentAnswers).length < 9) {
+                alert("Mohon isi semua pertanyaan terlebih dahulu.");
+                return;
+            }
+            nextStep(step);
+        }
+
+        // --- LOGIKA SUBMIT UTAMA ---
+        document.getElementById('identity-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const nama = document.getElementById('nama').value;
+            if(!nama) { alert("Nama wajib diisi."); return; }
+
+            // 1. Hitung Skor & Kategori secara LOKAL (Sesuai script lama kamu)
+            let totalSkor = 0;
+            const nilaiGejala = []; // Array untuk dikirim ke backend jika perlu
+
+            gejalaList.forEach(g => {
+                const skor = currentAnswers[g.kode] || 0;
+                totalSkor += skor;
+                nilaiGejala.push(skor);
+            });
+
+            let kategori = '';
+            let saran = '';
+            let headerColor = 'bg-teal-600';
+
+            if (totalSkor <= 4) {
+                kategori = 'Normal / Minimal';
+                saran = 'Kondisi mental Anda stabil. Tetap jaga pola hidup sehat.';
+            } else if (totalSkor <= 9) {
+                kategori = 'Depresi Ringan';
+                saran = 'Ada tanda stres ringan. Coba relaksasi atau cerita ke teman.';
+                headerColor = 'bg-yellow-500';
+            } else if (totalSkor <= 14) {
+                kategori = 'Depresi Sedang';
+                saran = 'Gejala mulai mengganggu. Pertimbangkan konseling.';
+                headerColor = 'bg-orange-500';
+            } else if (totalSkor <= 19) {
+                kategori = 'Depresi Cukup Berat';
+                saran = 'Sangat disarankan berkonsultasi ke profesional.';
+                headerColor = 'bg-rose-600';
+            } else {
+                kategori = 'Depresi Berat';
+                saran = 'Kondisi serius. Segera cari bantuan medis atau psikiater.';
+                headerColor = 'bg-red-700';
+            }
+
+            // Cek Red Flag C9 (Bunuh Diri)
+            if (currentAnswers['C9'] > 0) {
+                saran += " <br><strong>⚠️ PERINGATAN:</strong> Adanya pikiran menyakiti diri memerlukan perhatian segera.";
+                headerColor = 'bg-red-800';
+            }
+
+            // 2. Kirim ke Backend (Sesuai format payload script lama)
+            const payload = {
+                nama_pasien: nama,
+                email: document.getElementById('email').value,
+                umur: document.getElementById('umur').value,
+                alasan: document.getElementById('alasan').value,
+                gejala_dipilih: nilaiGejala, // Array angka [0, 1, 2...]
+                total_skor: totalSkor,
+                kategori: kategori
+            };
+
+            try {
+                const res = await fetch('/api/public/diagnosis', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                // Abaikan response data backend jika kita pakai hitungan frontend, 
+                // atau gunakan data backend jika backend mengembalikan hasil juga.
+                // Di sini kita pakai hasil hitungan frontend untuk display.
+                
+                showResult(nama, totalSkor, kategori, saran, headerColor);
+
+            } catch (err) {
+                alert('Gagal koneksi ke server, tapi berikut hasil perhitungan lokal Anda.');
+                showResult(nama, totalSkor, kategori, saran, headerColor);
+            }
+        });
+
+        function showResult(nama, skor, kategori, saran, colorClass) {
+            document.getElementById('result-kategori').textContent = kategori;
+            document.getElementById('result-score').textContent = `Skor Total: ${skor}`;
+            document.getElementById('result-desc').innerHTML = `Halo <strong>${nama}</strong>, berdasarkan jawaban Anda, hasil skrining menunjukkan indikasi <strong>${kategori}</strong>.`;
+            document.getElementById('result-advice').innerHTML = saran;
+            
+            const header = document.getElementById('result-header');
+            header.className = `text-white p-10 ${colorClass}`; // Update warna header
+
+            nextStep('result');
+            feather.replace();
+        }
+    </script>
+</body>
+</html>
