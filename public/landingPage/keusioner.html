@@ -142,8 +142,8 @@
             </div>
             
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Beranda</a>
-                <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Tentang Kami</a>
+                <a href="./diagnosa.html#home" class="text-slate-600 hover:text-mindful font-medium transition">Beranda</a>
+                <a href="./diagnosa.html#about" class="text-slate-600 hover:text-mindful font-medium transition">Tentang Kami</a>
                 <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Layanan</a>
                 <a href="#" class="text-slate-600 hover:text-mindful font-medium transition">Kontak</a>
             </div>
@@ -244,178 +244,22 @@
             </section>
 
             <section id="step-3" class="step-section">
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
-                    <div class="bg-gradient-to-r from-slate-50 to-white p-8 border-b border-slate-200">
-                        <h2 class="text-2xl font-heading font-bold text-slate-800">Tentang Anda & Konteks</h2>
-                        <p class="text-slate-500 mt-2">Informasi ini membantu memberikan konteks pada hasil diagnosa (Opsional namun disarankan).</p>
+                <div class="bg-white rounded-3xl shadow-xl p-6 border border-slate-100">
+                    <h3 class="text-xl font-bold mb-4">Data Diri</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="nama" placeholder="Nama" class="p-3 border rounded-lg" required>
+                        <input type="email" id="email" placeholder="Email" class="p-3 border rounded-lg">
+                        <input type="number" id="umur" placeholder="Umur" class="p-3 border rounded-lg" required>
+                        <input type="text" id="pekerjaan" placeholder="Pekerjaan (opsional)" class="p-3 border rounded-lg">
                     </div>
-
-                    <div class="p-8">
-                        <form id="demographic-form" class="space-y-8">
-                            
-                            <div class="grid md:grid-cols-2 gap-8">
-                                <div class="space-y-3">
-                                    <label class="block text-sm font-bold text-slate-700">Apa alasan utama Anda menggunakan sistem ini? <span class="text-xs font-normal text-slate-500">(Pilih Maksimal 3)</span></label>
-                                    <div class="space-y-2" id="reason-group">
-                                        <div class="flex items-center"><input type="checkbox" name="reason" value="curiosity" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Hanya ingin tahu/penasaran</span></div>
-                                        <div class="flex items-center"><input type="checkbox" name="reason" value="symptoms" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Merasakan gejala depresi</span></div>
-                                        <div class="flex items-center"><input type="checkbox" name="reason" value="referral" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Disarankan orang lain/profesional</span></div>
-                                        <div class="flex items-center"><input type="checkbox" name="reason" value="monitoring" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Memantau kondisi berkala</span></div>
-                                        <div class="flex items-center"><input type="checkbox" name="reason" value="education" class="mr-2 rounded text-mindful focus:ring-mindful limit-3"> <span class="text-sm">Keperluan edukasi/penelitian</span></div>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-3">
-                                    <label class="block text-sm font-bold text-slate-700">Untuk siapa Anda mengambil tes ini?</label>
-                                    <div class="flex space-x-4">
-                                        <div class="flex-1">
-                                            <input type="radio" name="target" id="target-self" value="self" class="hidden" checked>
-                                            <label for="target-self" class="block w-full text-center p-3 border rounded-xl cursor-pointer hover:border-mindful transition">
-                                                <i class="fas fa-user mb-1 block"></i> Diri Sendiri
-                                            </label>
-                                        </div>
-                                        <div class="flex-1">
-                                            <input type="radio" name="target" id="target-other" value="other" class="hidden">
-                                            <label for="target-other" class="block w-full text-center p-3 border rounded-xl cursor-pointer hover:border-mindful transition">
-                                                <i class="fas fa-user-friends mb-1 block"></i> Orang Lain
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr class="border-slate-100">
-
-                            <h3 class="text-lg font-bold text-mindful-dark"><i class="fas fa-id-card mr-2"></i>Tentang Kamu</h3>
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-2">Rentang Usia</label>
-                                    <select id="age-range" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-mindful">
-                                        <option value="">Pilih Rentang Usia</option>
-                                        <option value="<18">Di bawah 18 tahun</option>
-                                        <option value="18-24">18 - 24 tahun</option>
-                                        <option value="25-34">25 - 34 tahun</option>
-                                        <option value="35-44">35 - 44 tahun</option>
-                                        <option value="45-54">45 - 54 tahun</option>
-                                        <option value=">55">Di atas 55 tahun</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-2">Gender</label>
-                                    <div class="flex gap-4 mb-2">
-                                        <label class="inline-flex items-center"><input type="radio" name="gender" value="L" class="text-mindful"> <span class="ml-2 text-sm">Laki-laki</span></label>
-                                        <label class="inline-flex items-center"><input type="radio" name="gender" value="P" class="text-mindful"> <span class="ml-2 text-sm">Perempuan</span></label>
-                                    </div>
-                                    <label class="inline-flex items-center text-sm text-slate-600 bg-purple-50 px-3 py-1 rounded-lg w-full">
-                                        <input type="checkbox" name="is_trans" class="mr-2 text-purple-600 rounded"> Saya mengidentifikasi sebagai Transgender
-                                    </label>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-2">Perkiraan Pendapatan (Bulanan)</label>
-                                    <select id="income" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-mindful">
-                                        <option value="">Pilih Rentang</option>
-                                        <option value="<2jt">< Rp 2.000.000</option>
-                                        <option value="2-5jt">Rp 2.000.000 - Rp 5.000.000</option>
-                                        <option value="5-10jt">Rp 5.000.000 - Rp 10.000.000</option>
-                                        <option value=">10jt">> Rp 10.000.000</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-2">Populasi yang menggambarkan kamu</label>
-                                    <select id="population" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-mindful">
-                                        <option value="">Pilih Status</option>
-                                        <option value="student">Pelajar / Mahasiswa</option>
-                                        <option value="worker">Pekerja Kantoran</option>
-                                        <option value="freelance">Freelancer / Wirausaha</option>
-                                        <option value="unemployed">Sedang mencari kerja</option>
-                                        <option value="retired">Pensiunan</option>
-                                        <option value="irmt">Ibu Rumah Tangga</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <label class="block text-sm font-bold text-slate-700 mb-3">Domisili</label>
-                                <div class="grid md:grid-cols-2 gap-4">
-                                    <div>
-                                        <div class="flex gap-4 mb-3">
-                                            <label class="inline-flex items-center"><input type="radio" name="location_type" value="ID" checked onclick="toggleCountry(false)" class="text-mindful"> <span class="ml-2 text-sm">Indonesia</span></label>
-                                            <label class="inline-flex items-center"><input type="radio" name="location_type" value="Overseas" onclick="toggleCountry(true)" class="text-mindful"> <span class="ml-2 text-sm">Luar Negeri</span></label>
-                                        </div>
-                                        <input type="text" id="country_name" placeholder="Nama Negara" class="w-full p-2 border rounded-lg mb-2 hidden" disabled>
-                                    </div>
-                                    <div>
-                                        <input type="text" id="zipcode" placeholder="Kode Pos (Zip/Postal Code)" class="w-full p-2 border rounded-lg">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr class="border-slate-100">
-
-                            <h3 class="text-lg font-bold text-mindful-dark"><i class="fas fa-heartbeat mr-2"></i>Riwayat Kesehatan</h3>
-                            
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <div class="bg-blue-50/50 p-4 rounded-xl">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Pernah menerima penanganan/dukungan mental sebelumnya?</label>
-                                    <div class="flex gap-4">
-                                        <label><input type="radio" name="past_support" value="yes"> Ya</label>
-                                        <label><input type="radio" name="past_support" value="no"> Tidak</label>
-                                    </div>
-                                </div>
-                                <div class="bg-blue-50/50 p-4 rounded-xl">
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Apakah sedang mendapatkannya SEKARANG?</label>
-                                    <div class="flex gap-4">
-                                        <label><input type="radio" name="current_support" value="yes"> Ya</label>
-                                        <label><input type="radio" name="current_support" value="no"> Tidak</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-bold text-slate-700 mb-2">Apa kontributor utama masalah kesehatan mental Anda saat ini? <span class="text-xs font-normal text-slate-500">(Maksimal 3)</span></label>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2" id="contributors-group">
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="work" class="mr-2 limit-3-con"> Pekerjaan/Karir</label>
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="study" class="mr-2 limit-3-con"> Akademik/Sekolah</label>
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="finance" class="mr-2 limit-3-con"> Keuangan</label>
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="relationship" class="mr-2 limit-3-con"> Hubungan Asmara</label>
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="family" class="mr-2 limit-3-con"> Keluarga</label>
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="health" class="mr-2 limit-3-con"> Kesehatan Fisik</label>
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="trauma" class="mr-2 limit-3-con"> Trauma Masa Lalu</label>
-                                    <label class="flex items-center p-2 border rounded hover:bg-slate-50"><input type="checkbox" name="contributor" value="loneliness" class="mr-2 limit-3-con"> Kesepian</label>
-                                </div>
-                            </div>
-
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Riwayat Penyakit Fisik?</label>
-                                    <select id="physical_disease" class="w-full p-2 border rounded-lg mb-2" onchange="toggleOtherDisease()">
-                                        <option value="none">Tidak Ada</option>
-                                        <option value="diabetes">Diabetes</option>
-                                        <option value="heart">Jantung</option>
-                                        <option value="autoimmune">Autoimun</option>
-                                        <option value="other">Lainnya (Sebutkan)</option>
-                                    </select>
-                                    <input type="text" id="other_disease_text" placeholder="Sebutkan penyakit fisik..." class="w-full p-2 border rounded-lg hidden">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">Memiliki hewan peliharaan (Pet Support)?</label>
-                                    <div class="flex gap-4 mt-2">
-                                        <label><input type="radio" name="pet" value="yes"> Ya</label>
-                                        <label><input type="radio" name="pet" value="no"> Tidak</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-
-                        <div class="mt-8 flex justify-between">
-                            <button onclick="prevStep(2)" class="text-slate-500 hover:text-slate-800 font-medium px-4 py-2">
-                                <i class="fas fa-arrow-left mr-2"></i> Kembali
-                            </button>
-                            <button onclick="calculateAndShowResult()" class="btn-primary text-white text-lg font-bold py-3 px-10 rounded-xl shadow-lg hover:shadow-xl transition flex items-center">
-                                Lihat Hasil Diagnosa <i class="fas fa-file-medical-alt ml-2"></i>
-                            </button>
-                        </div>
+                    <textarea id="keluhan" placeholder="Keluhan utama (opsional)" class="w-full mt-4 p-3 border rounded-lg"></textarea>
+                    <div class="mt-6 flex justify-between">
+                        <button onclick="prevStep(2)" class="text-slate-500 hover:text-slate-800 font-medium px-4 py-2 rounded-lg hover:bg-slate-100 transition">
+                            <i class="fas fa-arrow-left mr-2"></i> Kembali
+                        </button>
+                        <button onclick="calculateAndShowResult()" class="btn-primary text-white font-medium py-3 px-6 rounded-xl shadow-md">
+                            Tampilkan hasil gejala <i class="fas fa-chevron-right ml-2"></i>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -528,8 +372,8 @@
             <div>
                 <h4 class="text-white font-bold mb-4 uppercase tracking-wider">Tautan</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-mindful transition">Beranda</a></li>
-                    <li><a href="#" class="hover:text-mindful transition">Tentang Kami</a></li>
+                    <li><a href="./diagnosa.html#home" class="hover:text-mindful transition">Beranda</a></li>
+                    <li><a href="./diagnosa.html#about" class="hover:text-mindful transition">Tentang Kami</a></li>
                     <li><a href="#" class="hover:text-mindful transition">Kebijakan Privasi</a></li>
                 </ul>
             </div>
@@ -740,28 +584,43 @@ document.getElementById('step-result').classList.add('active');
         'button[onclick="calculateAndShowResult()"]'
     );
 
-     const demografiData = {
-        ageRange: document.getElementById("age-range")?.value || null,
-        gender: document.querySelector("input[name='gender']:checked")?.value || null,
-        income: document.getElementById("income")?.value || null,
-        population: document.getElementById("population")?.value || null,
-        zipcode: document.getElementById("zipcode")?.value || null
-    };
-
-    console.log("DEMOGRAFI:", demografiData);
-
     const originalText = btnSubmit.innerHTML;
     btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menganalisis...';
     btnSubmit.disabled = true;
 
     try {
-        const response = await fetch('/api/public/diagnosis/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                jawaban: currentAnswers,
-            })
-        });
+        // ambil data identitas / demografi dari step-3
+        const identitas = {
+            nama: document.getElementById('nama')?.value?.trim() || 'Anonim',
+            email: document.getElementById('email')?.value?.trim() || null
+        };
+
+        const demografi = {
+            umur: Number(document.getElementById('umur')?.value) || null,
+            pekerjaan: document.getElementById('pekerjaan')?.value?.trim() || null
+        };
+
+        const keluhan = document.getElementById('keluhan')?.value?.trim() || null;
+
+        // validasi kecil: pastikan minimal jawaban dan umur/ nama jika required
+        if (!identitas.nama) {
+            alert('Mohon isi nama sebelum melihat hasil.');
+            nextStep(3);
+            return;
+        }
+
+        const response = await fetch('http://localhost:3000/api/public/diagnosis/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        jawaban: currentAnswers,
+        nama: document.getElementById('nama')?.value?.trim() || 'Anonim',
+        email: document.getElementById('email')?.value?.trim() || null,
+        umur: Number(document.getElementById('umur')?.value) || null,
+        keluhan: document.getElementById('keluhan')?.value?.trim() || null
+    })
+});
+
 
         if (!response.ok) {
             const text = await response.text();
@@ -812,153 +671,6 @@ data.rekomendasi.forEach(r => {
         btnSubmit.disabled = false;
     }
 }
-
-
-
-//         async function calculateAndShowResult() {
-//     // 1. UI FEEDBACK: Kasih tau user kalau sistem lagi mikir
-//     const btnSubmit = document.querySelector('button[onclick="calculateAndShowResult()"]');
-//     const originalText = btnSubmit.innerHTML;
-//     btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menganalisis...';
-//     btnSubmit.disabled = true;
-
-//     try {
-//         // 2. PERSIAPAN DATA: Ambil data jawaban
-//         // currentAnswers isinya { D01: 2, D02: 1, ... }
-        
-//         // 3. KIRIM KE BACKEND (API)
-//         const response = await fetch('/api/public/diagnosis/submit', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({
-//                 jawaban: currentAnswers, 
-//                 // Jika butuh data demografi, bisa ditambah disini:
-//                 // demografi: { usia: ..., gender: ... }
-//             })
-//         });
-
-//         const resultJson = await response.json();
-
-//         // 4. CEK HASIL DARI BACKEND
-//         if (resultJson.success) {
-//             const data = resultJson.data; 
-//             // Backend mengirim: { skor: 15, hasil: "Depresi Sedang...", saran: "..." }
-
-//             // --- A. UPDATE WARNA (Visual) BERDASARKAN SKOR ---
-//             // Karena backend cuma kirim teks, kita tentukan warna di sini
-//             let colorClass = 'bg-mindful'; // Default (Hijau/Biru)
-//             if (data.skor > 19) colorClass = 'bg-red-700';       // Severe
-//             else if (data.skor > 14) colorClass = 'bg-orange-600'; // Mod. Severe
-//             else if (data.skor > 9) colorClass = 'bg-yellow-500';  // Moderate
-//             else if (data.skor > 4) colorClass = 'bg-calm-dark';   // Mild
-
-//             // --- B. MASUKKAN DATA KE HTML (DOM) ---
-//             const header = document.getElementById('result-header');
-//             header.className = `p-10 text-center text-white relative overflow-hidden ${colorClass}`;
-
-//             document.getElementById('result-category').textContent = data.hasil;
-//             document.getElementById('result-score').textContent = `Total Skor PHQ-9: ${data.skor}`;
-            
-//             // Backend sudah mengirim saran lengkap, jadi kita pakai itu
-//             document.getElementById('result-description').textContent = data.saran;
-            
-//             // Jika backend tidak mengirim list HTML rekomendasi spesifik, 
-//             // kamu bisa buat logika if-else singkat disini atau minta backend kirim array rekomendasi.
-//             // Untuk sekarang, kita kosongkan atau isi default:
-//             document.getElementById('recommendation-list').innerHTML = `<li>Ikuti saran klinis di atas.</li>`;
-
-//             // --- C. CEK RED FLAG (BUNUH DIRI) ---
-//             // Cek apakah string hasil mengandung kata kunci bahaya
-//             if (data.hasil.includes('PERLU PERHATIAN KHUSUS') || data.hasil.includes('RISIKO')) {
-//                 document.getElementById('crisis-banner').classList.remove('hidden');
-//             } else {
-//                 document.getElementById('crisis-banner').classList.add('hidden');
-//             }
-
-//             // 5. PINDAH KE HALAMAN HASIL
-//             nextStep('result');
-
-//         } else {
-//             alert('Gagal: ' + (resultJson.msg || 'Terjadi kesalahan sistem'));
-//         }
-
-//     } catch (error) {
-//         console.error('Error koneksi:', error);
-//         alert('Gagal menghubungi server. Periksa koneksi internet Anda.');
-//     } finally {
-//         // Kembalikan tombol seperti semula jika gagal/selesai
-//         btnSubmit.innerHTML = originalText;
-//         btnSubmit.disabled = false;
-//     }
-// }
-
-
-
-        // function calculateAndShowResult() {
-        //     // 1. Calculate Score
-        //     let totalScore = 0;
-        //     let suicideRisk = false;
-            
-        //     Object.keys(currentAnswers).forEach(key => {
-        //         totalScore += currentAnswers[key];
-        //         if(key === 'C9' && currentAnswers[key] > 0) suicideRisk = true;
-        //     });
-
-        //     // 2. Determine Category (Standard PHQ-9 cutoffs)
-        //     let category = "";
-        //     let desc = "";
-        //     let color = "";
-        //     let recommendations = "";
-
-        //     if (totalScore <= 4) {
-        //         category = "Minimal / Tidak Depresi";
-        //         color = "bg-mindful";
-        //         desc = "Gejala yang Anda alami minimal. Kemungkinan besar ini adalah fluktuasi suasana hati yang normal.";
-        //         recommendations = "<li>Pertahankan pola hidup sehat (tidur cukup, olahraga).</li><li>Lakukan manajemen stres ringan.</li>";
-        //     } else if (totalScore <= 9) {
-        //         category = "Depresi Ringan";
-        //         color = "bg-calm-dark";
-        //         desc = "Terindikasi gejala depresi ringan. Mungkin mengganggu namun Anda masih bisa berfungsi dengan cukup baik.";
-        //         recommendations = "<li>Curhat dengan teman dekat atau keluarga.</li><li>Pantau gejala selama 2 minggu ke depan.</li><li>Lakukan aktivitas yang biasanya Anda nikmati (behavioral activation).</li>";
-        //     } else if (totalScore <= 14) {
-        //         category = "Depresi Sedang";
-        //         color = "bg-yellow-500";
-        //         desc = "Terindikasi gejala depresi sedang. Hal ini mungkin mulai signifikan mengganggu pekerjaan atau hubungan sosial Anda.";
-        //         recommendations = "<li><strong>Sangat disarankan</strong> berkonsultasi dengan Psikolog.</li><li>Terapi Kognitif Perilaku (CBT) biasanya efektif.</li><li>Coba kurangi beban kerja jika memungkinkan.</li>";
-        //     } else if (totalScore <= 19) {
-        //         category = "Depresi Cukup Berat";
-        //         color = "bg-orange-600";
-        //         desc = "Terindikasi gejala depresi cukup berat (Moderately Severe). Memerlukan perhatian profesional segera.";
-        //         recommendations = "<li><strong>Segera hubungi Psikolog Klinis atau Psikiater.</strong></li><li>Mungkin memerlukan kombinasi terapi dan pengobatan medis.</li><li>Jangan memendam masalah sendirian.</li>";
-        //     } else {
-        //         category = "Depresi Berat";
-        //         color = "bg-red-700";
-        //         desc = "Terindikasi gejala depresi berat. Ini adalah kondisi serius yang mempengaruhi fungsi hidup secara total.";
-        //         recommendations = "<li><strong>Wajib segera mencari pertolongan medis/psikiater.</strong></li><li>Libatkan keluarga untuk dukungan penuh.</li><li>Prioritaskan kesehatan mental di atas segalanya saat ini.</li>";
-        //     }
-
-        //     // 3. Update DOM
-        //     const header = document.getElementById('result-header');
-        //     header.className = `p-10 text-center text-white relative overflow-hidden ${color}`;
-            
-        //     document.getElementById('result-category').textContent = category;
-        //     document.getElementById('result-score').textContent = `Total Skor PHQ-9: ${totalScore}`;
-        //     document.getElementById('result-description').textContent = desc;
-        //     document.getElementById('recommendation-list').innerHTML = recommendations;
-
-        //     // 4. Handle Suicide Risk
-        //     if(suicideRisk) {
-        //         document.getElementById('crisis-banner').classList.remove('hidden');
-        //         document.getElementById('result-description').innerHTML += "<br><br><strong>CATATAN:</strong> Adanya keinginan menyakiti diri sendiri adalah tanda bahwa Anda membutuhkan pertolongan darurat sekarang juga.";
-        //     } else {
-        //         document.getElementById('crisis-banner').classList.add('hidden');
-        //     }
-
-        //     // Go to result page
-        //     nextStep('result');
-        // }
     </script>
 </body>
 </html>

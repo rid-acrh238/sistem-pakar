@@ -11,12 +11,11 @@ import { verifyToken } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 router.get('/gejala', getGejalaDiagnosis);
-router.post('/diagnosis', submitDiagnosis);
-router.post('/diagnosis/submit', submitDiagnosis);
+router.post('/submit', submitDiagnosis);
 router.get('/hasil', getHasilDiagnosis);
 router.delete('/hasil/:id', verifyToken, deleteHasilDiagnosis);
 router.get('/hasil', getHistory);
-router.get('/hasil', getHasilDiagnosis);
+
 
 
 // tambahan endpoint untuk laporan dashboard

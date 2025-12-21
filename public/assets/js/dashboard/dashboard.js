@@ -1160,27 +1160,6 @@ function setupPrintHeader() {
   };
 }
 
-
-
- // ===========================
-// 🔹 CRUD: KELOLA ADMIN
-// ===========================
-
-// function loadAdminData() {
-//   loadTableData(`${API_BASE_URL}/admin`, 'adminTableBody', (item) => `
-//     <tr class="bg-white border-b hover:bg-gray-50 transition">
-//       <td class="py-4 px-6 font-medium text-gray-900">${item.username}</td>
-//       <td class="py-4 px-6">${item.nama_lengkap}</td>
-//       <td class="py-4 px-6">${item.email || '-'}</td>
-//       <td class="py-4 px-6">${formatDate(item.created_at)}</td>
-//       <td class="py-4 px-6 text-center space-x-2">
-//         <button class="btn-edit-admin bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded text-sm" data-id="${item.id}" data-username="${item.username}">Edit</button>
-//          <button class="btn-password-admin bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Password</button>
-//         <button class="btn-hapus-admin bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm" data-id="${item.id}">Hapus</button>
-//       </td>
-//     </tr>
-//   `).then(() => attachAdminButtonListeners());
-// }
 function loadAdminData() {
   loadTableData(`${API_BASE_URL}/admin`, 'adminTableBody', (item) => {
     
@@ -1531,7 +1510,7 @@ window.previewImage = function(event) {
     });
 
     safeAddListener('homeButton', 'click', () => {
-        window.location.href = '/diagnosa.html';
+        window.location.href = '../../../landingPage/diagnosa.html';
     });
 
     if (mobileMenuButton && sidebar) {
@@ -1578,7 +1557,7 @@ window.previewImage = function(event) {
 const homeButton = document.getElementById('homeButton');
 if (homeButton) {
   homeButton.addEventListener('click', () => {
-    window.location.href = '../../../dashboard/diagnosa.html';
+    window.location.href = '../../../landingPage/diagnosa.html';
   });
 }
 
@@ -1586,62 +1565,3 @@ if (homeButton) {
     // --- INITIALIZATION ---
     showPage('pageDashboard');
 }); // Penutup DOMContentLoaded
-//     logoutButton.addEventListener('click', () => {
-//         Swal.fire({
-//             title: 'Keluar dari dashboard?', 
-//             text: 'Sesi login kamu akan berakhir.',
-//             icon: 'warning',
-//             showCancelButton: true,
-//             confirmButtonText: 'Ya, keluar',
-//             cancelButtonText: 'Batal',
-//             confirmButtonColor: '#d33',
-//         }).then((result) => {
-//             if (result.isConfirmed) {
-//                 // Hapus token & redirect ke login
-//                 localStorage.removeItem('token');
-//                 localStorage.removeItem('nama_lengkap');
-//                 Swal.fire('Berhasil keluar!', 'Kamu telah logout dari sistem.', 'success');
-//                 setTimeout(() => (window.location.href = '/auth/login'), 1000);
-//             }
-//         });
-//     });
-
-//     const formEditProfil = document.getElementById('formEditProfil');
-//     if (formEditProfil) {
-//         formEditProfil.addEventListener('submit', handleUpdateProfil);
-//     }
-
-
-
-//     // Mobile menu toggle
-//     mobileMenuButton.addEventListener('click', () => {
-//         sidebar.classList.toggle('-translate-x-full');
-//     });
-
-//     // Sidebar navigation
-//     navLinks.forEach((link) => {
-//         link.addEventListener('click', (e) => {
-//             e.preventDefault();
-//             showPage(e.currentTarget.dataset.page);
-//         });
-//     });
-
-//     // Modal triggers
-//     openTambahAdminModalButton.addEventListener('click', () => openModal('tambahAdminModal'));
-//     closeModalButtons.forEach((button) => {
-//         button.addEventListener('click', (e) => closeModal(e.currentTarget.dataset.modal));
-//     });
-// on
-//     // Form submissions
-//     formTambahAdmin.addEventListener('submit', handleTambahAdmin);
-//     formUbahPassword.addEventListener('submit', handleUbahPassword);
-
-//     // Print button
-//     // printButton.addEventListener('click', () => {
-//     //     window.print();
-//     // });
-
-//     // --- INITIALIZATION ---
-//     showPage('pageDashboard'); // Load dashboard on page load
-// });
-
