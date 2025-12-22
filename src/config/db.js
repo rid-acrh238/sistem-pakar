@@ -12,6 +12,10 @@ export const pool = mysql.createPool({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
+  // 👇 TAMBAHAN PENTING BIAR GAK GAMPANG TIMEOUT
+  connectTimeout: 60000, // Tunggu sampai 60 detik sebelum nyerah
+  enableKeepAlive: true, // Jaga koneksi tetap hidup
+  keepAliveInitialDelay: 0,
   ssl: {
         rejectUnauthorized: false
     }
