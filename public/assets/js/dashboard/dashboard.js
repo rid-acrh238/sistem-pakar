@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- SECURITY CHECK ---
     if (!token) {
-        window.location.href = 'login.html';
+        window.location.href = '/auth/login';
         return;
     }
 

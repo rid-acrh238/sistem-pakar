@@ -29,13 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       // ⬇️ panggil API login, bukan halaman HTML
-      const res = await fetch('http://localhost:3000/api/admin/login', {
+      const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password }),
       });
 
       const data = await res.json();
+      console.log("📦 RESPON SERVER:", data);
       if (!res.ok) throw new Error(data.message || 'Gagal login');
 
       // simpan data penting

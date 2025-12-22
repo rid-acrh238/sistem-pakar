@@ -4,4 +4,4 @@ logs/
 uploads/*
 .vscode/
 .DS_Store
-arsip/
+arsip/.env 

@@ -19,7 +19,7 @@ import publicRoutes from './src/routes/publicRoutes.js';
 // --- Konfigurasi Awal ---
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // --- Setup Path Folder (JURUS PAMUNGKAS) ---
 // Kita gunakan process.cwd() agar path selalu benar dari root project
