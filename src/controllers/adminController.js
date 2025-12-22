@@ -150,8 +150,8 @@ export const updateProfil = async (req, res) => {
 
         // Cek file foto
         if (req.file) {
-            console.log("✅ Foto baru diterima:", req.file.filename);
-            dataToUpdate.foto_profil = req.file.filename;
+            console.log("✅ Foto baru diterima:", req.file.path);
+            dataToUpdate.foto_profil = req.file.path;
         }
 
         // Update DB

@@ -145,13 +145,17 @@ async function loadAdminProfile() {
         if (avatarEl) {
             // 👇 LOGIKA SAMA: Abaikan jika isinya 'default.jpg'
             const hasPhoto = user.foto_profil && user.foto_profil !== 'default.jpg';
-
+            if (user.foto_profil.startsWith('https')) {
+        // Kalau link dari Cloudinary (https://...), pakai langsung
+        avatarUrl = user.foto_profil;
+            }
             if (hasPhoto) {
                 avatarEl.src = `/uploads/${user.foto_profil}?v=${new Date().getTime()}`;
             } else {
                 // Pakai UI Avatars
                 avatarEl.src = `https://ui-avatars.com/api/?name=${user.nama_lengkap}&background=0D9488&color=fff&size=128`;
             }
+            avatarEl.src = avatarUrl;
         }
     } catch (err) {
         console.error('Gagal memuat profil admin:', err.message);
