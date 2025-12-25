@@ -106,7 +106,7 @@ app.use((err, req, res, next) => {
 });
 
 // === START SERVER ===
-app.listen(PORT, '0.0.0.0' () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(chalk.greenBright(`🚀 Server Berjalan di http://localhost:${PORT}`));
     console.log(chalk.cyanBright(`📁 Menggunakan satu file server.js (Terpusat)`));
 });
