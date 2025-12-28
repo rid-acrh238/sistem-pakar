@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kebijakan Privasi - MindCare</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'Poppins', 'sans-serif'],
+                        'heading': ['Poppins', 'Inter', 'sans-serif']
+                    },
+                    colors: {
+                        'mindful': {
+                            'light': '#C5E4F3',
+                            'primary': '#5DADE2',
+                            'DEFAULT': '#3498DB',
+                            'dark': '#2874A6',
+                            'darker': '#1B4F72'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+    <nav class="w-full bg-white border-b border-slate-200 fixed top-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="bg-mindful-light p-2 rounded-lg">
+                    <i class="fas fa-brain text-mindful-darker text-xl"></i>
+                </div>
+                <h1 class="text-xl font-heading font-bold text-mindful-darker">MindCare</h1>
+            </div>
+            <a href="javascript:history.back()" class="text-sm font-medium text-slate-500 hover:text-mindful transition">
+                <i class="fas fa-arrow-left mr-1"></i> Kembali
+            </a>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-16 px-6">
+        <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-12">
+            
+            <h1 class="text-3xl font-heading font-bold text-slate-900 mb-2">Kebijakan Privasi</h1>
+            <p class="text-slate-500 text-sm mb-8">Terakhir diperbarui: 28 Desember 2025</p>
+
+            <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                
+                <p>
+                    Selamat datang di <strong>MindCare</strong>. Kami menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi yang Anda bagikan saat menggunakan layanan sistem pakar deteksi dini depresi kami. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda.
+                </p>
+
+                <h3 class="text-xl font-bold text-slate-800 mt-8">1. Informasi yang Kami Kumpulkan</h3>
+                <p>Saat Anda menggunakan MindCare, kami dapat mengumpulkan jenis informasi berikut:</p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><strong>Data Identitas (Opsional/Wajib):</strong> Nama, Umur, Jenis Kelamin, dan Pekerjaan yang Anda masukkan secara sukarela pada formulir data diri.</li>
+                    <li><strong>Data Kontak (Opsional):</strong> Alamat email, jika Anda memilih untuk mencantumkannya.</li>
+                    <li><strong>Data Kesehatan Mental:</strong> Jawaban Anda terhadap kuesioner gejala (berbasis PHQ-9) dan keluhan utama yang Anda tuliskan.</li>
+                    <li><strong>Data Teknis:</strong> Informasi browser dan perangkat yang digunakan untuk akses teknis (log server standar).</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-slate-800 mt-8">2. Penggunaan Informasi</h3>
+                <p>Data yang kami kumpulkan digunakan untuk tujuan berikut:</p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Memproses jawaban kuesioner menggunakan metode <em>Forward-Chaining</em> untuk memberikan hasil screening awal.</li>
+                    <li>Menampilkan rekomendasi tindakan dan rujukan yang relevan dengan kondisi Anda.</li>
+                    <li>Tujuan riset dan pengembangan sistem (data akan dianonimkan/disamarkan sebelum dianalisis).</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-slate-800 mt-8">3. Keamanan Data</h3>
+                <p>
+                    Kami menerapkan langkah-langkah keamanan teknis yang wajar untuk melindungi data Anda dari akses yang tidak sah. Namun, harap diingat bahwa tidak ada metode transmisi data melalui internet yang 100% aman.
+                </p>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4">
+                    <p class="text-sm text-yellow-800">
+                        <strong>Catatan:</strong> Kami tidak pernah menjual data pribadi atau data kesehatan Anda kepada pihak ketiga manapun.
+                    </p>
+                </div>
+
+                <h3 class="text-xl font-bold text-slate-800 mt-8">4. Penafian Medis (Medical Disclaimer)</h3>
+                <p>
+                    Layanan MindCare adalah alat bantu screening awal dan <strong>BUKAN pengganti diagnosis medis profesional</strong>. Hasil yang ditampilkan oleh sistem ini tidak boleh dianggap sebagai diagnosis final.
+                </p>
+                <p>
+                    Jika hasil tes menunjukkan indikasi depresi berat atau risiko bunuh diri, kami sangat menyarankan Anda untuk segera mencari bantuan profesional (Psikolog/Psikiater) atau mengunjungi fasilitas kesehatan terdekat.
+                </p>
+
+                <h3 class="text-xl font-bold text-slate-800 mt-8">5. Tautan Pihak Ketiga</h3>
+                <p>
+                    Aplikasi ini mungkin berisi tautan ke situs web lain (seperti Google Maps, Halodoc, atau Alodokter) untuk memudahkan Anda mencari bantuan. Kami tidak bertanggung jawab atas kebijakan privasi atau konten dari situs pihak ketiga tersebut.
+                </p>
+
+                <h3 class="text-xl font-bold text-slate-800 mt-8">6. Hubungi Kami</h3>
+                <p>
+                    Jika Anda memiliki pertanyaan mengenai kebijakan privasi ini atau cara kerja sistem MindCare, silakan hubungi kami melalui email:
+                </p>
+                <p class="font-medium text-mindful-dark">
+                    <i class="fas fa-envelope mr-2"></i> admin@mindcare-project.com
+                </p>
+
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-slate-100 flex justify-center">
+                <button onclick="history.back()" class="bg-slate-800 text-white px-6 py-3 rounded-xl hover:bg-slate-900 transition font-medium">
+                    Tutup Halaman
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8 text-center text-slate-500 text-sm">
+        &copy; 2025 MindCare Expert System. Hak Cipta Dilindungi.
+    </footer>
+
+</body>
+</html>

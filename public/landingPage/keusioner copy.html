@@ -83,9 +83,14 @@
             box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
         }
 
-        /* --- GAYA KUESIONER --- */
-        .custom-radio { display: none; }
+        /* --- GAYA KUESIONER BARU (Dari diagnosamincek.html) --- */
         
+        /* Menyembunyikan radio button asli */
+        .custom-radio {
+            display: none;
+        }
+        
+        /* Tampilan opsi jawaban (kartu) */
         .radio-option {
             display: flex;
             flex-direction: column;
@@ -98,7 +103,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
-            height: 100%;
+            height: 100%; /* Agar tinggi sama */
         }
         
         .radio-option:hover {
@@ -107,6 +112,7 @@
             transform: translateY(-2px);
         }
         
+        /* State ketika dipilih */
         .custom-radio:checked + .radio-option {
             border-color: #3498DB;
             background-color: #E8F4FC;
@@ -115,6 +121,7 @@
             box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
         }
 
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -257,6 +264,7 @@
                 </div>
             </section>
 
+
             <section id="step-result" class="step-section">
                 <div class="max-w-4xl mx-auto space-y-8">
                     
@@ -301,82 +309,29 @@
                                 <div>
                                     <h3 class="text-lg font-bold text-slate-800 mb-3">Rekomendasi Tindakan</h3>
                                     <ul id="recommendation-list" class="space-y-3 text-sm text-slate-600">
-                                    </ul>
+                                        </ul>
                                 </div>
 
-                                <div class="bg-calm-light/30 p-5 rounded-xl border border-calm-light flex flex-col h-full">
-    <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center">
-        <i class="fas fa-map-marker-alt text-calm-dark mr-2"></i> Cari Bantuan Profesional
-    </h3>
-    
-    <div class="space-y-3 text-sm flex-grow">
-        <p class="text-slate-600 text-xs mb-2">
-            MindCare tidak berafiliasi dengan RS manapun. Gunakan tombol di bawah untuk menemukan bantuan terdekat dari lokasimu saat ini.
-        </p>
-
-        <a href="https://www.google.com/maps/search/psikolog+atau+psikiater+terdekat" target="_blank" class="block bg-white p-3 rounded-lg shadow-sm border border-slate-100 hover:border-calm hover:shadow-md transition group">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="font-bold text-slate-700 group-hover:text-calm-dark transition">Cari Psikiater Terdekat</p>
-                    <p class="text-xs text-slate-500">Via Google Maps (GPS)</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-400 group-hover:text-calm transition"></i>
-            </div>
-        </a>
-
-        <a href="https://www.halodoc.com/tanya-dokter/kategori/kesehatan-jiwa" target="_blank" class="block bg-white p-3 rounded-lg shadow-sm border border-slate-100 hover:border-calm hover:shadow-md transition group">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="font-bold text-slate-700 group-hover:text-calm-dark transition">Konsultasi Online</p>
-                    <p class="text-xs text-slate-500">Halodoc / Alodokter (Berbayar)</p>
-                </div>
-                <i class="fas fa-mobile-alt text-slate-400 group-hover:text-calm transition"></i>
-            </div>
-        </a>
-
-        <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-100">
-            <div class="flex items-start">
-                <i class="fas fa-address-card text-green-600 mt-1 mr-2"></i>
-                <div>
-                    <p class="font-bold text-slate-700">Pengguna BPJS?</p>
-                    <p class="text-xs text-slate-500 mt-1">Silakan datang ke <strong>Faskes 1 (Puskesmas/Klinik)</strong> terdaftar Anda untuk minta rujukan ke Poli Jiwa.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-                            </div>
-
-                            <div class="mt-8 bg-gradient-to-r from-mindful-light/50 to-white p-6 rounded-2xl border border-mindful/30 relative overflow-hidden group shadow-sm">
-                                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-mindful/10 rounded-full blur-xl"></div>
-                                
-                                <div class="relative z-10 text-center">
-                                    <div class="flex flex-col md:flex-row justify-center items-center gap-3 mb-4">
-                                        <h4 class="text-mindful-dark font-bold uppercase tracking-widest text-xs">
-                                            <i class="fas fa-quote-left mr-2"></i>Afirmasi Harian
-                                        </h4>
-                                        
-                                        <select id="quote-category" onchange="generateQuote()" class="text-xs border border-mindful/40 rounded-full px-3 py-1 bg-white text-slate-600 focus:outline-none focus:border-mindful cursor-pointer hover:bg-slate-50 transition">
-                                            <option value="all">🌐 Universal / Semua</option>
-                                            <option value="islam">☪️ Islam</option>
-                                            <option value="kristen">✝️ Kristen / Katolik</option>
-                                            <option value="buddha">☸️ Buddha</option>
-                                            <option value="hindu">🕉️ Hindu</option>
-                                        </select>
+                                <div class="bg-calm-light/30 p-5 rounded-xl border border-calm-light">
+                                    <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center">
+                                        <i class="fas fa-hospital-alt text-calm-dark mr-2"></i> Rujukan Medis
+                                    </h3>
+                                    <div class="space-y-3 text-sm">
+                                        <div class="bg-white p-3 rounded shadow-sm">
+                                            <p class="font-bold text-slate-700">RSJ Dr. Soeharto Heerdjan</p>
+                                            <p class="text-xs text-slate-500">Jakarta Barat - BPJS Tersedia</p>
+                                            <p class="text-xs text-green-600 font-semibold mt-1">Est. Konsul: Rp 150rb - 300rb</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded shadow-sm">
+                                            <p class="font-bold text-slate-700">RSUP Nasional Dr. Cipto M.</p>
+                                            <p class="text-xs text-slate-500">Jakarta Pusat - Poli Jiwa Lengkap</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded shadow-sm">
+                                            <p class="font-bold text-slate-700">Halodoc / Alodokter (Online)</p>
+                                            <p class="text-xs text-slate-500">Konsultasi Psikolog/Psikiater</p>
+                                            <p class="text-xs text-green-600 font-semibold mt-1">Est: Rp 50rb - 150rb</p>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="min-h-[80px] flex flex-col justify-center">
-                                        <p id="quote-text" class="text-lg md:text-xl font-heading font-semibold text-slate-700 italic mb-2 transition-all duration-500">
-                                            "..."
-                                        </p>
-                                        <p id="quote-author" class="text-sm text-slate-500 font-medium transition-all duration-500">
-                                            - MindCare AI
-                                        </p>
-                                    </div>
-
-                                    <button onclick="generateQuote()" class="mt-4 text-xs text-mindful hover:text-mindful-dark font-semibold bg-white/50 px-4 py-2 rounded-full border border-transparent hover:border-mindful/30 transition shadow-sm">
-                                        <i class="fas fa-sync-alt mr-1"></i> Acak Kutipan Lain
-                                    </button>
                                 </div>
                             </div>
 
@@ -420,7 +375,7 @@
                 <ul class="space-y-2">
                     <li><a href="./diagnosa.html#home" class="hover:text-mindful transition">Beranda</a></li>
                     <li><a href="./diagnosa.html#about" class="hover:text-mindful transition">Tentang Kami</a></li>
-                    <li><a href="./privacy.html" class="hover:text-mindful transition">Kebijakan Privasi</a></li>
+                    <li><a href="#" class="hover:text-mindful transition">Kebijakan Privasi</a></li>
                 </ul>
             </div>
             <div>
@@ -451,45 +406,13 @@
             { kode: "C9", nama: "Merasa lebih baik mati atau ingin melukai diri sendiri dengan cara apapun" }
         ];
 
-        // --- DATABASE KUTIPAN LINTAS AGAMA ---
-        const interfaithQuotes = [
-            // --- ISLAM ---
-            { text: "Maka sesungguhnya bersama kesulitan ada kemudahan.", author: "QS. Al-Insyirah: 5-6", category: "islam" },
-            { text: "Janganlah kamu berduka cita, sesungguhnya Allah bersama kita.", author: "QS. At-Taubah: 40", category: "islam" },
-            { text: "Allah tidak membebani seseorang melainkan sesuai dengan kesanggupannya.", author: "QS. Al-Baqarah: 286", category: "islam" },
-            { text: "Sesungguhnya pertolongan Allah itu dekat.", author: "QS. Al-Baqarah: 214", category: "islam" },
-            
-            // --- KRISTEN / KATOLIK ---
-            { text: "Segala perkara dapat kutanggung di dalam Dia yang memberi kekuatan kepadaku.", author: "Filipi 4:13", category: "kristen" },
-            { text: "Serahkanlah segala kekuatiranmu kepada-Nya, sebab Ia yang memelihara kamu.", author: "1 Petrus 5:7", category: "kristen" },
-            { text: "Tuhan itu dekat kepada orang-orang yang patah hati.", author: "Mazmur 34:18", category: "kristen" },
-            { text: "Marilah kepada-Ku, semua yang letih lesu dan berbeban berat, Aku akan memberi kelegaan kepadamu.", author: "Matius 11:28", category: "kristen" },
-
-            // --- BUDDHA ---
-            { text: "Rasa sakit itu pasti, tapi menderita adalah pilihan.", author: "Buddha Gautama", category: "buddha" },
-            { text: "Kedamaian datang dari dalam. Jangan mencarinya di luar.", author: "Buddha Gautama", category: "buddha" },
-            { text: "Tidak ada yang bisa menyelamatkan kita kecuali diri kita sendiri.", author: "Buddha Gautama", category: "buddha" },
-            
-            // --- HINDU ---
-            { text: "Kamu berhak atas pekerjaanmu, tetapi tidak atas hasilnya. Jangan biarkan hasil jadi motivasimu.", author: "Bhagavad Gita", category: "hindu" },
-            { text: "Ketenangan pikiran adalah yoga yang tertinggi.", author: "Swami Sivananda", category: "hindu" },
-            { text: "Perubahan adalah hukum dunia.", author: "Bhagavad Gita", category: "hindu" },
-
-            // --- UNIVERSAL / STOIC (Netral) ---
-            { text: "Kita lebih sering menderita dalam imajinasi kita daripada dalam kenyataan.", author: "Seneca", category: "universal" },
-            { text: "Badai pasti berlalu, dan kamu akan tetap berdiri.", author: "MindCare", category: "universal" },
-            { text: "Tidak apa-apa untuk istirahat sejenak. Kamu sedang berjuang.", author: "MindCare", category: "universal" },
-            { text: "Kamu lebih kuat dari yang kamu tahu.", author: "Anonim", category: "universal" },
-            { text: "Penyembuhan membutuhkan waktu, bersabarlah dengan dirimu sendiri.", author: "MindCare", category: "universal" }
-        ];
-
         let currentAnswers = {};
         
         // --- LOGIC: Navigation & UI ---
         document.addEventListener('DOMContentLoaded', () => {
             renderQuestions();
             updateProgress(1);
-            setupLimitCheckboxes(); 
+            setupLimitCheckboxes(); // Setup max 3 selection logic
         });
 
         function nextStep(step) {
@@ -517,7 +440,7 @@
             document.getElementById('progress-fill').style.width = `${percentage}%`;
         }
 
-        // --- LOGIC: Questionnaire UI ---
+        // --- LOGIC: Questionnaire UI DIPERBARUI ---
         function renderQuestions() {
             const container = document.getElementById('question-container');
             let html = '';
@@ -559,23 +482,39 @@
         }
 
         function saveAnswer(code, val) {
+            // 1. Simpan jawaban ke variabel global
             currentAnswers[code] = val;
+            
+            // 2. Cari index pertanyaan saat ini berdasarkan kode (misal C1 -> index 0)
             const currentIndex = gejalaList.findIndex(item => item.kode === code);
+            
+            // 3. Logika Auto-Scroll
             if (currentIndex !== -1) {
+                // Beri jeda sedikit (300ms) biar user sempat lihat animasinya 'klik'
                 setTimeout(() => {
+                    // Cek apakah ini pertanyaan terakhir?
                     if (currentIndex < gejalaList.length - 1) {
+                        // Jika BUKAN terakhir, cari elemen pertanyaan BERIKUTNYA
                         const nextIndex = currentIndex + 1;
                         const nextElement = document.querySelector(`.question-item[data-index="${nextIndex}"]`);
-                        if (nextElement) nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        if (nextElement) {
+                            // Scroll halus ke tengah layar
+                            nextElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
                     } else {
+                        // Jika pertanyaan TERAKHIR, scroll ke tombol "Lanjut"
                         const nextButton = document.querySelector('button[onclick="validateAndNext(3)"]');
-                        if (nextButton) nextButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (nextButton) {
+                            nextButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
                     }
-                }, 300); 
+                }, 300); // 300ms delay
             }
         }
 
         function validateAndNext(step) {
+            // Check if all questions answered
             if(Object.keys(currentAnswers).length < gejalaList.length) {
                 alert("Mohon lengkapi semua pertanyaan kuesioner sebelum melanjutkan.");
                 return;
@@ -583,7 +522,9 @@
             nextStep(step);
         }
 
+        // --- LOGIC: Optional Form Helpers ---
         function setupLimitCheckboxes() {
+            // Helper for Reason (Max 3)
             const reasonChecks = document.querySelectorAll('.limit-3');
             reasonChecks.forEach(check => {
                 check.addEventListener('change', function() {
@@ -594,118 +535,143 @@
                     }
                 });
             });
+
+            // Helper for Contributors (Max 3)
+            const conChecks = document.querySelectorAll('.limit-3-con');
+            conChecks.forEach(check => {
+                check.addEventListener('change', function() {
+                    const checkedCount = document.querySelectorAll('.limit-3-con:checked').length;
+                    if(checkedCount > 3) {
+                        this.checked = false;
+                        alert("Maksimal pilih 3 faktor kontributor.");
+                    }
+                });
+            });
         }
 
-        // --- LOGIC: GENERATOR KUTIPAN ---
-        function generateQuote() {
-            const textEl = document.getElementById('quote-text');
-            const authorEl = document.getElementById('quote-author');
-            const categorySelect = document.getElementById('quote-category');
-            
-            if(!textEl || !authorEl) return;
-
-            const selectedCategory = categorySelect ? categorySelect.value : 'all';
-
-            let filteredQuotes;
-            if (selectedCategory === 'all') {
-                filteredQuotes = interfaithQuotes;
+        function toggleCountry(isOverseas) {
+            const el = document.getElementById('country_name');
+            if(isOverseas) {
+                el.classList.remove('hidden');
+                el.disabled = false;
             } else {
-                filteredQuotes = interfaithQuotes.filter(q => 
-                    q.category === selectedCategory || q.category === 'universal'
-                );
-            }
-
-            if (filteredQuotes.length === 0) filteredQuotes = interfaithQuotes;
-
-            textEl.style.opacity = 0;
-            authorEl.style.opacity = 0;
-            
-            setTimeout(() => {
-                const randomItem = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
-                textEl.textContent = `"${randomItem.text}"`;
-                authorEl.textContent = `- ${randomItem.author}`;
-                textEl.style.opacity = 1;
-                authorEl.style.opacity = 1;
-            }, 300);
-        }
-
-        // --- LOGIC: SUBMIT & CALCULATE ---
-        async function calculateAndShowResult() {
-            document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('step-result').classList.add('active');
-            
-            const btnSubmit = document.querySelector('button[onclick="calculateAndShowResult()"]');
-            const originalText = btnSubmit.innerHTML;
-            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menganalisis...';
-            btnSubmit.disabled = true;
-
-            try {
-                const identitas = {
-                    nama: document.getElementById('nama')?.value?.trim() || 'Anonim',
-                    email: document.getElementById('email')?.value?.trim() || null
-                };
-
-                if (!identitas.nama) {
-                    alert('Mohon isi nama sebelum melihat hasil.');
-                    nextStep(3);
-                    return;
-                }
-
-                const response = await fetch('/api/public/diagnosis/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jawaban: currentAnswers,
-                        nama: document.getElementById('nama')?.value?.trim() || 'Anonim',
-                        email: document.getElementById('email')?.value?.trim() || null,
-                        umur: Number(document.getElementById('umur')?.value) || null,
-                        keluhan: document.getElementById('keluhan')?.value?.trim() || null
-                    })
-                });
-
-                if (!response.ok) {
-                    const text = await response.text();
-                    throw new Error(text || 'Response server gagal');
-                }
-
-                const resultJson = await response.json();
-                
-                if (!resultJson.success) {
-                    throw new Error(resultJson.message || 'Diagnosis gagal');
-                }
-
-                const data = resultJson;
-
-                // Update UI Hasil
-                document.getElementById('result-category').textContent = data.kategori;
-                document.getElementById('result-score').textContent = `Total Skor PHQ-9: ${data.score}`;
-                document.getElementById('result-description').textContent = data.deskripsi;
-
-                const recList = document.getElementById('recommendation-list');
-                recList.innerHTML = "";
-                data.rekomendasi.forEach(r => {
-                    recList.innerHTML += `<li>• ${r}</li>`;
-                });
-
-                if (data.krisis) {
-                    document.getElementById('crisis-banner').classList.remove('hidden');
-                } else {
-                    document.getElementById('crisis-banner').classList.add('hidden');
-                }
-
-                // PANGGIL GENERATOR KUTIPAN SEBELUM TAMPIL
-                generateQuote();
-
-                nextStep('result');
-
-            } catch (err) {
-                console.error('Error koneksi:', err);
-                alert(err.message);
-            } finally {
-                btnSubmit.innerHTML = originalText;
-                btnSubmit.disabled = false;
+                el.classList.add('hidden');
+                el.disabled = true;
+                el.value = "";
             }
         }
+
+        function toggleOtherDisease() {
+            const val = document.getElementById('physical_disease').value;
+            const textInput = document.getElementById('other_disease_text');
+            if(val === 'other') {
+                textInput.classList.remove('hidden');
+            } else {
+                textInput.classList.add('hidden');
+            }
+        }
+
+        // --- LOGIC: CALCULATION (Forward Chaining) ---
+
+        // --- GANTI SELURUH FUNGSI calculateAndShowResult DENGAN INI ---
+
+async function calculateAndShowResult() {
+    
+    document.querySelectorAll('.step-section')
+  .forEach(el => el.classList.remove('active'));
+
+document.getElementById('step-result').classList.add('active');
+    const btnSubmit = document.querySelector(
+        'button[onclick="calculateAndShowResult()"]'
+    );
+
+    const originalText = btnSubmit.innerHTML;
+    btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menganalisis...';
+    btnSubmit.disabled = true;
+
+    try {
+        // ambil data identitas / demografi dari step-3
+        const identitas = {
+            nama: document.getElementById('nama')?.value?.trim() || 'Anonim',
+            email: document.getElementById('email')?.value?.trim() || null
+        };
+
+        const demografi = {
+            umur: Number(document.getElementById('umur')?.value) || null,
+            pekerjaan: document.getElementById('pekerjaan')?.value?.trim() || null
+        };
+
+        const keluhan = document.getElementById('keluhan')?.value?.trim() || null;
+
+        // validasi kecil: pastikan minimal jawaban dan umur/ nama jika required
+        if (!identitas.nama) {
+            alert('Mohon isi nama sebelum melihat hasil.');
+            nextStep(3);
+            return;
+        }
+
+        const response = await fetch('/api/public/diagnosis/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        jawaban: currentAnswers,
+        nama: document.getElementById('nama')?.value?.trim() || 'Anonim',
+        email: document.getElementById('email')?.value?.trim() || null,
+        umur: Number(document.getElementById('umur')?.value) || null,
+        keluhan: document.getElementById('keluhan')?.value?.trim() || null
+    })
+});
+
+
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text || 'Response server gagal');
+        }
+
+        const resultJson = await response.json();
+        console.log('HASIL SUBMIT:', resultJson);
+
+        // VALIDASI OBJECT (BUKAN ARRAY)
+        if (!resultJson.success) {
+            throw new Error(resultJson.message || 'Diagnosis gagal');
+        }
+
+        const data = resultJson;
+
+        // ===== UPDATE UI HASIL =====
+        document.getElementById('result-category').textContent = data.kategori;
+        document.getElementById('result-score').textContent =
+            `Total Skor PHQ-9: ${data.score}`;
+        document.getElementById('result-description').textContent =
+            data.deskripsi;
+
+        // rekomendasi (array)
+        const recList = document.getElementById('recommendation-list');
+recList.innerHTML = "";
+
+data.rekomendasi.forEach(r => {
+  recList.innerHTML += `<li>• ${r}</li>`;
+});
+
+        // banner krisis
+        if (data.krisis) {
+            document.getElementById('crisis-banner').classList.remove('hidden');
+        } else {
+            document.getElementById('crisis-banner').classList.add('hidden');
+        }
+
+        // ⬅️ INI YANG MEMBUAT TOMBOL “HIDUP”
+        nextStep('result');
+
+    } catch (err) {
+        console.error('Error koneksi:', err);
+        alert(err.message);
+    } finally {
+        // PASTI JALAN, ERROR ATAU TIDAK
+        btnSubmit.innerHTML = originalText;
+        btnSubmit.disabled = false;
+    }
+}
     </script>
 </body>
 </html>
