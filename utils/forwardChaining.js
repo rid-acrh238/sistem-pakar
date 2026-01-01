@@ -20,21 +20,36 @@ export async function forwardChaining(jawabanUser) {
         }
 
         // 2. CEK DATABASE ATURAN
-        const [dbRules] = await pool.query('SELECT * FROM aturan');
+        // 2. CEK DATABASE ATURAN (Logika Forward Chaining berbasis Skor)
+const [dbRules] = await pool.query('SELECT * FROM aturan');
+
+let diagnosisDb = null;
+let saranDb = null;
+
+for (const rule of dbRules) {
+    // Memeriksa apakah Total Skor masuk dalam rentang aturan di database
+    // Contoh: Jika skor 10, apakah 10 >= 10 DAN 10 <= 14?
+    if (skorPHQ9 >= rule.range_bawah && skorPHQ9 <= rule.range_atas) {
+        diagnosisDb = rule.hasil;
+        saranDb = rule.solusi || rule.saran; // Ambil solusi dari DB
+        break; // Jika sudah ketemu yang cocok, berhenti mencari
+    }
+}
+        // const [dbRules] = await pool.query('SELECT * FROM aturan');
         
-        let diagnosisDb = null;
-        let ruleMatched = null;
+        // let diagnosisDb = null;
+        // let ruleMatched = null;
 
-        for (const rule of dbRules) {
-            const syarat = rule.kondisi.split(',').map(s => s.trim());
-            const isMatch = syarat.every(g => fakta.includes(g));
+        // for (const rule of dbRules) {
+        //     const syarat = rule.kondisi.split(',').map(s => s.trim());
+        //     const isMatch = syarat.every(g => fakta.includes(g));
 
-            if (isMatch) {
-                diagnosisDb = rule.hasil;
-                ruleMatched = syarat;
-                break; 
-            }
-        }
+        //     if (isMatch) {
+        //         diagnosisDb = rule.hasil;
+        //         ruleMatched = syarat;
+        //         break; 
+        //     }
+        // }
 
         // 3. TENTUKAN HASIL AKHIR & SARAN
         let finalResult = '';
