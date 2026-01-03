@@ -49,33 +49,33 @@ export const refreshToken = async (req, res) => {
 };
 
 // === REGISTER (async/await style) ===
-// export const registerAdmin = async (req, res) => {
-//   const { username, email, password, nama_lengkap } = req.body;
-//   if (!username || !email || !password || !nama_lengkap)
-//     return res.status(400).json({ message: 'Semua field wajib diisi' });
+export const registerAdmin = async (req, res) => {
+  const { username, email, password, nama_lengkap } = req.body;
+  if (!username || !email || !password || !nama_lengkap)
+    return res.status(400).json({ message: 'Semua field wajib diisi' });
 
-//   try {
-//     const existing = await findUserByIdentifier(username);
-//     if (existing.length > 0)
-//       return res.status(400).json({ message: 'Username atau email sudah digunakan' });
+  try {
+    const existing = await findUserByIdentifier(username);
+    if (existing.length > 0)
+      return res.status(400).json({ message: 'Username atau email sudah digunakan' });
 
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const requesterRole = req.user?.role || null;
-//     const finalRole = 'admin';
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const requesterRole = req.user?.role || null;
+    const finalRole = 'admin';
 
-//     await insertUser(username, email, hashedPassword, nama_lengkap, finalRole);
+    await insertUser(username, email, hashedPassword, nama_lengkap, finalRole);
 
-//     res.status(201).json({
-//       message:
-//         requesterRole === 'admin'
-//           ? `Admin baru berhasil ditambahkan (${finalRole})`
-//           : 'Akun admin berhasil didaftarkan. Silakan login.',
-//     });
-//   } catch (error) {
-//     console.error('🔥 Register error:', error.message);
-//     res.status(500).json({ message: 'Kesalahan server' });
-//   }
-// };
+    res.status(201).json({
+      message:
+        requesterRole === 'admin'
+          ? `Admin baru berhasil ditambahkan (${finalRole})`
+          : 'Akun admin berhasil didaftarkan. Silakan login.',
+    });
+  } catch (error) {
+    console.error('🔥 Register error:', error.message);
+    res.status(500).json({ message: 'Kesalahan server' });
+  }
+};
 
 // === LOGIN ===
 // ✅ src/controllers/adminController.js
