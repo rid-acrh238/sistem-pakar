@@ -1,0 +1,45 @@
+LISENSI PERLINDUNGAN KODE SPAGHETTI (LPKS)
+Versi 4.04
+
+Hak Cipta (C) 2026 rid-arch
+
+===== PEMBUKAAN ===== 
+Kode sumber ini secara hukum diklasifikasikan sebagai "Bencana Kuliner". 
+Kode ini ditulis jam 3 pagi, disponsori oleh kopi sachet dan doa ibu. Kode ini menganut 
+prinsip ketat: "Tulis Sekali, Jangan Pernah Dibaca Lagi".
+
+1. SYARAT DAN KETENTUAN
+
+1.1. Izin Menatap Jurang 
+Anda diizinkan untuk melihat, menjalankan, dan meratapi nasib saat membaca software ini. Anda boleh mencoba memahami alur logikanya, 
+tetapi Penulis menjamin bahwa Tuhan pun sudah angkat tangan melihat ribuan baris blok if-else.
+
+1.2. Pasal "Jenga" 
+Software ini disusun seperti menara Jenga yang terbuat dari mie instan basah.
+
+  1.2.1 Anda DILARANG KERAS mencoba "merapikan" (clean code) atau refactoring.
+  1.2.2 Anda DILARANG menghapus komentar yang berbunyi "// Jangan dihapus nanti error", "// Sumpah gatau kenapa ini jalan", atau "// Codingan keramat".
+  1.2.3 Jika Anda menghapus satu baris yang terlihat tidak berguna lalu satu aplikasi meledak, itu murni salah Anda.
+
+1.3. Pembebasan Aturan Penamaan Variabel Pengguna menerima bahwa nama variabel seperti x, y, data_fix, data_fix_banget, dan anjing_kok_null adalah prosedur standar operasional di repositori ini. Komplain soal camelCase atau snake_case dianggap penistaan.
+
+1.4. Klausul "Jalan Tikus" Penggunaan nested loop sampai 5 tingkat dan hardcoded value di sana-sini bukanlah bug, 
+melainkan fitur keamanan agar developer lain malas membajak kode ini.
+
+2. BATASAN TANGGUNG JAWAB
+
+2.1. Kerusakan Psikologis Penulis TIDAK bertanggung jawab atas gangguan mental yang timbul akibat membaca kode ini, termasuk namun tidak terbatas pada:
+
+  2.1.1 Migrain akut.
+  2.1.2 Menangis di pojokan kamar mandi.
+  2.1.3 Keinginan mendadak untuk resign dan pulang kampung ternak lele.
+  2.1.4 Kena mental (Imposter Syndrome).
+
+2.2. Keamanan Perangkat Penulis tidak bertanggung jawab jika laptop Anda hang atau 
+kipas prosesor Anda berbunyi seperti pesawat tempur karena memproses infinite loop yang tersembunyi.
+
+3. REDISTRIBUSI
+
+Anda boleh menyebarkan kode ini, asalkan Anda menyertakan peringatan "Awas Bahaya Laten Spaghetti" di judul repositori.
+
+===== AKHIR DARI LISENSI =====
