@@ -356,7 +356,7 @@ console.log('[Dashboard] Data hasil diagnosa:', hasil);
             document.getElementById('totalAturan').textContent = aturan.length || 0;
             //document.getElementById('totalPenyakit').textContent = penyakit.length || 0;
             document.getElementById('totalHasilDiagnosa').textContent = hasil.length || 0;
-            document.getElementById('totalAdmin').textContent = admin.length || 0;
+            // document.getElementById('totalAdmin').textContent = admin.length || 0;
 
             // Update recent diagnosis table
             const recentTableBody = document.getElementById('recentDiagnosisTableBody');
