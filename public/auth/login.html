@@ -16,6 +16,148 @@
                 <div class="flex justify-center mb-4">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiI9EG3HnRWqOKOEttlFP67yCXJc-xVG6WXw&s" alt="Logo Kampus" class="h-20 w-auto object-contain">
                 </div>
+                
+                <h2 id="pageTitle" class="text-2xl font-bold text-center text-gray-800 mb-1">Login Admin</h2>
+                <p id="pageSubtitle" class="text-center text-gray-500 text-sm mb-6">Masukkan email untuk mendapatkan kode akses</p>
+
+                <form id="loginForm" onsubmit="return false;">
+                    
+                    <div id="step1">
+                        <div class="mb-6">
+                            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email Admin</label>
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="contoh@gmail.com"
+                                class="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="requestOTP()"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 shadow-lg"
+                        >
+                            Kirim Kode Akses
+                        </button>
+                    </div>
+
+                    <div id="step2" style="display: none;">
+                        <div class="mb-6">
+                            <label for="otp" class="block text-gray-700 text-sm font-bold mb-2">Kode OTP</label>
+                            <input
+                                type="text"
+                                id="otp"
+                                maxlength="6"
+                                placeholder="123456"
+                                style="letter-spacing: 5px; text-align: center; font-size: 1.2rem;"
+                                class="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                            />
+                        </div>
+
+                        <button
+                            type="button"
+                            onclick="verifyOTP()"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 shadow-lg"
+                        >
+                            Masuk Dashboard
+                        </button>
+
+                        <p class="text-center mt-4 text-sm">
+                            <a href="#" onclick="location.reload()" class="text-gray-500 hover:text-green-600">
+                                ↺ Salah email? Ulangi
+                            </a>
+                        </p>
+                    </div>
+
+                    <div id="loading" style="display: none;" class="mt-4 text-center">
+                        <p class="text-green-600 font-semibold animate-pulse">⏳ Sedang memproses...</p>
+                    </div>
+
+                </form>
+
+                 <!-- <p class="text-center text-gray-600 text-sm mt-6">
+                    Belum punya akun?
+                    <a id="register-link" href="./register.html" class="font-bold text-green-600 hover:text-green-800 transition">
+                        Daftar di sini
+                    </a>
+                </p>  -->
+            </div>
+        </div>
+
+        <script src="../assets/js/auth/login.js"></script>
+    </body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - Sistem Pakar</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/login.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/login.css" />
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <img src="https://www.stikomelrahma.ac.id/wp-content/uploads/2024/11/logo-stikom.png" alt="Logo" class="logo">
+            <h2 id="pageTitle">Admin Login</h2>
+            <p id="pageSubtitle">Masuk untuk mengelola sistem pakar.</p>
+        </div>
+        
+        <form id="loginForm" onsubmit="return false;">
+            <div id="step1">
+                <div class="input-group">
+                    <label for="email">Email Admin</label>
+                    <input type="email" id="email" placeholder="contoh@gmail.com" required>
+                </div>
+                <button type="button" class="btn-login" onclick="requestOTP()">Kirim Kode Akses</button>
+            </div>
+
+            <div id="step2" style="display: none;">
+                <div class="input-group">
+                    <label for="otp">Kode OTP (Cek Email)</label>
+                    <input type="text" id="otp" placeholder="123456" maxlength="6" style="text-align: center; letter-spacing: 3px; font-weight: bold;">
+                </div>
+                <button type="button" class="btn-login" onclick="verifyOTP()">Masuk Dashboard</button>
+                <p style="text-align: center; margin-top: 10px; font-size: 0.9em;">
+                    <a href="#" onclick="location.reload()" style="color: #666;">Ganti Email?</a>
+                </p>
+            </div>
+        </form>
+
+        <div id="loading" style="display: none; text-align: center; margin-top: 10px; color: blue;">
+            Memproses... ⏳
+        </div>
+    </div>
+
+    <script src="../assets/js/auth/login.js"></script>
+</body>
+</html> -->
+
+<!-- <!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login Admin - Sistem Pakar</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="../assets/css/login.css" />
+    </head>
+    <body class="bg-cover bg-center bg-no-repeat font-sans" style="background-image: url('../assets/img/gedung-stikom.png');">
+        
+        <div class="flex items-center justify-center min-h-screen bg-black/50 backdrop-blur-sm">
+            
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all hover:scale-[1.01]">
+                
+                <div class="flex justify-center mb-4">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiI9EG3HnRWqOKOEttlFP67yCXJc-xVG6WXw&s" alt="Logo Kampus" class="h-20 w-auto object-contain">
+                </div>
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-1">Login Admin</h2>
                 <p class="text-center text-gray-500 text-sm mb-6">Silakan masuk menggunakan akun Anda</p>
 
@@ -57,18 +199,18 @@
                     </div>
                 </form>
 
-                <!-- <p class="text-center text-gray-600 text-sm mt-6">
+                 <p class="text-center text-gray-600 text-sm mt-6">
                     Belum punya akun?
                     <a id="register-link" href="./register.html" class="font-bold text-green-600 hover:text-green-800 transition">
                         Daftar di sini
                     </a>
-                </p> -->
+                </p> 
             </div>
         </div>
 
         <script src="../assets/js/auth/login.js"></script>
     </body>
-</html>
+</html> -->
 
 
 <!-- <!doctype html>
@@ -148,4 +290,4 @@
 
         <script src="../assets/js/auth/login.js"></script>
     </body>
-</html> -->
+</html> --> 
