@@ -1,7 +1,10 @@
 // src/routes/adminRoutes.js
 import express from 'express';
 import {
-  loginAdmin,
+  // loginAdmin,     
+  requestLoginOTP, 
+  verifyLoginOTP,
+  magicLogin,
   registerAdmin,
   getAllAdminList,
   getAllAdmin,
@@ -20,8 +23,13 @@ const router = express.Router();
 
 // --- Auth routes ---
 router.get('/', verifyToken, getAllAdminList); // ✅ tambahkan ini
-router.post('/login', loginAdmin);
-router.post('/register', verifyTokenOptional, registerAdmin); // ⬅️ pakai middleware opsional
+// router.post('/login', loginAdmin);
+// router.post('/register', verifyTokenOptional, registerAdmin); // ⬅️ pakai middleware opsional
+router.post('/login-request', requestLoginOTP); // Input Email -> Kirim Email
+router.post('/login-verify', verifyLoginOTP);   // Input Email + OTP -> Dapat Token
+
+// ✅ Route baru untuk Magic Link (GET karena diklik di browser)
+router.get('/magic-login', magicLogin);
 
 // --- Admin-only routes ---
 //router.get('/admin', verifyToken, onlyAdmin, getAllAdmin)

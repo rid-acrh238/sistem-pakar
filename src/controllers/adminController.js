@@ -2,6 +2,7 @@ import { pool } from '../config/db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { sendOTP } from '../config/mailer.js';
 import {
   findUserByIdentifier,
   insertUser,
@@ -13,6 +14,156 @@ import {
 } from '../models/adminModel.js';
 
 dotenv.config();
+
+
+// 1️⃣ REQUEST OTP (Langkah 1)
+export const requestLoginOTP = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).json({ message: 'Email wajib diisi' });
+
+    try {
+        // Cek user by email
+        const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Email tidak terdaftar.' });
+        }
+
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        
+        // Simpan OTP ke database (update kolom user)
+        // Pastikan kolom otp_code dan otp_expires sudah dibuat di DB seperti instruksi sebelumnya
+        await pool.query(
+            'UPDATE users SET otp_code = ?, otp_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE email = ?',
+            [otp, email]
+        );
+
+        // Kirim Email
+        await sendOTP(email, otp);
+
+        res.status(200).json({ success: true, message: 'OTP terkirim ke email.' });
+
+    } catch (error) {
+        console.error('🔥 Request OTP error:', error);
+        res.status(500).json({ message: 'Gagal memproses permintaan login.' });
+    }
+};
+
+// 2️⃣ VERIFY OTP (Langkah 2)
+export const verifyLoginOTP = async (req, res) => {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) return res.status(400).json({ message: 'Email dan OTP wajib diisi' });
+
+    try {
+        // Cek User + OTP + Expired belum lewat
+        const [users] = await pool.query(
+            'SELECT * FROM users WHERE email = ? AND otp_code = ? AND otp_expires > NOW()',
+            [email, otp]
+        );
+
+        if (users.length === 0) {
+            return res.status(401).json({ message: 'Kode OTP salah atau kadaluarsa.' });
+        }
+
+        const user = users[0];
+
+        // Reset OTP setelah berhasil
+        await pool.query('UPDATE users SET otp_code = NULL, otp_expires = NULL WHERE id = ?', [user.id]);
+
+        // Generate Token (Pakai fungsi generateTokens punyamu yang sudah ada di file itu)
+        const payload = { id: user.id, username: user.username, role: user.role };
+        const { token, refreshToken } = generateTokens(payload); // Pastikan fungsi generateTokens bisa diakses scope-nya
+
+        res.status(200).json({
+            message: 'Login berhasil',
+            token,
+            refreshToken,
+            user: {
+                nama_lengkap: user.nama_lengkap,
+                foto_profil: user.foto_profil,
+                username: user.username,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error('🔥 Verify OTP error:', error);
+        res.status(500).json({ message: 'Kesalahan server saat verifikasi.' });
+    }
+};
+
+// ✅ FITUR BARU: MAGIC LINK HANDLER
+export const magicLogin = async (req, res) => {
+    // Ambil data dari URL (Query String)
+    const { email, otp } = req.query; 
+
+    if (!email || !otp) return res.send('Link tidak valid.');
+
+    try {
+        // 1. Validasi OTP (Sama kayak verifyLoginOTP)
+        const [users] = await pool.query(
+            'SELECT * FROM users WHERE email = ? AND otp_code = ? AND otp_expires > NOW()',
+            [email, otp]
+        );
+
+        if (users.length === 0) {
+            return res.send(`
+                <h1 style="color:red; text-align:center; margin-top:50px;">
+                    Link Kadaluarsa / Salah! ❌
+                </h1>
+                <p style="text-align:center;">Silakan request login ulang.</p>
+            `);
+        }
+
+        const user = users[0];
+
+        // 2. Hapus OTP (Biar sekali pakai)
+        await pool.query('UPDATE users SET otp_code = NULL, otp_expires = NULL WHERE id = ?', [user.id]);
+
+        // 3. Generate Token
+        const payload = { id: user.id, username: user.username, role: user.role };
+        const { token, refreshToken } = generateTokens(payload);
+        
+        // Data user buat disimpan di storage
+        const userData = JSON.stringify({
+            nama_lengkap: user.nama_lengkap,
+            foto_profil: user.foto_profil,
+            username: user.username,
+            role: user.role
+        });
+
+        // 4. 🔥 JURUS RAHASIA: Kirim HTML yang auto-save token & redirect
+        // Browser akan mengeksekusi script ini otomatis
+        res.send(`
+            <html>
+                <head><title>Masuk...</title></head>
+                <body>
+                    <h2 style="text-align:center; font-family:sans-serif; margin-top:50px;">
+                        Berhasil! Mengalihkan ke Dashboard... 🚀
+                    </h2>
+                    <script>
+                        // Simpan Token ke LocalStorage Browser
+                        localStorage.setItem('token', '${token}');
+                        localStorage.setItem('refreshToken', '${refreshToken}');
+                        localStorage.setItem('user', '${userData}'); // Simpan string JSON
+
+                        // Redirect ke Dashboard setelah 1 detik
+                        setTimeout(() => {
+                            window.location.href = '/dashboard/dashboard.html';
+                        }, 1000);
+                    </script>
+                </body>
+            </html>
+        `);
+
+    } catch (error) {
+        console.error('🔥 Magic Link Error:', error);
+        res.status(500).send('Server Error');
+    }
+};
 
 // === Helper: Generate access & refresh tokens ===
 function generateTokens(payload) {

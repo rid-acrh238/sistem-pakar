@@ -105,6 +105,9 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Terjadi kesalahan internal server.' });
 });
 
+
+
+
 // === START SERVER ===
 app.listen(PORT, '0.0.0.0', () => {
     console.log(chalk.greenBright(`🚀 Server Berjalan di http://localhost:${PORT}`));
