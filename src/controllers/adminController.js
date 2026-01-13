@@ -15,12 +15,27 @@ import {
 
 dotenv.config();
 
+const otpCooldowns = {};
+
 
 // 1️⃣ REQUEST OTP (Langkah 1)
 export const requestLoginOTP = async (req, res) => {
     const { email } = req.body;
 
     if (!email) return res.status(400).json({ message: 'Email wajib diisi' });
+
+    // ==========================================
+    // 🔥 BARU: CEK COOLDOWN (Rate Limiting)
+    // ==========================================
+    const currentTime = Date.now();
+    // Jika email ada di daftar cooldown DAN waktunya belum habis
+    if (otpCooldowns[email] && currentTime < otpCooldowns[email]) {
+        const sisaDetik = Math.ceil((otpCooldowns[email] - currentTime) / 1000);
+        return res.status(429).json({ 
+            message: `Tunggu ${sisaDetik} detik lagi sebelum minta kode baru.` 
+        });
+    }
+    // ==========================================
 
     try {
         // Cek user by email
@@ -33,12 +48,16 @@ export const requestLoginOTP = async (req, res) => {
         // Generate OTP
         const otp = Math.floor(100000 + Math.random() * 900000);
         
-        // Simpan OTP ke database (update kolom user)
-        // Pastikan kolom otp_code dan otp_expires sudah dibuat di DB seperti instruksi sebelumnya
+        // Simpan OTP ke database
         await pool.query(
             'UPDATE users SET otp_code = ?, otp_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE email = ?',
             [otp, email]
         );
+
+        // ==========================================
+        // 🔥 BARU: SET WAKTU COOLDOWN (60 Detik dari sekarang)
+        // ==========================================
+        otpCooldowns[email] = currentTime + 60000; // 60000ms = 1 Menit
 
         // Kirim Email
         await sendOTP(email, otp);
@@ -47,12 +66,19 @@ export const requestLoginOTP = async (req, res) => {
 
     } catch (error) {
         console.error('🔥 Request OTP error:', error);
+        
+        // Kalau error (misal email gagal kirim), hapus cooldown biar user bisa coba lagi
+        delete otpCooldowns[email]; 
+
         res.status(500).json({ message: 'Gagal memproses permintaan login.' });
     }
 };
 
-// 2️⃣ VERIFY OTP (Langkah 2)
+// 2️⃣ VERIFY OTP (Langkah 2 - Tidak perlu diubah, biarkan seperti aslinya)
 export const verifyLoginOTP = async (req, res) => {
+    // ... (Isi verifyLoginOTP kamu yang lama paste disini, gak ada perubahan) ...
+    // Tapi kalau mau lengkapnya saya tulis ulang di bawah biar gampang copas:
+    
     const { email, otp } = req.body;
 
     if (!email || !otp) return res.status(400).json({ message: 'Email dan OTP wajib diisi' });
@@ -73,9 +99,11 @@ export const verifyLoginOTP = async (req, res) => {
         // Reset OTP setelah berhasil
         await pool.query('UPDATE users SET otp_code = NULL, otp_expires = NULL WHERE id = ?', [user.id]);
 
-        // Generate Token (Pakai fungsi generateTokens punyamu yang sudah ada di file itu)
+        // Generate Token
+        // Asumsi fungsi generateTokens sudah ada di scope file ini
         const payload = { id: user.id, username: user.username, role: user.role };
-        const { token, refreshToken } = generateTokens(payload); // Pastikan fungsi generateTokens bisa diakses scope-nya
+        // Pastikan kamu punya fungsi generateTokens di file ini atau di-import
+        const { token, refreshToken } = generateTokens(payload); 
 
         res.status(200).json({
             message: 'Login berhasil',
@@ -94,6 +122,85 @@ export const verifyLoginOTP = async (req, res) => {
         res.status(500).json({ message: 'Kesalahan server saat verifikasi.' });
     }
 };
+
+// // 1️⃣ REQUEST OTP (Langkah 1)
+// export const requestLoginOTP = async (req, res) => {
+//     const { email } = req.body;
+
+//     if (!email) return res.status(400).json({ message: 'Email wajib diisi' });
+
+//     try {
+//         // Cek user by email
+//         const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        
+//         if (users.length === 0) {
+//             return res.status(404).json({ message: 'Email tidak terdaftar.' });
+//         }
+
+//         // Generate OTP
+//         const otp = Math.floor(100000 + Math.random() * 900000);
+        
+//         // Simpan OTP ke database (update kolom user)
+//         // Pastikan kolom otp_code dan otp_expires sudah dibuat di DB seperti instruksi sebelumnya
+//         await pool.query(
+//             'UPDATE users SET otp_code = ?, otp_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE email = ?',
+//             [otp, email]
+//         );
+
+//         // Kirim Email
+//         await sendOTP(email, otp);
+
+//         res.status(200).json({ success: true, message: 'OTP terkirim ke email.' });
+
+//     } catch (error) {
+//         console.error('🔥 Request OTP error:', error);
+//         res.status(500).json({ message: 'Gagal memproses permintaan login.' });
+//     }
+// };
+
+// // 2️⃣ VERIFY OTP (Langkah 2)
+// export const verifyLoginOTP = async (req, res) => {
+//     const { email, otp } = req.body;
+
+//     if (!email || !otp) return res.status(400).json({ message: 'Email dan OTP wajib diisi' });
+
+//     try {
+//         // Cek User + OTP + Expired belum lewat
+//         const [users] = await pool.query(
+//             'SELECT * FROM users WHERE email = ? AND otp_code = ? AND otp_expires > NOW()',
+//             [email, otp]
+//         );
+
+//         if (users.length === 0) {
+//             return res.status(401).json({ message: 'Kode OTP salah atau kadaluarsa.' });
+//         }
+
+//         const user = users[0];
+
+//         // Reset OTP setelah berhasil
+//         await pool.query('UPDATE users SET otp_code = NULL, otp_expires = NULL WHERE id = ?', [user.id]);
+
+//         // Generate Token (Pakai fungsi generateTokens punyamu yang sudah ada di file itu)
+//         const payload = { id: user.id, username: user.username, role: user.role };
+//         const { token, refreshToken } = generateTokens(payload); // Pastikan fungsi generateTokens bisa diakses scope-nya
+
+//         res.status(200).json({
+//             message: 'Login berhasil',
+//             token,
+//             refreshToken,
+//             user: {
+//                 nama_lengkap: user.nama_lengkap,
+//                 foto_profil: user.foto_profil,
+//                 username: user.username,
+//                 role: user.role
+//             }
+//         });
+
+//     } catch (error) {
+//         console.error('🔥 Verify OTP error:', error);
+//         res.status(500).json({ message: 'Kesalahan server saat verifikasi.' });
+//     }
+// };
 
 // ✅ FITUR BARU: MAGIC LINK HANDLER
 export const magicLogin = async (req, res) => {
