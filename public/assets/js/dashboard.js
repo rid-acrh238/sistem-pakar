@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             safeSetText('totalGejala', listGejala.length);
             safeSetText('totalAturan', listAturan.length);
             safeSetText('totalHasilDiagnosa', listDiagnosa.length);
-            safeSetText('totalAdmin', listAdmin.length);
+            // safeSetText('totalAdmin', listAdmin.length);
 
             // B. Update Tabel 5 Diagnosa Terakhir
             const recentTableBody = document.getElementById('recentDiagnosisTableBody');
